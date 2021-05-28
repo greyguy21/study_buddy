@@ -8,6 +8,8 @@ import 'package:study_buddy/screens/items_page.dart';
 // on press, show animal trying on clothes, & (buy?) button
 // pop up card (item, buy or go back) - on bottom half of screen
 
+// should this be stateful or stateless ??
+
 // below app bar display cash
 class StoreInventory extends StatefulWidget {
   @override
