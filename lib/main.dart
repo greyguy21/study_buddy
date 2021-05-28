@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_buddy/screens/store_inventory.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
-        // home: ,
+        home: StoreInventory(),
 
       // routes: {
         //   "/": (context) => HomePage(),
