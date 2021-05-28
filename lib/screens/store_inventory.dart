@@ -2,21 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/items_page.dart';
 
 // buttons: on press : only display bought / not bought
-// how to update bought or not bought
-// implement stack
+// how to update bought or not bought ** need backend?
+// implement stack : animals trying on clothes
 
-// understand how to use media query
-// tabview
-// listview
-// gridview
-// pageview
-// inkwell
-// hero
-// nested scroll view
-// silver
+// on press, show animal trying on clothes, & (buy?) button
+// pop up card (item, buy or go back) - on bottom half of screen
 
-// questions how to scroll more??
-
+// below app bar display cash
 class StoreInventory extends StatefulWidget {
   @override
   _StoreInventoryState createState() => _StoreInventoryState();

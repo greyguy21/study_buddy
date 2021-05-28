@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_buddy/screens/authentication.dart';
 import 'package:study_buddy/screens/store_inventory.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
-        home: StoreInventory(),
+        home: Authentication(),
 
       // routes: {
         //   "/": (context) => HomePage(),
