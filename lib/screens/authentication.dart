@@ -27,6 +27,7 @@ class _AuthenticationState extends State<Authentication> {
             FloatingActionButton.extended(
               onPressed: () {},
               backgroundColor: Colors.lightBlue,
+              // pop up?
               label: Text("LOGIN"),
             ),
             SizedBox(
@@ -35,6 +36,7 @@ class _AuthenticationState extends State<Authentication> {
             FloatingActionButton.extended(
               onPressed: () {},
               backgroundColor: Colors.lightBlue,
+              // sign in with email & password -> pop up ?
               label: Text("REGISTER"),
             ),
             SizedBox(
@@ -43,6 +45,7 @@ class _AuthenticationState extends State<Authentication> {
             FloatingActionButton.extended(
               onPressed: () {},
               backgroundColor: Colors.lightBlue,
+              // sign in anonymously
               label: Text("CONTINUE AS GUEST"),
             )
           ],

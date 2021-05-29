@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
-        home: Loading(),
+        home: StoreInventory(),
 
       // routes: {
         //   "/": (context) => HomePage(),
