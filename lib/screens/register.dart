@@ -8,6 +8,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
   String email = '';
   String password = '';
 
@@ -20,18 +21,27 @@ class _RegisterState extends State<Register> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Form(
+            key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
+                    validator: (val) => val!.isEmpty || !val.contains("@")
+                        ? "Enter a valid email"
+                        : null,
                     onChanged: (val) {
                       setState(() => email = val);
                     },
+                    decoration: InputDecoration(hintText: "Email"),
                   ),
                   TextFormField(
+                    validator: (val) => val!.isEmpty || val.length < 6
+                        ? "Enter a valid password"
+                        : null,
                     onChanged: (val) {
                       setState(() => password = val);
                     },
                     obscureText: true,
+                    decoration: InputDecoration(hintText: "Password"),
                   ),
                 ],
               )
@@ -45,6 +55,7 @@ class _RegisterState extends State<Register> {
         Center(
           child: FloatingActionButton.extended(
             onPressed: () async {
+              if (_formKey.currentState!.validate()) {
               FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
               await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
               _firebaseAuth
@@ -57,6 +68,7 @@ class _RegisterState extends State<Register> {
                       Navigator.pushReplacementNamed(context, "/setup");
                     }
                   });
+              }
             },
             label: Text(
                 "CONTINUE",

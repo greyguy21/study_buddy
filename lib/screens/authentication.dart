@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/register.dart';
 
+
 class Authentication extends StatefulWidget {
   @override
   _AuthenticationState createState() => _AuthenticationState();
