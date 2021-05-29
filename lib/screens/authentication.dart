@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Authentication extends StatefulWidget {
@@ -43,7 +44,20 @@ class _AuthenticationState extends State<Authentication> {
               height: 7.0,
             ),
             FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () async {
+                FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+                await _firebaseAuth.signInAnonymously();
+                _firebaseAuth
+                    .authStateChanges()
+                    .listen((User? user) {
+                      if (user == null) {
+                        print(" user is signed out");
+                      } else {
+                        print("user is signed in");
+                      }
+                });
+                Navigator.pushReplacementNamed(context, "/setup");
+              },
               backgroundColor: Colors.lightBlue,
               // sign in anonymously
               label: Text("CONTINUE AS GUEST"),

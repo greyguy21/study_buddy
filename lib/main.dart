@@ -5,6 +5,7 @@ import 'package:study_buddy/screens/main_focus.dart';
 // import 'package:study_buddy/screens/ .dart';
 import 'package:study_buddy/screens/authentication.dart';
 import 'package:study_buddy/screens/loading.dart';
+import 'package:study_buddy/screens/setup.dart';
 import 'package:study_buddy/screens/store_inventory.dart';
 
 // void main() {
@@ -22,14 +23,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'study buddy',
       theme: ThemeData(primaryColor: Colors.white),
-      home: Loading(),
-      initialRoute: "/",
+      home: SetUp(),
+      // initialRoute: "/",
 
-      // routes: {
-      //   "/": (context) => HomePage(),
-      //   "/user": (context) => UserPage(),
-      //   "/main": (context) => MainFocus(),
-      // }
+      routes: {
+        // "/": (context) => HomePage(),
+        // "/authenticate": (context) => Authentication(),
+        //"/setup": (context) => SetUp(),
+      }
     );
   }
 }
