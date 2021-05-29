@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/screens/main_focus.dart';
 // import 'package:study_buddy/screens/ .dart';
+=======
+import 'package:study_buddy/screens/authentication.dart';
+import 'package:study_buddy/screens/loading.dart';
+import 'package:study_buddy/screens/store_inventory.dart';
+>>>>>>> store
 
 void main() {
   runApp(MyApp());
@@ -15,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primaryColor: Colors.white),
       home: HomePage(),
       initialRoute: "/",
+
       // routes: {
       //   "/": (context) => HomePage(),
       //   "/user": (context) => UserPage(),
