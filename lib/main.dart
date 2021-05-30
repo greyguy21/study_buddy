@@ -26,28 +26,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
-        initialRoute: "/authenticate",
-
-      routes: {
-        "/": (context) => HomePage(),
-        "/authenticate": (context) => Authentication(),
-        "/setup": (context) => SetUp(),
-      }
-      );
-=======
-      title: 'study buddy',
-      theme: ThemeData(primaryColor: Colors.white),
-      initialRoute: "/authenticate",
-
-      routes: {
-        "/": (context) => HomePage(),
-        "/authenticate": (context) => Authentication(),
-        "/setup": (context) => SetUp(),
-      }
-    );
->>>>>>> c4d63e3b8e5786779f4f2be6041d126c7807254e
+        // initialRoute: "/authenticate",
+        home: HomePage(),
+        routes: {
+          // "/": (context) => HomePage(),
+          "/authenticate": (context) => Authentication(),
+          "/setup": (context) => SetUp(),
+          "/menu": (context) => Menu(),
+          "/settings": (context) => SettingsPage(),
+        });
   }
 }
