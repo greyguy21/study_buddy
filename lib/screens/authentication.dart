@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:study_buddy/screens/login.dart';
 import 'package:study_buddy/screens/register.dart';
 
 
@@ -28,7 +29,14 @@ class _AuthenticationState extends State<Authentication> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               FloatingActionButton.extended(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => Login(),
+                    );
+                  });
+                },
                 backgroundColor: Colors.lightBlue,
                 // pop up?
                 label: Text("LOGIN"),
@@ -70,7 +78,7 @@ class _AuthenticationState extends State<Authentication> {
                 backgroundColor: Colors.lightBlue,
                 // sign in anonymously
                 label: Text("CONTINUE AS GUEST"),
-              )
+              ),
             ],
           ),
         )
