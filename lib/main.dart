@@ -28,10 +28,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
-        // initialRoute: "/authenticate",
-        home: HomePage(),
+        initialRoute: "/authenticate",
+        // home: Authentication(),
+
         routes: {
-          // "/": (context) => HomePage(),
+          "/": (context) => HomePage(),
           "/authenticate": (context) => Authentication(),
           "/setup": (context) => SetUp(),
           "/menu": (context) => Menu(),

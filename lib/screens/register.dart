@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
- @override
+  @override
   _RegisterState createState() => _RegisterState();
 }
 
@@ -13,7 +13,7 @@ class _RegisterState extends State<Register> {
   String password = '';
   String error = '';
 
- @override
+  @override
   Widget build(BuildContext context) {
     return new AlertDialog(
       title: const Text('REGISTER'),
@@ -22,7 +22,7 @@ class _RegisterState extends State<Register> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Form(
-            key: _formKey,
+              key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -45,8 +45,7 @@ class _RegisterState extends State<Register> {
                     decoration: InputDecoration(hintText: "Password"),
                   ),
                 ],
-              )
-          ),
+              )),
           SizedBox(
             height: 15.0,
           ),
@@ -59,10 +58,9 @@ class _RegisterState extends State<Register> {
               try {
                 if (_formKey.currentState!.validate()) {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-                  await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-                  _firebaseAuth
-                      .authStateChanges()
-                      .listen((User? user)       {
+                  await _firebaseAuth.createUserWithEmailAndPassword(
+                      email: email, password: password);
+                  _firebaseAuth.authStateChanges().listen((User? user) {
                     if (user == null) {
                       print("nothing");
                     } else {
@@ -77,17 +75,15 @@ class _RegisterState extends State<Register> {
                 } else if (e.code == "email-already-in-use") {
                   error = "The account already exists for that email.";
                 }
-              } catch(e) {
+              } catch (e) {
                 print(e);
                 error = "Error occurred when registering";
               }
             },
-            label: Text(
-                "CONTINUE",
+            label: Text("CONTINUE",
                 style: TextStyle(
                   color: Colors.white,
-                )
-            ),
+                )),
             backgroundColor: Colors.lightBlue,
           ),
         ),
@@ -95,12 +91,10 @@ class _RegisterState extends State<Register> {
           height: 10.0,
         ),
         Center(
-          child: Text(
-            error,
-            style: TextStyle(
-              color: Colors.red,
-            )
-          ),
+          child: Text(error,
+              style: TextStyle(
+                color: Colors.red,
+              )),
         )
       ],
       // backgroundColor: Colors., (of start popup)

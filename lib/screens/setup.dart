@@ -11,16 +11,11 @@ class _SetUpState extends State<SetUp> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Container(
-          padding: EdgeInsets.all(50.0),
-          color: Colors.lightBlue,
-          child: Text(
-            "Let's Set up!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 21.0,
-            )
-          )
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/");
+          },
+          child: Text("Let's Set Up!"),
         ),
       ),
     );
