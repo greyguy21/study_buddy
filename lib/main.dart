@@ -23,12 +23,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'study buddy',
       theme: ThemeData(primaryColor: Colors.white),
-      home: Authentication(),
-      // initialRoute: "/",
+      initialRoute: "/authenticate",
 
       routes: {
-        // "/": (context) => HomePage(),
-        // "/authenticate": (context) => Authentication(),
+        "/": (context) => HomePage(),
+        "/authenticate": (context) => Authentication(),
         "/setup": (context) => SetUp(),
       }
     );
