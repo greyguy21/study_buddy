@@ -12,11 +12,12 @@ import 'package:study_buddy/screens/store_inventory.dart';
 //   runApp(MyApp());
 // }
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
