@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
+import 'package:study_buddy/screens/menu.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
                   // menu button
                   IconButton(
                     onPressed: () {
-                      // go to menu page
+                      Navigator.pushNamed(context, '/menu');
                     },
                     icon: Icon(
                       Icons.menu,
