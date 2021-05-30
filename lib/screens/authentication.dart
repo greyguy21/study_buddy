@@ -15,6 +15,7 @@ class _AuthenticationState extends State<Authentication> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.lightBlue,
+          automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(
               "Study Buddy",

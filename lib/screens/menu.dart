@@ -29,6 +29,7 @@ class _MenuState extends State<Menu> {
               // ...
               // Then close the drawer
               Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, "/store");
             },
           ),
           ListTile(

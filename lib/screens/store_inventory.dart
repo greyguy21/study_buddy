@@ -38,7 +38,9 @@ class _StoreInventoryState extends State<StoreInventory>
             Icons.home,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "/");
+          },
         ),
         title: Text(
           "Store/Inventory",

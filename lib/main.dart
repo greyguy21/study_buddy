@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         title: 'study buddy',
         theme: ThemeData(primaryColor: Colors.white),
         initialRoute: "/authenticate",
-        // home: Authentication(),
 
         routes: {
           "/": (context) => HomePage(),
@@ -37,6 +36,8 @@ class MyApp extends StatelessWidget {
           "/setup": (context) => SetUp(),
           "/menu": (context) => Menu(),
           "/settings": (context) => SettingsPage(),
-        });
+          "/store": (context) => StoreInventory(),
+        }
+    );
   }
 }

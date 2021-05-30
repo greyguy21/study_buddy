@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // how to make this generic ?? or just make individual classes 
@@ -82,7 +83,46 @@ Widget _buildItem(String name, String price, String imgPath, bool bought, contex
                 )
               )
             )
-          )
+          ),
+          SizedBox(
+            height: 7.0,
+          ),
+          Center(
+            child: Text(
+              price,
+              style: TextStyle(
+                color: Colors.lightBlue,
+              )
+            ),
+          ),
+          Text(
+            name,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(
+            height: 7.0,
+          ),
+          Container(
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 50.0,
+                ),
+                Icon(
+                  Icons.shopping_cart,
+                  color: Colors.lightBlue,
+                ),
+                Text(
+                    "Buy",
+                    style: TextStyle(
+                      color: Colors.lightBlue,
+                    )
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     )
