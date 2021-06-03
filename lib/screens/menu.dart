@@ -18,30 +18,34 @@ class _MenuState extends State<Menu> {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blue.shade200,
             ),
             child: Text('Menu'),
           ),
           ListTile(
+            leading: Icon(Icons.shopping_cart_outlined),
             title: Text('Store/Inventory'),
             onTap: () {
               // Update the state of the app
               // ...
               // Then close the drawer
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, "/store");
+              Navigator.pushNamed(context, "/store");
             },
           ),
           ListTile(
+            leading: Icon(Icons.timeline),
             title: Text('Timeline'),
             onTap: () {
               // Update the state of the app
               // ...
               // Then close the drawer
               Navigator.pop(context);
+              // Navigator.pushNamed(context, '/ ');
             },
           ),
           ListTile(
+            leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () {
               // Update the state of the app

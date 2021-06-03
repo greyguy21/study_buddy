@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
 
@@ -11,13 +12,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Image(
             image: AssetImage('assets/defaultBg.jpeg'),
             height: double.infinity,
             width: double.infinity,
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
           ),
           Container(
             margin: EdgeInsets.fromLTRB(20, 60, 50, 30),
@@ -91,8 +93,21 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Task: '),
-          Text('Time: '),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Task:',
+            ),
+            // onSubmitted: (value) => ,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Column(
+              children: [
+                Text('Time (in minutes):'),
+                TimerSlider(),
+              ],
+            ),
+          )
         ],
       ),
       actions: <Widget>[
@@ -100,6 +115,20 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             // go to main focus page
             // start focus session
+            // a
+            // d
+            // d
+            //
+            // t
+            // i
+            // m
+            // e
+            // r
+            //
+            // h
+            // e
+            // r
+            // e
           },
           label: Text(
             'start',
@@ -120,14 +149,28 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class FocusPage extends StatefulWidget {
+double _timeSliderValue = 10;
+
+// timer slider
+class TimerSlider extends StatefulWidget {
+  const TimerSlider({Key? key}) : super(key: key);
+
   @override
-  _FocusPageState createState() => _FocusPageState();
+  _TimerSliderState createState() => _TimerSliderState();
 }
 
-class _FocusPageState extends State<FocusPage> {
+class _TimerSliderState extends State<TimerSlider> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Slider(
+      value: _timeSliderValue,
+      onChanged: (newTiming) {
+        setState(() => _timeSliderValue = newTiming);
+      },
+      min: 10,
+      max: 120,
+      label: _timeSliderValue.round().toString(),
+      divisions: 22,
+    );
   }
 }
