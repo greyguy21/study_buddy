@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:study_buddy/services/database.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -60,11 +61,12 @@ class _RegisterState extends State<Register> {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
                   await _firebaseAuth.createUserWithEmailAndPassword(
                       email: email, password: password);
-                  _firebaseAuth.authStateChanges().listen((User? user) {
+                  _firebaseAuth.authStateChanges().listen((User? user) async{
                     if (user == null) {
                       print("nothing");
                     } else {
                       print("registration successful!");
+                      await DatabaseService(uid: user.uid).updateUserData("new user"); 
                       Navigator.pushReplacementNamed(context, "/setup");
                     }
                   });
