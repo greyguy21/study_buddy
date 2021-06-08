@@ -10,6 +10,7 @@ import 'package:study_buddy/screens/menu.dart';
 import 'package:study_buddy/screens/settings.dart';
 import 'package:study_buddy/screens/setup.dart';
 import 'package:study_buddy/screens/store_inventory.dart';
+import 'package:study_buddy/screens/verify.dart';
 // import 'package:study_buddy/screens/menu.dart';
 
 // void main() {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           "/menu": (context) => Menu(),
           "/settings": (context) => SettingsPage(),
           "/store": (context) => StoreInventory(),
+          "/verify": (context) => Verify(),
         });
   }
 }

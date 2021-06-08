@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
                     } else {
                       print("registration successful!");
                       await DatabaseService(uid: user.uid).updateUserData("new user"); 
-                      Navigator.pushReplacementNamed(context, "/setup");
+                      Navigator.pushReplacementNamed(context, "/verify");
                     }
                   });
                 }
