@@ -113,22 +113,7 @@ class _HomePageState extends State<HomePage> {
       actions: <Widget>[
         FloatingActionButton.extended(
           onPressed: () {
-            // go to main focus page
-            // start focus session
-            // a
-            // d
-            // d
-            //
-            // t
-            // i
-            // m
-            // e
-            // r
-            //
-            // h
-            // e
-            // r
-            // e
+            Navigator.pushNamed(context, '/mainfocus');
           },
           label: Text(
             'start',
@@ -149,7 +134,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-double _timeSliderValue = 10;
+// double _timeSliderValue = 10;
 
 // timer slider
 class TimerSlider extends StatefulWidget {
@@ -163,13 +148,13 @@ class _TimerSliderState extends State<TimerSlider> {
   @override
   Widget build(BuildContext context) {
     return Slider(
-      value: _timeSliderValue,
+      value: globals.timeSliderValue,
       onChanged: (newTiming) {
-        setState(() => _timeSliderValue = newTiming);
+        setState(() => globals.timeSliderValue = newTiming);
       },
       min: 10,
       max: 120,
-      label: _timeSliderValue.round().toString(),
+      label: globals.timeSliderValue.round().toString(),
       divisions: 22,
     );
   }
