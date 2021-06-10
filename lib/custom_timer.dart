@@ -30,7 +30,6 @@ class _CustomTimerState extends State<CustomTimer> {
             globals.coins = globals.coins + globals.timeSliderValue.round();
           });
           Navigator.pushNamed(context, "/endSession");
-          Navigator.pop(context); // check if this correct idk what it does
         }
       });
     });
