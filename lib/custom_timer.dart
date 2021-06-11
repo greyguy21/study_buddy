@@ -43,15 +43,6 @@ class _CustomTimerState extends State<CustomTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(Icons.timer),
-        SizedBox(
-          width: 5,
-        ),
-        Text(timerText)
-      ],
-    );
+    return Text(timerText, style: TextStyle(fontSize: 50));
   }
 }

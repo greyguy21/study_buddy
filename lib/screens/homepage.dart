@@ -22,30 +22,32 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(20, 60, 50, 30),
             child: Column(children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // menu button
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/menu');
-                    },
-                    icon: Icon(
-                      Icons.menu,
-                      size: 30.0,
+              Padding(
+                padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // menu button
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/menu');
+                      },
+                      icon: Icon(
+                        Icons.menu,
+                        size: 30.0,
+                      ),
                     ),
-                  ),
-                  // showing amount of money
-                  Row(
-                    children: [
-                      Icon(Icons.attach_money),
-                      Text(globals.coins.toString(),
-                          style: TextStyle(fontSize: 20)),
-                    ],
-                  ),
-                ],
+                    // showing amount of money
+                    Row(
+                      children: [
+                        Icon(Icons.attach_money),
+                        Text(globals.coins.toString(),
+                            style: TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               // add animal and items here
               Container(
@@ -96,6 +98,7 @@ class _HomePageState extends State<HomePage> {
           TextField(
             decoration: InputDecoration(
               labelText: 'Task:',
+              filled: true,
             ),
             // onSubmitted: (value) => ,
           ),
@@ -152,7 +155,7 @@ class _TimerSliderState extends State<TimerSlider> {
       onChanged: (newTiming) {
         setState(() => globals.timeSliderValue = newTiming);
       },
-      min: 10,
+      min: 1,
       max: 120,
       label: globals.timeSliderValue.round().toString(),
       divisions: 22,

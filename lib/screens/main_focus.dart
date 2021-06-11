@@ -24,20 +24,25 @@ class _MainFocusPageState extends State<MainFocusPage> {
             width: double.infinity,
             fit: BoxFit.cover,
           ),
-          Column(children: <Widget>[
-            // add animal and items here
-            Container(
-              margin: EdgeInsets.only(
-                top: 350,
+          Container(
+            margin: EdgeInsets.only(top: 108),
+            child: Column(children: <Widget>[
+              // add animal and items here
+              Container(
+                margin: EdgeInsets.only(
+                  top: 350,
+                ),
+                child: Image(
+                  image: AssetImage('assets/dog.jpg'),
+                ),
               ),
-              child: Image(
-                image: AssetImage('assets/dog.jpg'),
+              // timer widget
+              Container(
+                margin: EdgeInsets.only(top: 50),
+                child: CustomTimer(),
               ),
-            ),
-            // timer widget here
-            // Text('$_minutes:$_seconds')
-            CustomTimer(),
-          ]),
+            ]),
+          ),
         ],
       ),
     );
