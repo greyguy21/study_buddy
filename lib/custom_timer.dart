@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
-import 'screens/main_focus.dart';
+import 'screens/end_session.dart';
 
 class CustomTimer extends StatefulWidget {
   @override
@@ -29,7 +29,12 @@ class _CustomTimerState extends State<CustomTimer> {
           setState(() {
             globals.coins = globals.coins + globals.timeSliderValue.round();
           });
-          Navigator.pushNamed(context, "/endSession");
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => endSession(context),
+            );
+          });
         }
       });
     });
@@ -44,5 +49,9 @@ class _CustomTimerState extends State<CustomTimer> {
   @override
   Widget build(BuildContext context) {
     return Text(timerText, style: TextStyle(fontSize: 50));
+  }
+
+  Widget endSession(BuildContext context) {
+    return EndSession();
   }
 }

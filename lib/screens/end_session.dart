@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../globals.dart' as globals;
+import 'package:page_transition/page_transition.dart';
+import 'package:study_buddy/screens/homepage.dart';
 
 class EndSession extends StatefulWidget {
   const EndSession({Key? key}) : super(key: key);
@@ -23,7 +25,10 @@ class _EndSessionState extends State<EndSession> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, "/");
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: HomePage(), type: PageTransitionType.fade));
             },
             child: Text('ok'),
           ),

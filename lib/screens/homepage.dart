@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
+import 'package:study_buddy/screens/main_focus.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,7 +33,11 @@ class _HomePageState extends State<HomePage> {
                     // menu button
                     IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/menu');
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: Menu(),
+                                type: PageTransitionType.leftToRight));
                       },
                       icon: Icon(
                         Icons.menu,
@@ -95,12 +101,15 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          TextField(
+          TextFormField(
+            validator: (val) => val!.isEmpty ? "please enter task name" : null,
             decoration: InputDecoration(
               labelText: 'Task:',
               filled: true,
             ),
-            // onSubmitted: (value) => ,
+            onChanged: (val) {
+              setState(() => globals.taskName = val);
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -116,7 +125,10 @@ class _HomePageState extends State<HomePage> {
       actions: <Widget>[
         FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pushNamed(context, '/mainfocus');
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: MainFocusPage(), type: PageTransitionType.fade));
           },
           label: Text(
             'start',
@@ -136,8 +148,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// double _timeSliderValue = 10;
 
 // timer slider
 class TimerSlider extends StatefulWidget {

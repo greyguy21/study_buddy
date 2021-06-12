@@ -12,10 +12,10 @@ class MainFocusPage extends StatefulWidget {
 }
 
 class _MainFocusPageState extends State<MainFocusPage> {
+  String taskName = globals.taskName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Image(
@@ -25,12 +25,15 @@ class _MainFocusPageState extends State<MainFocusPage> {
             fit: BoxFit.cover,
           ),
           Container(
-            margin: EdgeInsets.only(top: 108),
             child: Column(children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(top: 80),
+                  child:
+                      Text('Task: $taskName', style: TextStyle(fontSize: 20))),
               // add animal and items here
               Container(
                 margin: EdgeInsets.only(
-                  top: 350,
+                  top: 354,
                 ),
                 child: Image(
                   image: AssetImage('assets/dog.jpg'),
