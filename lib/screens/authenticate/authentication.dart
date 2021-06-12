@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:study_buddy/screens/login.dart';
-import 'package:study_buddy/screens/register.dart';
+import 'package:study_buddy/screens/authenticate/login.dart';
+import 'package:study_buddy/screens/authenticate/register.dart';
+import 'package:study_buddy/services/database.dart';
 
 
 class Authentication extends StatefulWidget {
@@ -67,7 +68,7 @@ class _AuthenticationState extends State<Authentication> {
                   await _firebaseAuth.signInAnonymously();
                   _firebaseAuth
                       .authStateChanges()
-                      .listen((User? user) {
+                      .listen((User? user) async {
                     if (user == null) {
                       print(" user is signed out");
                     } else {

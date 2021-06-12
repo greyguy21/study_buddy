@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,7 +67,39 @@ class _RegisterState extends State<Register> {
                       print("nothing");
                     } else {
                       print("registration successful!");
-                      await DatabaseService(uid: user.uid).updateUserData("new user"); 
+                      // await DatabaseService(uid: user.uid).createNewUserData("new user");
+                      // print(user.uid);
+                      FirebaseFirestore.instance.collection("user").doc(user.uid).set(
+                        {
+                          "coins": 0,
+                          "pet": ""
+                        }
+                      ).then((value) {
+                        FirebaseFirestore.instance.collection("user")
+                            .doc(user.uid)
+                            .collection("clothes")
+                            .add({
+                              "name": "nothing",
+                            });
+                        FirebaseFirestore.instance.collection("user")
+                            .doc(user.uid)
+                            .collection("furniture")
+                            .add({
+                              "name": "nothing",
+                            });
+                        FirebaseFirestore.instance.collection("user")
+                            .doc(user.uid)
+                            .collection("wallpapers")
+                            .add({
+                              "name": "nothing",
+                            });
+                        FirebaseFirestore.instance.collection("user")
+                            .doc(user.uid)
+                            .collection("accessories")
+                            .add({
+                              "name": "nothing",
+                            });
+                      });
                       Navigator.pushReplacementNamed(context, "/verify");
                     }
                   });
