@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
+import 'package:study_buddy/screens/main_focus.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,30 +24,36 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(20, 60, 50, 30),
             child: Column(children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // menu button
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/menu');
-                    },
-                    icon: Icon(
-                      Icons.menu,
-                      size: 30.0,
+              Padding(
+                padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // menu button
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: Menu(),
+                                type: PageTransitionType.leftToRight));
+                      },
+                      icon: Icon(
+                        Icons.menu,
+                        size: 30.0,
+                      ),
                     ),
-                  ),
-                  // showing amount of money
-                  Row(
-                    children: [
-                      Icon(Icons.attach_money),
-                      Text(globals.coins.toString(),
-                          style: TextStyle(fontSize: 20)),
-                    ],
-                  ),
-                ],
+                    // showing amount of money
+                    Row(
+                      children: [
+                        Icon(Icons.attach_money),
+                        Text(globals.coins.toString(),
+                            style: TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               // add animal and items here
               Container(
@@ -93,11 +101,15 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          TextField(
+          TextFormField(
+            validator: (val) => val!.isEmpty ? "please enter task name" : null,
             decoration: InputDecoration(
               labelText: 'Task:',
+              filled: true,
             ),
-            // onSubmitted: (value) => ,
+            onChanged: (val) {
+              setState(() => globals.taskName = val);
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -113,7 +125,10 @@ class _HomePageState extends State<HomePage> {
       actions: <Widget>[
         FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pushNamed(context, '/mainfocus');
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: MainFocusPage(), type: PageTransitionType.fade));
           },
           label: Text(
             'start',
@@ -134,8 +149,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// double _timeSliderValue = 10;
-
 // timer slider
 class TimerSlider extends StatefulWidget {
   const TimerSlider({Key? key}) : super(key: key);
@@ -152,7 +165,7 @@ class _TimerSliderState extends State<TimerSlider> {
       onChanged: (newTiming) {
         setState(() => globals.timeSliderValue = newTiming);
       },
-      min: 10,
+      min: 1,
       max: 120,
       label: globals.timeSliderValue.round().toString(),
       divisions: 22,

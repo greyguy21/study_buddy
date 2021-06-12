@@ -3,7 +3,6 @@ library study_buddy.globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-var coins = 888;
 // var coins = FirebaseFirestore.instance.collection("user")
 //     .doc(FirebaseAuth.instance.currentUser!.uid)
 //     .get()
@@ -15,4 +14,7 @@ var coins = 888;
 //         return 888;
 //       }
 //     });
+
+var coins = 0;
 double timeSliderValue = 10;
+var taskName = '';

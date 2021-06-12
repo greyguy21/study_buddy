@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
-import 'screens/main_focus.dart';
+import 'screens/end_session.dart';
 
 class CustomTimer extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _CustomTimerState extends State<CustomTimer> {
   int currentSeconds = 0;
 
   String get timerText =>
-      '${((timerMaxSeconds - currentSeconds) ~/ 60).toString()}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
+      '${((timerMaxSeconds - currentSeconds) ~/ 60).toString()}:${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
   startTimeout([int? milliseconds]) {
     var duration = interval;
@@ -29,8 +29,12 @@ class _CustomTimerState extends State<CustomTimer> {
           setState(() {
             globals.coins = globals.coins + globals.timeSliderValue.round();
           });
-          Navigator.pushNamed(context, "/endSession");
-          Navigator.pop(context); // check if this correct idk what it does
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => endSession(context),
+            );
+          });
         }
       });
     });
@@ -44,15 +48,10 @@ class _CustomTimerState extends State<CustomTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(Icons.timer),
-        SizedBox(
-          width: 5,
-        ),
-        Text(timerText)
-      ],
-    );
+    return Text(timerText, style: TextStyle(fontSize: 50));
+  }
+
+  Widget endSession(BuildContext context) {
+    return EndSession();
   }
 }
