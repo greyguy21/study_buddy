@@ -67,39 +67,7 @@ class _RegisterState extends State<Register> {
                       print("nothing");
                     } else {
                       print("registration successful!");
-                      // await DatabaseService(uid: user.uid).createNewUserData("new user");
-                      // print(user.uid);
-                      FirebaseFirestore.instance.collection("user").doc(user.uid).set(
-                        {
-                          "coins": 0,
-                          "pet": ""
-                        }
-                      ).then((value) {
-                        FirebaseFirestore.instance.collection("user")
-                            .doc(user.uid)
-                            .collection("clothes")
-                            .add({
-                              "name": "nothing",
-                            });
-                        FirebaseFirestore.instance.collection("user")
-                            .doc(user.uid)
-                            .collection("furniture")
-                            .add({
-                              "name": "nothing",
-                            });
-                        FirebaseFirestore.instance.collection("user")
-                            .doc(user.uid)
-                            .collection("wallpapers")
-                            .add({
-                              "name": "nothing",
-                            });
-                        FirebaseFirestore.instance.collection("user")
-                            .doc(user.uid)
-                            .collection("accessories")
-                            .add({
-                              "name": "nothing",
-                            });
-                      });
+                      await DatabaseService().newUser();
                       Navigator.pushReplacementNamed(context, "/verify");
                     }
                   });
