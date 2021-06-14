@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:study_buddy/models/accessory.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
+import 'package:study_buddy/models/furniture.dart';
+import 'package:study_buddy/models/wallpaper.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -84,5 +87,74 @@ class DatabaseService {
               .doc(clothing.name)
               .update({"inUse" : true});
         });
+  }
+
+  Future buyFurniture(Furniture furniture) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async{
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") - furniture.price;
+      transaction.update(docRef, {"coins" : newCoinValue});
+    }).then((value) {
+      docRef
+          .collection("furniture")
+          .doc(furniture.name)
+          .set({
+        "name": furniture.name,
+        "price": furniture.price,
+        "imgPath": furniture.imgPath,
+      });
+    });
+  }
+
+  Future buyWallpaper(Wallpaper wallpaper) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async{
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") - wallpaper.price;
+      transaction.update(docRef, {"coins" : newCoinValue});
+    }).then((value) {
+      docRef
+          .collection("wallpapers")
+          .doc(wallpaper.name)
+          .set({
+        "name": wallpaper.name,
+        "price": wallpaper.price,
+        "imgPath": wallpaper.imgPath,
+      });
+    });
+  }
+
+  Future buyAccessory(Accessory accessory) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async{
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") - accessory.price;
+      transaction.update(docRef, {"coins" : newCoinValue});
+    }).then((value) {
+      docRef
+          .collection("accessories")
+          .doc(accessory.name)
+          .set({
+        "name": accessory.name,
+        "price": accessory.price,
+        "imgPath": accessory.imgPath,
+      });
+    });
   }
 }

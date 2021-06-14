@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:study_buddy/screens/store/accessories_page.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
+import 'package:study_buddy/screens/store/furniture_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
+import 'package:study_buddy/screens/store/wallpapers_page.dart';
 
 // buttons: on press : only display bought / not bought
 // how to update bought or not bought ** need backend?
@@ -96,9 +99,9 @@ class _StoreInventoryState extends State<StoreInventory>
                       controller: _tabController,
                       children:[
                         ClothesPage(),
-                        ItemsPage(),
-                        ItemsPage(),
-                        ItemsPage(),
+                        FurniturePage(),
+                        WallpaperPage(),
+                        AccessoriesPage(),
                       ]
                     )
                   ), 

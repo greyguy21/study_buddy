@@ -14,6 +14,7 @@ class ClothesPage extends StatefulWidget {
 }
 
 class _ClothesPageState extends State<ClothesPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,14 +35,14 @@ class _ClothesPageState extends State<ClothesPage> {
                     mainAxisSpacing: 15.0,
                     childAspectRatio: 0.8,
                     children: [
-                      _buildClothes("Kotaro1", 10, "assets/kotaro1.jpg", context),
-                      _buildClothes("Kotaro2", 10, "assets/kotaro2.jpg", context),
-                      _buildClothes("Kotaro3", 10, "assets/kotaro3.jpg", context),
-                      _buildClothes("Kotaro4", 10, "assets/kotaro4.jpg", context),
-                      _buildClothes("Kotaro5", 10, "assets/kotaro5.jpg", context),
-                      _buildClothes("Kotaro6", 10, "assets/kotaro6.jpg", context),
-                      _buildClothes("Kotaro7", 10, "assets/kotaro7.jpg", context),
-                      _buildClothes("Kotaro8", 10, "assets/kotaro8.jpg", context),
+                      _buildClothes("clothes1", 10, "assets/kotaro1.jpg", context),
+                      _buildClothes("clothes2", 10, "assets/kotaro2.jpg", context),
+                      _buildClothes("clothes3", 10, "assets/kotaro3.jpg", context),
+                      _buildClothes("clothes4", 10, "assets/kotaro4.jpg", context),
+                      _buildClothes("clothes5", 10, "assets/kotaro5.jpg", context),
+                      _buildClothes("clothes6", 10, "assets/kotaro6.jpg", context),
+                      _buildClothes("clothes7", 10, "assets/kotaro7.jpg", context),
+                      _buildClothes("clothes8", 10, "assets/kotaro8.jpg", context),
                     ],
                   ),
                 )
@@ -110,7 +111,7 @@ class _ClothesPageState extends State<ClothesPage> {
                   height: 7.0,
                 ),
                 Expanded(
-                  child: buyButton(context, clothing);
+                  child: buyButton(context, clothing),
                 )
               ],
             )
@@ -131,6 +132,8 @@ class _ClothesPageState extends State<ClothesPage> {
           clothing.bought = true;
         });
         await DatabaseService().buyClothes(clothing);
+
+        // how to disable button!
       },
       icon: Icon(
         Icons.shopping_cart,
