@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/authenticate/login.dart';
 import 'package:study_buddy/screens/authenticate/register.dart';
+import 'package:study_buddy/services/database.dart';
 
 class Authentication extends StatefulWidget {
   @override
@@ -71,6 +72,7 @@ class _AuthenticationState extends State<Authentication> {
                       print(" user is signed out");
                     } else {
                       print("user is signed in");
+                      await DatabaseService().newUser();
                       Navigator.pushReplacementNamed(context, "/setup");
                     }
                   });

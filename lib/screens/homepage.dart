@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:study_buddy/models/app_user.dart';
+import 'package:study_buddy/screens/loading.dart';
+import 'package:study_buddy/services/database.dart';
 import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
 import 'package:study_buddy/screens/main_focus.dart';
@@ -13,84 +16,101 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: <Widget>[
-          Image(
-            image: AssetImage('assets/defaultBg.jpeg'),
-            height: double.infinity,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          Container(
-            child: Column(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // menu button
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: Menu(),
-                                type: PageTransitionType.leftToRight));
-                      },
-                      icon: Icon(
-                        Icons.menu,
-                        size: 30.0,
-                      ),
-                    ),
-                    // showing amount of money
-                    Row(
+    return StreamBuilder<AppUser>(
+      stream: DatabaseService().users,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
+        }
+
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: <Widget>[
+              Image(
+                image: AssetImage('assets/defaultBg.jpeg'),
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                child: Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.attach_money),
-                        Text(globals.coins.toString(),
-                            style: TextStyle(fontSize: 20)),
+                        // menu button
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Menu(),
+                                    type: PageTransitionType.leftToRight));
+                          },
+                          icon: Icon(
+                            Icons.menu,
+                            size: 30.0,
+                          ),
+                        ),
+                        // showing amount of money
+                        Row(
+                          children: [
+                            Icon(Icons.attach_money),
+                            // Text(globals.coins.toString(),
+                            //     style: TextStyle(fontSize: 20)),
+                            Text(
+                              "${snapshot.data!.coins}",
+                              style: TextStyle(fontSize: 20),
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  // add animal and items here
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 350,
+                    ),
+                    child: Image(
+                      image: AssetImage('assets/dog.jpg'),
+                    ),
+                  ),
+                ]),
               ),
-              // add animal and items here
-              Container(
-                margin: EdgeInsets.only(
-                  top: 350,
-                ),
-                child: Image(
-                  image: AssetImage('assets/dog.jpg'),
-                ),
-              ),
-            ]),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            setState(() {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => _startPopup(context),
-              );
-            });
-          },
-          label: Text(
-            'start',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 100),
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                setState(() {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => _startPopup(context),
+                  );
+                });
+              },
+              label: Text(
+                'start',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              icon: const Icon(Icons.alarm_on),
+              backgroundColor: Colors.green.shade300,
             ),
           ),
-          icon: const Icon(Icons.alarm_on),
-          backgroundColor: Colors.green.shade300,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        );
+      }
     );
   }
 
