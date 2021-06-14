@@ -124,9 +124,11 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Form(
+            key: _formKey,
             child: TextFormField(
-              validator: (val) =>
-                  val!.isEmpty ? "please enter task name" : null,
+              validator: (val) => val!.isEmpty || val.length < 1
+                  ? "please enter task name"
+                  : null,
               decoration: InputDecoration(
                 labelText: 'Task:',
                 filled: true,
@@ -150,10 +152,12 @@ class _HomePageState extends State<HomePage> {
       actions: <Widget>[
         FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    child: MainFocusPage(), type: PageTransitionType.fade));
+            if (_formKey.currentState!.validate()) {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: MainFocusPage(), type: PageTransitionType.fade));
+            }
           },
           label: Text(
             'start',
