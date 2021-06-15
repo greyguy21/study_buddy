@@ -43,12 +43,6 @@ class DatabaseService {
           .add({
         "name": "nothing",
       });
-      FirebaseFirestore.instance.collection("user")
-          .doc(uid)
-          .collection("tasks")
-          .add({
-        "name": "nothing",
-      });
     });
   }
 
@@ -184,5 +178,9 @@ class DatabaseService {
         "time": time,
       });
     });
+  }
+
+  Stream<QuerySnapshot> get timeline {
+    return _db.collection("user").doc(this.uid).collection("tasks").snapshots();
   }
 }

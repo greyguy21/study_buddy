@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/homepage.dart';
@@ -14,6 +12,7 @@ import 'package:study_buddy/screens/setup.dart';
 import 'package:study_buddy/screens/store/store_inventory.dart';
 import 'package:study_buddy/screens/authenticate/verify.dart';
 import 'package:study_buddy/screens/end_session.dart';
+import 'package:study_buddy/screens/timeline.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -42,6 +41,7 @@ class MyApp extends StatelessWidget {
           "/verify": (context) => Verify(),
           "/mainfocus": (context) => MainFocusPage(),
           "/endSession": (context) => EndSession(),
+          "/timeline" : (context) => Timeline(),
         });
   }
 }

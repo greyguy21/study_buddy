@@ -47,7 +47,7 @@ class _MenuState extends State<Menu> {
                 // ...
                 // Then close the drawer
                 Navigator.pop(context);
-                // Navigator.pushNamed(context, '/ ');
+                Navigator.pushNamed(context, '/timeline');
               },
             ),
             ListTile(
