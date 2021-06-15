@@ -40,9 +40,11 @@ class _MainFocusPageState extends State<MainFocusPage> {
                 ),
               ),
               // timer widget
-              Container(
-                margin: EdgeInsets.only(top: 50),
-                child: CustomTimer(),
+              Expanded(
+                child: Container(
+                  // margin: EdgeInsets.only(top: 50),
+                  child: CustomTimer(),
+                ),
               ),
             ]),
           ),

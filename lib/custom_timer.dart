@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:study_buddy/services/database.dart';
 import 'globals.dart' as globals;
 import 'screens/end_session.dart';
 
@@ -12,6 +13,7 @@ class _CustomTimerState extends State<CustomTimer> {
   final interval = const Duration(seconds: 1);
 
   final int timerMaxSeconds = globals.timeSliderValue.round() * 60;
+  final String taskName = globals.taskName;
 
   int currentSeconds = 0;
 
@@ -26,14 +28,12 @@ class _CustomTimerState extends State<CustomTimer> {
         currentSeconds = timer.tick;
         if (timer.tick >= timerMaxSeconds) {
           timer.cancel();
-          setState(() {
-            globals.coins = globals.coins + globals.timeSliderValue.round();
-          });
-          setState(() {
+          setState(() async {
             showDialog(
               context: context,
               builder: (BuildContext context) => endSession(context),
             );
+            await DatabaseService().updateTimeline(taskName, globals.timeSliderValue.round());
           });
         }
       });

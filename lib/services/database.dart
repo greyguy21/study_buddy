@@ -43,6 +43,12 @@ class DatabaseService {
           .add({
         "name": "nothing",
       });
+      FirebaseFirestore.instance.collection("user")
+          .doc(uid)
+          .collection("tasks")
+          .add({
+        "name": "nothing",
+      });
     });
   }
 
@@ -154,6 +160,28 @@ class DatabaseService {
         "name": accessory.name,
         "price": accessory.price,
         "imgPath": accessory.imgPath,
+      });
+    });
+  }
+
+  Future updateTimeline(String name, int time) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async{
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") + time;
+      transaction.update(docRef, {"coins" : newCoinValue});
+    }).then((value) {
+      docRef
+          .collection("tasks")
+          .doc(name)
+          .set({
+        "name": name,
+        "time": time,
       });
     });
   }
