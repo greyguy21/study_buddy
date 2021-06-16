@@ -17,103 +17,117 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<AppUser>(
-        stream: DatabaseService().users,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("something went wrong, please wait a moment...");
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          }
-
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: Stack(
-              children: <Widget>[
-                Image(
-                  image: AssetImage('assets/defaultBg.jpeg'),
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  child: Column(children: <Widget>[
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 60, left: 20, right: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // menu button
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: Menu(),
-                                      type: PageTransitionType.leftToRight));
-                            },
-                            icon: Icon(
-                              Icons.menu,
-                              size: 30.0,
-                            ),
-                          ),
-                          // showing amount of money
-                          Row(
-                            children: [
-                              Icon(Icons.attach_money),
-                              // Text(globals.coins.toString(),
-                              //     style: TextStyle(fontSize: 20)),
-                              Text(
-                                "${snapshot.data!.coins}",
-                                style: TextStyle(fontSize: 20),
-                              )
-                            ],
-                          ),
-                        ],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: <Widget>[
+          Image(
+            image: AssetImage('assets/defaultBg.jpeg'),
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            child: Column(children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // menu button
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: Menu(),
+                                type: PageTransitionType.leftToRight));
+                      },
+                      icon: Icon(
+                        Icons.menu,
+                        size: 30.0,
                       ),
                     ),
-                    // add animal and items here
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: 350,
-                      ),
-                      child: Image(
-                        image: AssetImage('assets/dog.jpg'),
-                      ),
+                    // showing amount of money
+                    Row(
+                      children: [
+                        Icon(Icons.attach_money),
+                        // Text(globals.coins.toString(),
+                        //     style: TextStyle(fontSize: 20)),
+                        StreamBuilder<AppUser>(
+                            stream: DatabaseService().users,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return _errorPopup(context);
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text(
+                                  'loading...',
+                                  style: TextStyle(fontSize: 8),
+                                );
+                              } else {
+                                return Text(
+                                  "${snapshot.data!.coins}",
+                                  style: TextStyle(fontSize: 20),
+                                );
+                              }
+                            }),
+                      ],
                     ),
-                  ]),
+                  ],
                 ),
-              ],
-            ),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  setState(() {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => _startPopup(context),
-                    );
-                  });
-                },
-                label: Text(
-                  'start',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
+              ),
+              // add animal and items here
+              // Container(
+              //   margin: EdgeInsets.only(
+              //     top: 150,
+              //   ),
+              //   child: SizedBox(
+              //     width: 200,
+              //     height: 200,
+              //     child: Image(
+              //       image: AssetImage('assets/cat.png'),
+              //       fit: BoxFit.none,
+              //     ),
+              //   ),
+              // ),
+              Positioned(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Image(
+                    image: AssetImage('assets/cat0101.png'),
                   ),
                 ),
-                icon: const Icon(Icons.alarm_on),
-                backgroundColor: Colors.green.shade300,
               ),
+            ]),
+          ),
+        ],
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => _startPopup(context),
+              );
+            });
+          },
+          label: Text(
+            'start',
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-          );
-        });
+          ),
+          icon: const Icon(Icons.alarm_on),
+          backgroundColor: Colors.green.shade300,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   Widget _startPopup(BuildContext context) {
@@ -174,6 +188,24 @@ class _HomePageState extends State<HomePage> {
         )
       ],
       // backgroundColor: Colors., (of start popup)
+    );
+  }
+
+  Widget _errorPopup(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              'An error has occurred in retrieving user data, please try again later.'),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('ok'),
+          ),
+        ],
+      ),
     );
   }
 }
