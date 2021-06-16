@@ -79,13 +79,25 @@ class DatabaseService {
 
   Future applyClothes(Clothes clothing) {
     return _db.collection("user").doc(this.uid)
-        .update({"clothsInUse" : clothing})
+        .update({"clothesInUse" : clothing.name})
         .then((value) {
           _db.collection("user")
               .doc(this.uid)
               .collection("clothes")
               .doc(clothing.name)
               .update({"inUse" : true});
+        });
+  }
+
+  Future removeClothes(Clothes clothing) {
+    return _db.collection("user").doc(this.uid)
+        .update({"clothesInUse" : ""})
+        .then((value) {
+          _db.collection("user")
+              .doc(this.uid)
+              .collection("clothes")
+              .doc(clothing.name)
+              .update({"inUse": false});
         });
   }
 

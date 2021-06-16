@@ -14,7 +14,6 @@ class ClothesPage extends StatefulWidget {
 }
 
 class _ClothesPageState extends State<ClothesPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +57,51 @@ class _ClothesPageState extends State<ClothesPage> {
   Widget _buildClothes(String name, int price, String imgPath, context) {
     Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath);
     // AppUser appUser = Provider.of<AppUser>(context);
+    return ClothesTile(clothing: clothing);
+  }
+}
+
+
+// ignore: must_be_immutable
+class ClothesTile extends StatefulWidget {
+  Clothes clothing;
+  ClothesTile({required this.clothing});
+
+  @override
+  _ClothesTileState createState() => _ClothesTileState(this.clothing);
+}
+
+class _ClothesTileState extends State<ClothesTile> {
+  late Clothes clothing;
+
+  _ClothesTileState(Clothes clothing) {
+    this.clothing = clothing;
+  }
+
+  var _buyButton;
+  var _applyButton;
+
+  @override
+  void initState() {
+    _buyButton = true;
+    _applyButton = false;
+    super.initState();
+  }
+
+  void buy() {
+    setState(() {
+      _buyButton = false;
+      _applyButton = true;
+    });
+  }
+
+  void apply() {
+    setState(() {
+      _applyButton = !_applyButton;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(5.0),
         child: Container(
@@ -78,13 +122,13 @@ class _ClothesPageState extends State<ClothesPage> {
                   height: 7.0,
                 ),
                 Hero(
-                  tag: imgPath,
+                  tag: clothing.imgPath,
                   child: Container(
                     height: 100.0,
                     width: 100.0,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(imgPath),
+                          image: AssetImage(clothing.imgPath),
                           fit: BoxFit.fill,
                         )
                     ),
@@ -95,14 +139,14 @@ class _ClothesPageState extends State<ClothesPage> {
                 ),
                 Center(
                   child: Text(
-                      "${price}",
+                      "${clothing.price}",
                       style: TextStyle(
                         color: Colors.black,
                       )
                   ),
                 ),
                 Text(
-                    name,
+                    clothing.name,
                     style: TextStyle(
                       color: Colors.black,
                     )
@@ -110,71 +154,103 @@ class _ClothesPageState extends State<ClothesPage> {
                 SizedBox(
                   height: 7.0,
                 ),
-                Expanded(
-                  child: buyButton(context, clothing),
+                Visibility(
+                  visible: _buyButton,
+                  child: Expanded(
+                    child: FloatingActionButton.extended(
+                      onPressed: () async {
+                        // check if coins > price first!!
+                        // else return error message
+
+                        // then need to change to use or remove!
+                        // change buttons, new tiles, or gesture detectors
+                        setState(() {
+                          clothing.bought = true;
+                        });
+                        buy();
+                        await DatabaseService().buyClothes(clothing);
+
+                        // how to disable button!
+                      },
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        "Buy",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: _applyButton,
+                  child: Expanded(
+                    child: FloatingActionButton.extended(
+                      onPressed: () async {
+                        // check if coins > price first!!
+                        // else return error message
+
+                        // then need to change to use or remove!
+                        // change buttons, new tiles, or gesture detectors
+                        setState(() {
+                          clothing.inUse = true;
+                        });
+                        apply();
+                        await DatabaseService().applyClothes(clothing);
+                        // how to disable button!
+                      },
+                      icon: Icon(
+                        Icons.check_circle_outline_rounded,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        "Apply",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: !_applyButton && !_buyButton,
+                  child: Expanded(
+                    child: FloatingActionButton.extended(
+                      onPressed: () async {
+                        // check if coins > price first!!
+                        // else return error message
+
+                        // then need to change to use or remove!
+                        // change buttons, new tiles, or gesture detectors
+                        setState(() {
+                          clothing.inUse = false;
+                        });
+                        apply();
+                        await DatabaseService().removeClothes(clothing);
+                        // how to disable button!
+                      },
+                      icon: Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        "Remove",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                  ),
                 )
               ],
             )
         )
     );
   }
-
-  // buy button
-  Widget buyButton(context, Clothes clothing) {
-    return FloatingActionButton.extended(
-      onPressed: () async {
-        // check if coins > price first!!
-        // else return error message
-
-        // then need to change to use or remove!
-        // change buttons, new tiles, or gesture detectors
-        setState(() {
-          clothing.bought = true;
-        });
-        await DatabaseService().buyClothes(clothing);
-
-        // how to disable button!
-      },
-      icon: Icon(
-        Icons.shopping_cart,
-        color: Colors.white,
-      ),
-      label: Text(
-        "Buy",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: Colors.lightBlue,
-    );
-  }
-
-  Widget applyButton(context, Clothes clothing) {
-    return FloatingActionButton.extended(
-      onPressed: () async {
-        // check if coins > price first!!
-        // else return error message
-
-        // then need to change to use or remove!
-        // change buttons, new tiles, or gesture detectors
-        setState(() {
-          clothing.bought = false;
-        });
-        await DatabaseService().applyClothes(clothing);
-      },
-      icon: Icon(
-        Icons.check_circle_outline_rounded,
-        color: Colors.white,
-      ),
-      label: Text(
-        "Apply",
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: Colors.lightBlue,
-    );
-  }
 }
-
-

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/screens/store/accessories_page.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
 import 'package:study_buddy/screens/store/furniture_page.dart';
@@ -57,6 +58,7 @@ class _StoreInventoryState extends State<StoreInventory>
         child: Column(
           children: <Widget>[
             Container(
+              // where the animal and things should be!!
               color: Colors.white60,
               height: MediaQuery.of(context).size.height/2.2,
             ),

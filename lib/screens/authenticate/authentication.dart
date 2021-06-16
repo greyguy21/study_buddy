@@ -30,6 +30,7 @@ class _AuthenticationState extends State<Authentication> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               FloatingActionButton.extended(
+                heroTag: "login",
                 onPressed: () {
                   setState(() {
                     showDialog(
@@ -46,6 +47,7 @@ class _AuthenticationState extends State<Authentication> {
                 height: 7.0,
               ),
               FloatingActionButton.extended(
+                heroTag: "register",
                 onPressed: () {
                   setState(() {
                     showDialog(
@@ -62,6 +64,7 @@ class _AuthenticationState extends State<Authentication> {
                 height: 7.0,
               ),
               FloatingActionButton.extended(
+                heroTag: "guest",
                 onPressed: () async {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
                   await _firebaseAuth.signInAnonymously();
