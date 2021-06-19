@@ -55,7 +55,8 @@ class DatabaseService {
   }
 
   AppUser _userFromFirestore(DocumentSnapshot snapshot) {
-    return AppUser(coins: snapshot.get("coins"), uid: this.uid);
+    return AppUser(coins: snapshot.get("coins"), uid: this.uid, pet: snapshot.get("pet"), clothesInUse: snapshot.get("clothesInUse"),
+    accessoryInUse: snapshot.get("accessoryInUse"));
   }
 
   Stream<AppUser> get users {
