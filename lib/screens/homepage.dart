@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
               //     ),
               //   ),
               // ),
-              Positioned(
+              Container(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.6,
@@ -100,7 +100,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-            ]),
+            ]
+            ),
           ),
         ],
       ),

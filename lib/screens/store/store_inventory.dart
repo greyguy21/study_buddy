@@ -61,6 +61,25 @@ class _StoreInventoryState extends State<StoreInventory>
               // where the animal and things should be!!
               color: Colors.white60,
               height: MediaQuery.of(context).size.height/2.2,
+              child: Stack(
+                children: <Widget>[
+                  Image(
+                    image: AssetImage("assets/defaultBg.jpeg"),
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.height,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: Image(
+                        image: AssetImage("assets/cat0101.png"),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
             PreferredSize(
               preferredSize: Size.fromHeight(50.0),

@@ -24,26 +24,34 @@ class DatabaseService {
           .collection("clothes")
           .add({
         "name": "nothing",
-      });
-      FirebaseFirestore.instance.collection("user")
-          .doc(uid)
-          .collection("furniture")
-          .add({
-        "name": "nothing",
+        "num": "00",
       });
       FirebaseFirestore.instance.collection("user")
           .doc(uid)
           .collection("wallpapers")
           .add({
         "name": "nothing",
+        "num" : "00",
       });
       FirebaseFirestore.instance.collection("user")
           .doc(uid)
           .collection("accessories")
           .add({
         "name": "nothing",
+        "num": "00",
       });
     });
+  }
+
+  Future updatePet(String pet) {
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({
+          "pet" : pet,
+          "clothesInUse": "00",
+          "accessoryInUse": "00",
+        });
   }
 
   AppUser _userFromFirestore(DocumentSnapshot snapshot) {
@@ -79,7 +87,7 @@ class DatabaseService {
 
   Future applyClothes(Clothes clothing) {
     return _db.collection("user").doc(this.uid)
-        .update({"clothesInUse" : clothing.name})
+        .update({"clothesInUse" : clothing.num})
         .then((value) {
           _db.collection("user")
               .doc(this.uid)
@@ -91,7 +99,7 @@ class DatabaseService {
 
   Future removeClothes(Clothes clothing) {
     return _db.collection("user").doc(this.uid)
-        .update({"clothesInUse" : ""})
+        .update({"clothesInUse" : "00"})
         .then((value) {
           _db.collection("user")
               .doc(this.uid)

@@ -34,14 +34,10 @@ class _ClothesPageState extends State<ClothesPage> {
                     mainAxisSpacing: 15.0,
                     childAspectRatio: 0.8,
                     children: [
-                      _buildClothes("clothes1", 10, "assets/kotaro1.jpg", context),
-                      _buildClothes("clothes2", 10, "assets/kotaro2.jpg", context),
-                      _buildClothes("clothes3", 10, "assets/kotaro3.jpg", context),
-                      _buildClothes("clothes4", 10, "assets/kotaro4.jpg", context),
-                      _buildClothes("clothes5", 10, "assets/kotaro5.jpg", context),
-                      _buildClothes("clothes6", 10, "assets/kotaro6.jpg", context),
-                      _buildClothes("clothes7", 10, "assets/kotaro7.jpg", context),
-                      _buildClothes("clothes8", 10, "assets/kotaro8.jpg", context),
+                      _buildClothes("Bee", 10, "assets/store/beeClothes.png", "01", context),
+                      _buildClothes("Overall", 10, "assets/store/overallClothes.png", "02", context),
+                      _buildClothes("Egg", 10, "assets/store/eggClothes.png", "03", context),
+                      _buildClothes("Bandanna", 10, "assets/store/bandannaClothes.png", "04", context),
                     ],
                   ),
                 )
@@ -54,8 +50,8 @@ class _ClothesPageState extends State<ClothesPage> {
 
   // should be clothes function?
   // just the build function ?
-  Widget _buildClothes(String name, int price, String imgPath, context) {
-    Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath);
+  Widget _buildClothes(String name, int price, String imgPath, String num, context) {
+    Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath, num: num);
     // AppUser appUser = Provider.of<AppUser>(context);
     return ClothesTile(clothing: clothing);
   }
@@ -158,6 +154,7 @@ class _ClothesTileState extends State<ClothesTile> {
                   visible: _buyButton,
                   child: Expanded(
                     child: FloatingActionButton.extended(
+                      heroTag: clothing.name,
                       onPressed: () async {
                         // check if coins > price first!!
                         // else return error message
@@ -190,6 +187,7 @@ class _ClothesTileState extends State<ClothesTile> {
                   visible: _applyButton,
                   child: Expanded(
                     child: FloatingActionButton.extended(
+                      heroTag: clothing.name,
                       onPressed: () async {
                         // check if coins > price first!!
                         // else return error message
@@ -221,6 +219,7 @@ class _ClothesTileState extends State<ClothesTile> {
                   visible: !_applyButton && !_buyButton,
                   child: Expanded(
                     child: FloatingActionButton.extended(
+                      heroTag: clothing.name,
                       onPressed: () async {
                         // check if coins > price first!!
                         // else return error message
