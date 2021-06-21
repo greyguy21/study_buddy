@@ -3,14 +3,14 @@ class Wallpaper {
   late int price;
   late String imgPath;
   late String num;
-  bool bought = false;
-  bool inUse = false;
+  bool bought;
+  bool inUse;
 
   Wallpaper(
       {required this.name,
       required this.price,
       required this.imgPath,
       required this.num,
-      required bought,
+      required this.bought,
       required this.inUse});
 }

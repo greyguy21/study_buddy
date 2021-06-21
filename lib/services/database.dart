@@ -310,16 +310,21 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") - wallpaper.price;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("wallpapers").doc(wallpaper.name).set({
+      docRef.collection("wallpapers").doc(wallpaper.num).update({
         "name": wallpaper.name,
         "price": wallpaper.price,
         "imgPath": wallpaper.imgPath,
+        "bought": true,
       });
     });
   }
 
-  Future applyWallpaper(Wallpaper wallpaper) {
+  Future applyWallpaper(Wallpaper wallpaper) async {
     // update inUse of prev wallpaper to false
+    String currWallpaper = await _db.collection("user").doc(this.uid).get().then((value) {
+      return value.get("wallpaper");
+    });
+
     return _db
         .collection("user")
         .doc(this.uid)
@@ -328,7 +333,13 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("wallpapers")
-          .doc(wallpaper.name)
+          .doc(currWallpaper)
+          .update({"inUse": false});
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc(wallpaper.num)
           .update({"inUse": true});
     });
   }

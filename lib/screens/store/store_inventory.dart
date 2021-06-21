@@ -75,6 +75,7 @@ class _StoreInventoryState extends State<StoreInventory>
                 String accessory = snapshot.data!.accessoryInUse;
                 String pet = snapshot.data!.pet;
                 String imgPath = "assets/$pet/${pet+clothes+accessory}.png";
+                String wallpaper = snapshot.data!.wallpaper;
 
                 return Container(
                   // where the animal and things should be!!
@@ -83,12 +84,27 @@ class _StoreInventoryState extends State<StoreInventory>
                   child: Stack(
                     children: <Widget>[
                       Image(
-                        image: AssetImage("assets/defaultBg.jpeg"),
+                        image: AssetImage("assets/wallpaper/$wallpaper.png"),
                         height: MediaQuery.of(context).size.width,
                         width: MediaQuery.of(context).size.height,
                         fit: BoxFit.cover,
                       ),
-                      Container(
+                      Positioned(
+                        top: 10,
+                        left: 320,
+                        child: Row(
+                          children: [
+                            Icon(Icons.attach_money),
+                            // Text(globals.coins.toString(),
+                            //     style: TextStyle(fontSize: 20)),
+                            Text(
+                              "${snapshot.data!.coins}",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * 0.6,
