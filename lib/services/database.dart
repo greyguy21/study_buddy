@@ -25,6 +25,8 @@ class DatabaseService {
       });
       FirebaseFirestore.instance
           .collection("user")
+      DatabaseService().addClothes();
+      FirebaseFirestore.instance.collection("user")
           .doc(uid)
           .collection("wallpapers")
           .add({
@@ -68,6 +70,64 @@ class DatabaseService {
         .map(_userFromFirestore);
   }
 
+  Clothes _clothesFromFirestore(DocumentSnapshot snapshot) {
+      return Clothes(
+          name: snapshot.get("name"),
+          price: snapshot.get("price"),
+          imgPath: snapshot.get("imgPath"),
+          num: snapshot.get("num"),
+          bought: snapshot.get("bought"),
+          inUse: snapshot.get("inUse"));
+  }
+
+  Stream<Clothes> clothes(String name){
+    // query snapshots
+    return _db.collection("user").doc(this.uid).collection("clothes")
+        .doc(name).snapshots().map(_clothesFromFirestore);
+  }
+
+  Future addClothes() {
+    return _db.collection("user").doc(this.uid).update({})
+        .then((value) {
+          _db.collection("user").doc(this.uid).collection("clothes").doc("Bee")
+              .set({
+                "name": "Bee",
+                "price": 10,
+                "imgPath": "assets/store/beeClothes.png",
+                "num": "01",
+                "bought": false,
+                "inUse": false,
+              });
+          _db.collection("user").doc(this.uid).collection("clothes").doc("Overall")
+              .set({
+            "name": "Overall",
+            "price": 10,
+            "imgPath": "assets/store/overallClothes.png",
+            "num": "02",
+            "bought": false,
+            "inUse": false,
+          });
+          _db.collection("user").doc(this.uid).collection("clothes").doc("Egg")
+              .set({
+            "name": "Egg",
+            "price": 10,
+            "imgPath": "assets/store/eggClothes.png",
+            "num": "03",
+            "bought": false,
+            "inUse": false,
+          });
+          _db.collection("user").doc(this.uid).collection("clothes").doc("Bandanna")
+              .set({
+            "name": "Bandanna",
+            "price": 10,
+            "imgPath": "assets/store/bandannaClothes.png",
+            "num": "04",
+            "bought": false,
+            "inUse": false,
+          });
+        });
+  }
+
   Future buyClothes(Clothes clothing) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
@@ -80,10 +140,12 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") - clothing.price;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("clothes").doc(clothing.name).set({
-        "name": clothing.name,
-        "price": clothing.price,
-        "imgPath": clothing.imgPath,
+      docRef
+          .collection("clothes")
+          .doc(clothing.name)
+          .update({
+        "bought": true,
+        "inUse": false,
       });
     });
   }

@@ -59,11 +59,13 @@ class _VerifyState extends State<Verify> {
   Future<void> checkEmailVerified() async {
     user = _firebaseAuth.currentUser!;
     await user.reload();
-    _firebaseAuth.authStateChanges().listen((User? user) {
-      if (user!.emailVerified) {
-        timer.cancel();
-        Navigator.pushReplacementNamed(context, "/setup");
-      }
+    _firebaseAuth
+        .authStateChanges()
+        .listen((User? user) {
+          if (user!.emailVerified) {
+            timer.cancel();
+            Navigator.pushReplacementNamed(context, "/setup");
+          }
     });
   }
 }

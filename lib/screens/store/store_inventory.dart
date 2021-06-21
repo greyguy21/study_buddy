@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/screens/homepage.dart';
+import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/screens/store/accessories_page.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
 import 'package:study_buddy/screens/store/furniture_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
+import 'package:study_buddy/services/database.dart';
 
 // buttons: on press : only display bought / not bought
 // how to update bought or not bought ** need backend?
@@ -31,6 +34,7 @@ class _StoreInventoryState extends State<StoreInventory>
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,29 +61,47 @@ class _StoreInventoryState extends State<StoreInventory>
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Container(
-              // where the animal and things should be!!
-              color: Colors.white60,
-              height: MediaQuery.of(context).size.height/2.2,
-              child: Stack(
-                children: <Widget>[
-                  Image(
-                    image: AssetImage("assets/defaultBg.jpeg"),
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.height,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: Image(
-                        image: AssetImage("assets/cat0101.png"),
+            StreamBuilder<AppUser>(
+              stream: DatabaseService().users,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("something went wrong");
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Loading();
+                }
+
+                String clothes = snapshot.data!.clothesInUse;
+                String accessory = snapshot.data!.accessoryInUse;
+                String pet = snapshot.data!.pet;
+                String imgPath = "assets/$pet/${pet+clothes+accessory}.png";
+
+                return Container(
+                  // where the animal and things should be!!
+                  color: Colors.white60,
+                  height: MediaQuery.of(context).size.height/2.2,
+                  child: Stack(
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage("assets/defaultBg.jpeg"),
+                        height: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.height,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  )
-                ],
-              ),
+                      Container(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          child: Image(
+                            image: AssetImage(imgPath),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
             PreferredSize(
               preferredSize: Size.fromHeight(50.0),
@@ -125,7 +147,7 @@ class _StoreInventoryState extends State<StoreInventory>
                         AccessoriesPage(),
                       ]
                     )
-                  ), 
+                  ),
                 ]
               )
             )
