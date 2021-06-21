@@ -23,8 +23,6 @@ class DatabaseService {
         "name": "nothing",
         "num": "00",
       });
-      FirebaseFirestore.instance
-          .collection("user")
       DatabaseService().addClothes();
       FirebaseFirestore.instance.collection("user")
           .doc(uid)
@@ -175,26 +173,6 @@ class DatabaseService {
           .collection("clothes")
           .doc(clothing.name)
           .update({"inUse": false});
-    });
-  }
-
-  Future buyFurniture(Furniture furniture) async {
-    DocumentReference docRef = _db.collection("user").doc(this.uid);
-
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot snapshot = await transaction.get(docRef);
-
-      if (!snapshot.exists) {
-        throw Exception("user does not exist!");
-      }
-      int newCoinValue = snapshot.get("coins") - furniture.price;
-      transaction.update(docRef, {"coins": newCoinValue});
-    }).then((value) {
-      docRef.collection("furniture").doc(furniture.name).set({
-        "name": furniture.name,
-        "price": furniture.price,
-        "imgPath": furniture.imgPath,
-      });
     });
   }
 

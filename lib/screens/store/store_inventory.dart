@@ -4,7 +4,6 @@ import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/screens/store/accessories_page.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
-import 'package:study_buddy/screens/store/furniture_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
 import 'package:study_buddy/services/database.dart';
@@ -32,7 +31,7 @@ class _StoreInventoryState extends State<StoreInventory>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -124,9 +123,6 @@ class _StoreInventoryState extends State<StoreInventory>
                         child: Text("clothes"),
                       ),
                       Tab(
-                        child: Text("furniture"),
-                      ),
-                      Tab(
                         child: Text("wallpaper"),
                       ),
                       Tab(
@@ -142,7 +138,6 @@ class _StoreInventoryState extends State<StoreInventory>
                       controller: _tabController,
                       children:[
                         ClothesPage(),
-                        FurniturePage(),
                         WallpaperPage(),
                         AccessoriesPage(),
                       ]
