@@ -22,17 +22,13 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return _errorPopup(context);
-        } else if (snapshot.connectionState ==
-            ConnectionState.waiting) {
-          return Text(
-            'loading...',
-            style: TextStyle(fontSize: 8),
-          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
         } else {
           String clothes = snapshot.data!.clothesInUse;
           String accessory = snapshot.data!.accessoryInUse;
           String pet = snapshot.data!.pet;
-          String imgPath = "assets/$pet/${pet+clothes+accessory}.png";
+          String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: Stack(
@@ -46,7 +42,8 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   child: Column(children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 60, left: 20, right: 50),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -102,8 +99,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  ]
-                  ),
+                  ]),
                 ),
               ],
             ),
@@ -129,7 +125,8 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.green.shade300,
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
           );
         }
       },
@@ -154,7 +151,8 @@ class _HomePageState extends State<HomePage> {
                 filled: true,
               ),
               onChanged: (val) {
-                setState(() => globals.taskName = val);
+                // setState(() => globals.taskName = val);
+                globals.taskName = val;
               },
             ),
           ),

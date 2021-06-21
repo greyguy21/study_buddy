@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
@@ -26,8 +26,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
-                    validator: (val) =>
-                    val!.isEmpty || !val.contains("@")
+                    validator: (val) => val!.isEmpty || !val.contains("@")
                         ? "Enter a valid email"
                         : null,
                     onChanged: (val) {
@@ -36,8 +35,7 @@ class _LoginState extends State<Login> {
                     decoration: InputDecoration(hintText: "Email"),
                   ),
                   TextFormField(
-                    validator: (val) =>
-                    val!.isEmpty || val.length < 6
+                    validator: (val) => val!.isEmpty || val.length < 6
                         ? "Enter a valid password"
                         : null,
                     onChanged: (val) {
@@ -47,8 +45,7 @@ class _LoginState extends State<Login> {
                     decoration: InputDecoration(hintText: "Password"),
                   ),
                 ],
-              )
-          ),
+              )),
           SizedBox(
             height: 15.0,
           ),
@@ -61,10 +58,9 @@ class _LoginState extends State<Login> {
               try {
                 if (_formKey.currentState!.validate()) {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-                  await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-                  _firebaseAuth
-                      .authStateChanges()
-                      .listen((User? user)       {
+                  await _firebaseAuth.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  _firebaseAuth.authStateChanges().listen((User? user) {
                     if (user == null) {
                       print("nothing");
                     } else {
@@ -73,30 +69,26 @@ class _LoginState extends State<Login> {
                     }
                   });
                 }
-              } on FirebaseAuthException catch(e) {
-                if (e.code == "user-not-found")  {
+              } on FirebaseAuthException catch (e) {
+                if (e.code == "user-not-found") {
                   error = "No user found for that email.";
                 } else if (e.code == "wrong-password") {
                   error = "Wrong password provided for that user.";
                 }
               }
             },
-            label: Text(
-                "CONTINUE",
+            label: Text("CONTINUE",
                 style: TextStyle(
                   color: Colors.white,
-                )
-            ),
+                )),
             backgroundColor: Colors.lightBlue,
           ),
         ),
         SizedBox(height: 10.0),
-        Text(
-          error,
-          style: TextStyle(
-            color: Colors.red,
-          )
-        )
+        Text(error,
+            style: TextStyle(
+              color: Colors.red,
+            ))
       ],
       // backgroundColor: Colors., (of start popup)
     );

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:study_buddy/screens/authenticate/authentication.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -6,6 +9,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool _initialBool = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,47 +22,60 @@ class _SettingsPageState extends State<SettingsPage> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.shade200,
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('User details:'),
+              subtitle:
+                  Text('Email: ${FirebaseAuth.instance.currentUser!.email}'),
+            ),
+            ListTile(
+              leading: Icon(Icons.circle_notifications_outlined),
+              title: Text('Notifications'),
+              trailing: Switch(
+                value: _initialBool,
+                onChanged: (bool newValue) {
+                  setState(() {
+                    _initialBool = newValue;
+                  });
+                },
               ),
-              child: Text('User details:'),
             ),
-            ListTile(
-              leading: Icon(Icons.shopping_cart_outlined),
-              title: Text('Store/Inventory'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/store");
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.timeline),
-              title: Text('Timeline'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/timeline');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/settings');
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 400),
+              child: ListTile(
+                tileColor: Colors.grey.shade100,
+                title: Center(child: Text('Sign Out')),
+                onTap: () async {
+                  setState(() {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          _confirmSignOutPopup(context),
+                    );
+                  });
+                },
+              ),
             ),
           ],
         ));
+  }
+
+  Widget _confirmSignOutPopup(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Confirm sign out?'),
+          TextButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut().then((value) =>
+                  // Navigator.pop(context);
+                  Navigator.popAndPushNamed(context, "/authenticate"));
+            },
+            child: Text('Sign out'),
+          ),
+        ],
+      ),
+    );
   }
 }
