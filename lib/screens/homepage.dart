@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 // animal and items
                 Positioned(
-                  top: 170,
+                  top: 200,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * 0.6,

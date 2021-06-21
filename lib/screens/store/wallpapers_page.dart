@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_buddy/models/wallpaper.dart';
 import 'package:study_buddy/services/database.dart';
+import '../loading.dart';
 
 class WallpaperPage extends StatefulWidget {
   @override
@@ -28,106 +29,195 @@ class _WallpaperPageState extends State<WallpaperPage> {
                 mainAxisSpacing: 15.0,
                 childAspectRatio: 0.8,
                 children: [
-                  _buildWallpaper("wallpaper1", 10, "assets/kotaro1.jpg", context),
-                  _buildWallpaper("wallpaper2", 10, "assets/kotaro2.jpg", context),
-                  _buildWallpaper("wallpaper3", 10, "assets/kotaro3.jpg", context),
-                  _buildWallpaper("wallpaper4", 10, "assets/kotaro4.jpg", context),
-                  _buildWallpaper("wallpaper5", 10, "assets/kotaro5.jpg", context),
-                  _buildWallpaper("wallpaper6", 10, "assets/kotaro6.jpg", context),
-                  _buildWallpaper("wallpaper7", 10, "assets/kotaro7.jpg", context),
-                  _buildWallpaper("wallpaper8", 10, "assets/kotaro8.jpg", context),
+                  WallpaperTile(wallpaper: "Bee"),
+                  WallpaperTile(wallpaper: "Overall"),
+                  WallpaperTile(wallpaper: "Egg"),
+                  WallpaperTile(wallpaper: "Bandanna")
                 ],
               ),
             )
           ],
-        )
-    );
+        ));
+  }
+}
+
+class WallpaperTile extends StatefulWidget {
+  String wallpaper;
+  WallpaperTile({required this.wallpaper});
+
+  @override
+  _WallpaperTileState createState() => _WallpaperTileState(this.wallpaper);
+}
+
+class _WallpaperTileState extends State<WallpaperTile> {
+  late String name;
+
+  _WallpaperTileState(String name) {
+    this.name = name;
   }
 
-  Widget _buildWallpaper(String name, int price, String imgPath, context) {
-    Wallpaper wallpaper = Wallpaper(name: name, price: price, imgPath: imgPath);
-    // AppUser appUser = Provider.of<AppUser>(context);
-    return Padding(
-        padding: EdgeInsets.all(5.0),
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 3.0,
-                  blurRadius: 5.0,
-                )
-              ],
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 7.0,
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Wallpaper>(
+      // database.dart need stream wallpapers
+      stream: DatabaseService().wallpapers(name),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
+        }
+
+        bool bought = snapshot.data!.bought;
+        bool inUse = snapshot.data!.inUse;
+        String name = snapshot.data!.name;
+        int price = snapshot.data!.price;
+        String imgPath = snapshot.data!.imgPath;
+        String num = snapshot.data!.num;
+        Wallpaper wpp = Wallpaper(
+            name: name,
+            price: price,
+            imgPath: imgPath,
+            num: num,
+            bought: bought,
+            inUse: inUse);
+
+        return Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 3.0,
+                      blurRadius: 5.0,
+                    )
+                  ],
+                  color: Colors.white,
                 ),
-                Hero(
-                  tag: imgPath,
-                  child: Container(
-                    height: 100.0,
-                    width: 100.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Hero(
+                      tag: imgPath,
+                      child: Container(
+                        height: 100.0,
+                        width: 100.0,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
                           image: AssetImage(imgPath),
                           fit: BoxFit.fill,
-                        )
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Center(
-                  child: Text(
-                      "${price}",
-                      style: TextStyle(
-                        color: Colors.black,
-                      )
-                  ),
-                ),
-                Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.black,
-                    )
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Expanded(
-                  child: FloatingActionButton.extended(
-                    onPressed: () async {
-                      // check if coins > price first!!
-                      // else return error message
-
-                      // then need to change to use or remove!
-                      // change buttons, new tiles, or gesture detectors
-                      setState(() {
-                        wallpaper.bought = true;
-                      });
-                      await DatabaseService().buyWallpaper(wallpaper);
-                    },
-                    icon: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      "Buy",
-                      style: TextStyle(
-                        color: Colors.white,
+                        )),
                       ),
                     ),
-                    backgroundColor: Colors.lightBlue,
-                  ),
-                )
-              ],
-            )
-        )
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Center(
+                      child: Text("${price}",
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
+                    ),
+                    Text(name,
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Visibility(
+                      visible: !bought,
+                      child: Expanded(
+                        child: FloatingActionButton.extended(
+                          heroTag: name,
+                          onPressed: () async {
+                            // check if coins > price first!!
+                            // else return error message
+
+                            // then need to change to use or remove!
+                            // change buttons, new tiles, or gesture detectors
+                            await DatabaseService().buyWallpaper(wpp);
+                            // how to disable button!
+                          },
+                          icon: Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Buy",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !inUse && bought,
+                      child: Expanded(
+                        child: FloatingActionButton.extended(
+                          heroTag: name,
+                          onPressed: () async {
+                            // check if coins > price first!!
+                            // else return error message
+
+                            // then need to change to use or remove!
+                            // change buttons, new tiles, or gesture detectors
+                            await DatabaseService().applyWallpaper(wpp);
+                            // how to disable button!
+                          },
+                          icon: Icon(
+                            Icons.check_circle_outline_rounded,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Apply",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    // Visibility(
+                    //   visible: inUse && bought,
+                    //   child: Expanded(
+                    //     child: FloatingActionButton.extended(
+                    //       heroTag: name,
+                    //       onPressed: () async {
+                    //         // check if coins > price first!!
+                    //         // else return error message
+
+                    //         // then need to change to use or remove!
+                    //         // change buttons, new tiles, or gesture detectors
+                    //         await DatabaseService().removeClothes(clothing);
+                    //         // how to disable button!
+                    //       },
+                    //       icon: Icon(
+                    //         Icons.cancel_outlined,
+                    //         color: Colors.white,
+                    //       ),
+                    //       label: Text(
+                    //         "Remove",
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //         ),
+                    //       ),
+                    //       backgroundColor: Colors.lightBlue,
+                    //     ),
+                    //   ),
+                    // )
+                  ],
+                )));
+      },
     );
   }
 }

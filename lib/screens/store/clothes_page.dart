@@ -7,7 +7,6 @@ import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
 import 'package:study_buddy/services/database.dart';
 
-
 class ClothesPage extends StatefulWidget {
   @override
   _ClothesPageState createState() => _ClothesPageState();
@@ -17,33 +16,36 @@ class _ClothesPageState extends State<ClothesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white30,
-            body: ListView(
-              children: [
-                SizedBox(
-                  height: 15.0,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  width: MediaQuery.of(context).size.width - 30.0,
-                  height: 220.0,
-                  color: Colors.white30,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 15.0,
-                    childAspectRatio: 0.8,
-                    children: [
-                      ClothesTile(clothing: "Bee",),
-                      ClothesTile(clothing: "Overall"),
-                      ClothesTile(clothing: "Egg"),
-                      ClothesTile(clothing: "Bandanna",)
-                    ],
+        backgroundColor: Colors.white30,
+        body: ListView(
+          children: [
+            SizedBox(
+              height: 15.0,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 15.0, right: 15.0),
+              width: MediaQuery.of(context).size.width - 30.0,
+              height: 220.0,
+              color: Colors.white30,
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 15.0,
+                childAspectRatio: 0.8,
+                children: [
+                  ClothesTile(
+                    clothing: "Bee",
                   ),
-                )
-              ],
+                  ClothesTile(clothing: "Overall"),
+                  ClothesTile(clothing: "Egg"),
+                  ClothesTile(
+                    clothing: "Bandanna",
+                  )
+                ],
+              ),
             )
-        );
+          ],
+        ));
     //   },
     // );
   }
@@ -54,8 +56,6 @@ class _ClothesPageState extends State<ClothesPage> {
   //   Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath, num: num, bought: false, inUse: false);
   //   return ClothesTile(clothing: clothing);
 }
-
-
 
 // ignore: must_be_immutable
 class ClothesTile extends StatefulWidget {
@@ -92,7 +92,13 @@ class _ClothesTileState extends State<ClothesTile> {
         int price = snapshot.data!.price;
         String imgPath = snapshot.data!.imgPath;
         String num = snapshot.data!.num;
-        Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath, num: num, bought: bought, inUse: inUse);
+        Clothes clothing = Clothes(
+            name: name,
+            price: price,
+            imgPath: imgPath,
+            num: num,
+            bought: bought,
+            inUse: inUse);
 
         return Padding(
             padding: EdgeInsets.all(5.0),
@@ -120,29 +126,24 @@ class _ClothesTileState extends State<ClothesTile> {
                         width: 100.0,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(imgPath),
-                              fit: BoxFit.fill,
-                            )
-                        ),
+                          image: AssetImage(imgPath),
+                          fit: BoxFit.fill,
+                        )),
                       ),
                     ),
                     SizedBox(
                       height: 7.0,
                     ),
                     Center(
-                      child: Text(
-                          "${price}",
+                      child: Text("${price}",
                           style: TextStyle(
                             color: Colors.black,
-                          )
-                      ),
+                          )),
                     ),
-                    Text(
-                        name,
+                    Text(name,
                         style: TextStyle(
                           color: Colors.black,
-                        )
-                    ),
+                        )),
                     SizedBox(
                       height: 7.0,
                     ),
@@ -231,9 +232,7 @@ class _ClothesTileState extends State<ClothesTile> {
                       ),
                     )
                   ],
-                )
-            )
-        );
+                )));
       },
     );
   }

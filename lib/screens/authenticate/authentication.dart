@@ -17,12 +17,10 @@ class _AuthenticationState extends State<Authentication> {
           backgroundColor: Colors.lightBlue,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text(
-              "Study Buddy",
+          title: Text("Study Buddy",
               style: TextStyle(
                 color: Colors.white,
-              )
-          ),
+              )),
         ),
         body: Center(
           child: Column(
@@ -68,9 +66,7 @@ class _AuthenticationState extends State<Authentication> {
                 onPressed: () async {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
                   await _firebaseAuth.signInAnonymously();
-                  _firebaseAuth
-                      .authStateChanges()
-                      .listen((User? user) async {
+                  _firebaseAuth.authStateChanges().listen((User? user) async {
                     if (user == null) {
                       print(" user is signed out");
                     } else {
@@ -86,7 +82,6 @@ class _AuthenticationState extends State<Authentication> {
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 }
