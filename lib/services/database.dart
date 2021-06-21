@@ -24,7 +24,6 @@ class DatabaseService {
         "num": "00",
       });
       DatabaseService().addClothes();
-
       FirebaseFirestore.instance
           .collection("user")
           .doc(uid)
@@ -33,6 +32,7 @@ class DatabaseService {
         "name": "nothing",
         "num": "00",
       });
+      DatabaseService().addWallpapers();
       FirebaseFirestore.instance
           .collection("user")
           .doc(uid)
@@ -201,6 +201,103 @@ class DatabaseService {
     });
   }
 
+  Future buyFurniture(Furniture furniture) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") - furniture.price;
+      transaction.update(docRef, {"coins": newCoinValue});
+    }).then((value) {
+      docRef.collection("furniture").doc(furniture.name).set({
+        "name": furniture.name,
+        "price": furniture.price,
+        "imgPath": furniture.imgPath,
+      });
+    });
+  }
+
+  Wallpaper _wallpapersFromFirestore(DocumentSnapshot snapshot) {
+    return Wallpaper(
+        name: snapshot.get("name"),
+        price: snapshot.get("price"),
+        imgPath: snapshot.get("imgPath"),
+        num: snapshot.get("num"),
+        bought: snapshot.get("bought"),
+        inUse: snapshot.get("inUse"));
+  }
+
+  Stream<Wallpaper> wallpapers(String name) {
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .collection("wallpapers")
+        .doc(name)
+        .snapshots()
+        .map(_wallpapersFromFirestore);
+  }
+
+  Future addWallpapers() {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc("1")
+          .set({
+        "name": "Default",
+        "price": 10,
+        "imgPath": "assets/wallpaper/1.png",
+        "num": "1",
+        "bought": true,
+        "inUse": true,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc("2")
+          .set({
+        "name": "Window",
+        "price": 10,
+        "imgPath": "assets/wallpaper/2.png",
+        "num": "2",
+        "bought": false,
+        "inUse": false,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc("3")
+          .set({
+        "name": "Garden",
+        "price": 10,
+        "imgPath": "assets/wallpaper/3.png",
+        "num": "3",
+        "bought": false,
+        "inUse": false,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc("4")
+          .set({
+        "name": "Living Room",
+        "price": 10,
+        "imgPath": "assets/wallpaper/4.png",
+        "num": "4",
+        "bought": false,
+        "inUse": false,
+      });
+    });
+  }
+
   Future buyWallpaper(Wallpaper wallpaper) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
@@ -218,6 +315,21 @@ class DatabaseService {
         "price": wallpaper.price,
         "imgPath": wallpaper.imgPath,
       });
+    });
+  }
+
+  Future applyWallpaper(Wallpaper wallpaper) {
+    // update inUse of prev wallpaper to false
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({"wallpaper": wallpaper.num}).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("wallpapers")
+          .doc(wallpaper.name)
+          .update({"inUse": true});
     });
   }
 
