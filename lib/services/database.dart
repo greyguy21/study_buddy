@@ -13,28 +13,28 @@ class DatabaseService {
   Future newUser() async {
     return await _db
         .collection("user")
-        .doc(uid).set(
-        {
-          "coins": 0,
-          "pet": ""
-        }
-    ).then((value) {
-      FirebaseFirestore.instance.collection("user")
+        .doc(uid)
+        .set({"coins": 0, "pet": "", "wallpaper": "1"}).then((value) {
+      FirebaseFirestore.instance
+          .collection("user")
           .doc(uid)
           .collection("clothes")
           .add({
         "name": "nothing",
         "num": "00",
       });
+      FirebaseFirestore.instance
+          .collection("user")
       DatabaseService().addClothes();
       FirebaseFirestore.instance.collection("user")
           .doc(uid)
           .collection("wallpapers")
           .add({
         "name": "nothing",
-        "num" : "00",
+        "num": "00",
       });
-      FirebaseFirestore.instance.collection("user")
+      FirebaseFirestore.instance
+          .collection("user")
           .doc(uid)
           .collection("accessories")
           .add({
@@ -45,23 +45,29 @@ class DatabaseService {
   }
 
   Future updatePet(String pet) {
-    return _db
-        .collection("user")
-        .doc(this.uid)
-        .update({
-          "pet" : pet,
-          "clothesInUse": "00",
-          "accessoryInUse": "00",
-        });
+    return _db.collection("user").doc(this.uid).update({
+      "pet": pet,
+      "clothesInUse": "00",
+      "accessoryInUse": "00",
+    });
   }
 
   AppUser _userFromFirestore(DocumentSnapshot snapshot) {
-    return AppUser(coins: snapshot.get("coins"), uid: this.uid, pet: snapshot.get("pet"), clothesInUse: snapshot.get("clothesInUse"),
-    accessoryInUse: snapshot.get("accessoryInUse"));
+    return AppUser(
+        coins: snapshot.get("coins"),
+        uid: this.uid,
+        pet: snapshot.get("pet"),
+        wallpaper: snapshot.get("wallpaper"),
+        clothesInUse: snapshot.get("clothesInUse"),
+        accessoryInUse: snapshot.get("accessoryInUse"));
   }
 
   Stream<AppUser> get users {
-    return _db.collection("user").doc(this.uid).snapshots().map(_userFromFirestore);
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .snapshots()
+        .map(_userFromFirestore);
   }
 
   Clothes _clothesFromFirestore(DocumentSnapshot snapshot) {
@@ -125,14 +131,14 @@ class DatabaseService {
   Future buyClothes(Clothes clothing) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
-    FirebaseFirestore.instance.runTransaction((transaction) async{
+    FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
       int newCoinValue = snapshot.get("coins") - clothing.price;
-      transaction.update(docRef, {"coins" : newCoinValue});
+      transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
       docRef
           .collection("clothes")
@@ -145,45 +151,46 @@ class DatabaseService {
   }
 
   Future applyClothes(Clothes clothing) {
-    return _db.collection("user").doc(this.uid)
-        .update({"clothesInUse" : clothing.num})
-        .then((value) {
-          _db.collection("user")
-              .doc(this.uid)
-              .collection("clothes")
-              .doc(clothing.name)
-              .update({"inUse" : true});
-        });
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({"clothesInUse": clothing.num}).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("clothes")
+          .doc(clothing.name)
+          .update({"inUse": true});
+    });
   }
 
   Future removeClothes(Clothes clothing) {
-    return _db.collection("user").doc(this.uid)
-        .update({"clothesInUse" : "00"})
-        .then((value) {
-          _db.collection("user")
-              .doc(this.uid)
-              .collection("clothes")
-              .doc(clothing.name)
-              .update({"inUse": false});
-        });
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({"clothesInUse": "00"}).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("clothes")
+          .doc(clothing.name)
+          .update({"inUse": false});
+    });
   }
 
   Future buyFurniture(Furniture furniture) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
-    FirebaseFirestore.instance.runTransaction((transaction) async{
+    FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
       int newCoinValue = snapshot.get("coins") - furniture.price;
-      transaction.update(docRef, {"coins" : newCoinValue});
+      transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef
-          .collection("furniture")
-          .doc(furniture.name)
-          .set({
+      docRef.collection("furniture").doc(furniture.name).set({
         "name": furniture.name,
         "price": furniture.price,
         "imgPath": furniture.imgPath,
@@ -194,19 +201,16 @@ class DatabaseService {
   Future buyWallpaper(Wallpaper wallpaper) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
-    FirebaseFirestore.instance.runTransaction((transaction) async{
+    FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
       int newCoinValue = snapshot.get("coins") - wallpaper.price;
-      transaction.update(docRef, {"coins" : newCoinValue});
+      transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef
-          .collection("wallpapers")
-          .doc(wallpaper.name)
-          .set({
+      docRef.collection("wallpapers").doc(wallpaper.name).set({
         "name": wallpaper.name,
         "price": wallpaper.price,
         "imgPath": wallpaper.imgPath,
@@ -217,19 +221,16 @@ class DatabaseService {
   Future buyAccessory(Accessory accessory) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
-    FirebaseFirestore.instance.runTransaction((transaction) async{
+    FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
       int newCoinValue = snapshot.get("coins") - accessory.price;
-      transaction.update(docRef, {"coins" : newCoinValue});
+      transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef
-          .collection("accessories")
-          .doc(accessory.name)
-          .set({
+      docRef.collection("accessories").doc(accessory.name).set({
         "name": accessory.name,
         "price": accessory.price,
         "imgPath": accessory.imgPath,
@@ -240,19 +241,16 @@ class DatabaseService {
   Future updateTimeline(String name, int time) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
-    FirebaseFirestore.instance.runTransaction((transaction) async{
+    FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
       int newCoinValue = snapshot.get("coins") + time;
-      transaction.update(docRef, {"coins" : newCoinValue});
+      transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef
-          .collection("tasks")
-          .doc(name)
-          .set({
+      docRef.collection("tasks").doc(name).set({
         "name": name,
         "time": time,
       });

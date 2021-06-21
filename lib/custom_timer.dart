@@ -33,7 +33,8 @@ class _CustomTimerState extends State<CustomTimer> {
               context: context,
               builder: (BuildContext context) => endSession(context),
             );
-            await DatabaseService().updateTimeline(taskName, globals.timeSliderValue.round());
+            await DatabaseService()
+                .updateTimeline(taskName, globals.timeSliderValue.round());
           });
         }
       });
@@ -48,7 +49,11 @@ class _CustomTimerState extends State<CustomTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(timerText, style: TextStyle(fontSize: 50));
+    return Text(
+      timerText,
+      style: TextStyle(fontSize: 50),
+      textAlign: TextAlign.center,
+    );
   }
 
   Widget endSession(BuildContext context) {

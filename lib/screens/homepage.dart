@@ -29,6 +29,8 @@ class _HomePageState extends State<HomePage> {
           String accessory = snapshot.data!.accessoryInUse;
           String pet = snapshot.data!.pet;
           String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
+          String wallpaper = snapshot.data!.wallpaper;
+
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: Stack(
@@ -39,67 +41,50 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-                Container(
-                  child: Column(children: <Widget>[
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 60, left: 20, right: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // menu button and coins
+                Padding(
+                  padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // menu button
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: Menu(),
+                                  type: PageTransitionType.leftToRight));
+                        },
+                        icon: Icon(
+                          Icons.menu,
+                          size: 30.0,
+                        ),
+                      ),
+                      Row(
                         children: [
-                          // menu button
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: Menu(),
-                                      type: PageTransitionType.leftToRight));
-                            },
-                            icon: Icon(
-                              Icons.menu,
-                              size: 30.0,
-                            ),
-                          ),
-                          // showing amount of money
-                          Row(
-                            children: [
-                              Icon(Icons.attach_money),
-                              // Text(globals.coins.toString(),
-                              //     style: TextStyle(fontSize: 20)),
-                              Text(
-                                "${snapshot.data!.coins}",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ],
+                          Icon(Icons.attach_money),
+                          // Text(globals.coins.toString(),
+                          //     style: TextStyle(fontSize: 20)),
+                          Text(
+                            "${snapshot.data!.coins}",
+                            style: TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                ),
+                // animal and items
+                Positioned(
+                  top: 170,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Image(
+                      image: AssetImage(imgPath),
                     ),
-                    // add animal and items here
-                    // Container(
-                    //   margin: EdgeInsets.only(
-                    //     top: 150,
-                    //   ),
-                    //   child: SizedBox(
-                    //     width: 200,
-                    //     height: 200,
-                    //     child: Image(
-                    //       image: AssetImage('assets/cat.png'),
-                    //       fit: BoxFit.none,
-                    //     ),
-                    //   ),
-                    // ),
-                    Container(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: Image(
-                          image: AssetImage(imgPath),
-                        ),
-                      ),
-                    ),
-                  ]),
+                  ),
                 ),
               ],
             ),
