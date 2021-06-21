@@ -15,12 +15,12 @@ class _VerifyState extends State<Verify> {
 
   @override
   void initState() {
-     super.initState();
-     user = _firebaseAuth.currentUser!;
-     user.sendEmailVerification();
-     timer = Timer.periodic(Duration(seconds: 5), (timer) {
-       checkEmailVerified();
-     });
+    super.initState();
+    user = _firebaseAuth.currentUser!;
+    user.sendEmailVerification();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      checkEmailVerified();
+    });
   }
 
   @override
@@ -32,42 +32,38 @@ class _VerifyState extends State<Verify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.mail_outline,
-              color: Colors.lightBlue,
-            ),
-            Container(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                "An email has been sent to ${user.email}. "
-                    "Please verify.",
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                )
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.mail_outline,
+                color: Colors.lightBlue,
               ),
-            )
-          ],
-        ),
-      )
-    );
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                    "An email has been sent to ${user.email}. "
+                    "Please verify.",
+                    style: TextStyle(
+                      color: Colors.lightBlue,
+                    )),
+              )
+            ],
+          ),
+        ));
   }
 
   Future<void> checkEmailVerified() async {
     user = _firebaseAuth.currentUser!;
     await user.reload();
-    _firebaseAuth
-        .authStateChanges()
-        .listen((User? user) {
-          if (user!.emailVerified) {
-            timer.cancel();
-            Navigator.pushReplacementNamed(context, "/");
-          }
+    _firebaseAuth.authStateChanges().listen((User? user) {
+      if (user!.emailVerified) {
+        timer.cancel();
+        Navigator.pushReplacementNamed(context, "/setup");
+      }
     });
   }
 }

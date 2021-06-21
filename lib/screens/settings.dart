@@ -25,7 +25,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('User details:'),
-              subtitle: Text('Email: '),
+              subtitle:
+                  Text('Email: ${FirebaseAuth.instance.currentUser!.email}'),
             ),
             ListTile(
               leading: Icon(Icons.circle_notifications_outlined),
@@ -42,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: const EdgeInsets.only(top: 400),
               child: ListTile(
+                tileColor: Colors.grey.shade100,
                 title: Center(child: Text('Sign Out')),
                 onTap: () async {
                   setState(() {
