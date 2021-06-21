@@ -253,8 +253,8 @@ class DatabaseService {
         "price": 10,
         "imgPath": "assets/wallpaper/1.png",
         "num": "1",
-        "bought": false,
-        "inUse": false,
+        "bought": true,
+        "inUse": true,
       });
       _db
           .collection("user")
@@ -288,7 +288,7 @@ class DatabaseService {
           .collection("wallpapers")
           .doc("4")
           .set({
-        "name": "LivingRoom",
+        "name": "Living Room",
         "price": 10,
         "imgPath": "assets/wallpaper/4.png",
         "num": "4",
@@ -319,6 +319,7 @@ class DatabaseService {
   }
 
   Future applyWallpaper(Wallpaper wallpaper) {
+    // update inUse of prev wallpaper to false
     return _db
         .collection("user")
         .doc(this.uid)

@@ -29,10 +29,10 @@ class _WallpaperPageState extends State<WallpaperPage> {
                 mainAxisSpacing: 15.0,
                 childAspectRatio: 0.8,
                 children: [
-                  WallpaperTile(wallpaper: "Bee"),
-                  WallpaperTile(wallpaper: "Overall"),
-                  WallpaperTile(wallpaper: "Egg"),
-                  WallpaperTile(wallpaper: "Bandanna")
+                  WallpaperTile(wallpaper: "1"),
+                  WallpaperTile(wallpaper: "2"),
+                  WallpaperTile(wallpaper: "3"),
+                  WallpaperTile(wallpaper: "4")
                 ],
               ),
             )
@@ -60,7 +60,6 @@ class _WallpaperTileState extends State<WallpaperTile> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Wallpaper>(
-      // database.dart need stream wallpapers
       stream: DatabaseService().wallpapers(name),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -112,7 +111,7 @@ class _WallpaperTileState extends State<WallpaperTile> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                           image: AssetImage(imgPath),
-                          fit: BoxFit.fill,
+                          fit: BoxFit.contain,
                         )),
                       ),
                     ),
@@ -143,8 +142,18 @@ class _WallpaperTileState extends State<WallpaperTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
-                            await DatabaseService().buyWallpaper(wpp);
-                            // how to disable button!
+                            int coins = await DatabaseService().coins();
+                            if (coins < price) {
+                              // pop up for not enough coins
+                              setState(() {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        _errorPopup(context));
+                              });
+                            } else {
+                              await DatabaseService().buyWallpaper(wpp);
+                            } // how to disable button!
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -219,6 +228,23 @@ class _WallpaperTileState extends State<WallpaperTile> {
                   ],
                 )));
       },
+    );
+  }
+
+  Widget _errorPopup(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Not enough coins!"),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('ok'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -72,7 +72,7 @@ class _AuthenticationState extends State<Authentication> {
                     } else {
                       print("user is signed in");
                       await DatabaseService().newUser();
-                      Navigator.pushReplacementNamed(context, "/setup");
+                      Navigator.pushNamed(context, "/setup");
                     }
                   });
                 },

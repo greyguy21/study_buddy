@@ -160,6 +160,7 @@ class _HomePageState extends State<HomePage> {
                   context,
                   PageTransition(
                       child: MainFocusPage(), type: PageTransitionType.fade));
+              // Navigator.pushReplacementNamed(context, "/mainfocus");
             }
           },
           label: Text(
