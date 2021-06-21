@@ -70,6 +70,12 @@ class DatabaseService {
         .map(_userFromFirestore);
   }
 
+  Future coins() {
+    return _db.collection("user").doc(this.uid).get().then((value) {
+      return value.get("coins");
+    });
+  }
+
   Clothes _clothesFromFirestore(DocumentSnapshot snapshot) {
     return Clothes(
         name: snapshot.get("name"),
