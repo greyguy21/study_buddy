@@ -66,7 +66,7 @@ class _VerifyState extends State<Verify> {
         .listen((User? user) {
           if (user!.emailVerified) {
             timer.cancel();
-            Navigator.pushReplacementNamed(context, "/");
+            Navigator.pushReplacementNamed(context, "/setup");
           }
     });
   }
