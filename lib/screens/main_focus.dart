@@ -44,29 +44,38 @@ class _MainFocusPageState extends State<MainFocusPage> {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
+                  // task name to display
                   Container(
-                    child: Column(children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(top: 80),
-                          child: Text('Task: $taskName',
-                              style: TextStyle(fontSize: 20))),
-                      // add animal and items here
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: 150,
-                        ),
-                        child: Image(
-                          image: AssetImage(imgPath),
-                        ),
+                      margin: EdgeInsets.only(top: 80),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Task: $taskName',
+                                style: TextStyle(fontSize: 20))
+                          ])),
+                  // animal and items
+                  Positioned(
+                    top: 170,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: Image(
+                        image: AssetImage(imgPath),
                       ),
-                      // timer widget
-                      Expanded(
-                        child: Container(
-                          // margin: EdgeInsets.only(top: 50),
-                          child: CustomTimer(),
-                        ),
+                    ),
+                  ),
+                  // timer widget
+                  Column(
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CustomTimer(),
+                        ],
                       ),
-                    ]),
+                    ],
                   ),
                 ],
               ),

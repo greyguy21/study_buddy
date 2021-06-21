@@ -6,6 +6,13 @@ class AppUser {
   String pet;
   String clothesInUse;
   String accessoryInUse;
+  String wallpaper;
 
-  AppUser({required this.coins,this.uid, required this.pet, required this.clothesInUse, required this.accessoryInUse});
+  AppUser(
+      {required this.coins,
+      this.uid,
+      required this.pet,
+      required this.clothesInUse,
+      required this.accessoryInUse,
+      required this.wallpaper});
 }
