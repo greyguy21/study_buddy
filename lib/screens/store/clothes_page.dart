@@ -193,6 +193,8 @@ class _ClothesTileState extends State<ClothesTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
+
+                            // must remove then can apply!
                             await DatabaseService().applyClothes(clothing);
                             // how to disable button!
                           },
