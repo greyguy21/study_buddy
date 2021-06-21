@@ -127,7 +127,7 @@ class _PetTileState extends State<PetTile> {
             //   visible: _selectButton,
             //   child:
             FloatingActionButton.extended(
-              heroTag: this.imgPath,
+              heroTag: this.pet,
               onPressed: () async {
                 // select();
                 await DatabaseService().updatePet(this.pet);

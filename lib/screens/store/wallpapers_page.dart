@@ -41,6 +41,7 @@ class _WallpaperPageState extends State<WallpaperPage> {
   }
 }
 
+// ignore: must_be_immutable
 class WallpaperTile extends StatefulWidget {
   String wallpaper;
   WallpaperTile({required this.wallpaper});

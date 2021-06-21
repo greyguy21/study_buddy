@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
+import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
 
 class ClothesPage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ClothesTileState extends State<ClothesTile> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading...");
+          return Loading();
         }
 
         bool bought = snapshot.data!.bought;
@@ -158,8 +159,15 @@ class _ClothesTileState extends State<ClothesTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
-                            await DatabaseService().buyClothes(clothing);
-                            // how to disable button!
+                            int coins = await DatabaseService().coins();
+                            if (coins < price) {
+                              // pop up for not enough coins
+                              setState(() {
+                                showDialog(context: context, builder: (BuildContext context) => _errorPopup(context));
+                              });
+                            } else {
+                              await DatabaseService().buyClothes(clothing);
+                            }// how to disable button!
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -236,4 +244,22 @@ class _ClothesTileState extends State<ClothesTile> {
       },
     );
   }
+}
+
+Widget _errorPopup(BuildContext context) {
+  return AlertDialog(
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+            "Not enough coins!"),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('ok'),
+        ),
+      ],
+    ),
+  );
 }
