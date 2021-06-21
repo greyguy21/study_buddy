@@ -29,14 +29,14 @@ class _HomePageState extends State<HomePage> {
           String accessory = snapshot.data!.accessoryInUse;
           String pet = snapshot.data!.pet;
           String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
-          String wallpaper = snapshot.data!.wallpaper;
+          String wallpaperstr = snapshot.data!.wallpaper;
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: Stack(
               children: <Widget>[
                 Image(
-                  image: AssetImage('assets/defaultBg.jpeg'),
+                  image: AssetImage("assets/wallpaper/$wallpaperstr.png"),
                   height: double.infinity,
                   width: double.infinity,
                   fit: BoxFit.cover,
