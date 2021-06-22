@@ -2,8 +2,16 @@ class Accessory {
   late String name;
   late int price;
   late String imgPath;
-  bool bought = false;
-  bool inUse = false;
+  late String num;
+  bool bought;
+  bool inUse;
 
-  Accessory({required this.name, required this.price, required this.imgPath});
+  Accessory({
+    required this.name,
+    required this.price,
+    required this.imgPath,
+    required this.num,
+    required this.bought,
+    required this.inUse
+  });
 }

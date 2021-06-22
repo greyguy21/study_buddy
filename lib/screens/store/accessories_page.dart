@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_buddy/models/accessory.dart';
+import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
 
 class AccessoriesPage extends StatefulWidget {
@@ -28,14 +29,10 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
                 mainAxisSpacing: 15.0,
                 childAspectRatio: 0.8,
                 children: [
-                  _buildAccessory("accessory1", 10, "assets/kotaro1.jpg", context),
-                  _buildAccessory("accessory2", 10, "assets/kotaro2.jpg", context),
-                  _buildAccessory("accessory3", 10, "assets/kotaro3.jpg", context),
-                  _buildAccessory("accessory4", 10, "assets/kotaro4.jpg", context),
-                  _buildAccessory("accessory5", 10, "assets/kotaro5.jpg", context),
-                  _buildAccessory("accessory6", 10, "assets/kotaro6.jpg", context),
-                  _buildAccessory("accessory7", 10, "assets/kotaro7.jpg", context),
-                  _buildAccessory("accessory8", 10, "assets/kotaro8.jpg", context),
+                  AccessoryTile(accessory: "Bee"),
+                  AccessoryTile(accessory: "Beret"),
+                  AccessoryTile(accessory: "Bread"),
+                  AccessoryTile(accessory: "Party Hat"),
                 ],
               ),
             )
@@ -43,91 +40,208 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
         )
     );
   }
+}
 
-  Widget _buildAccessory(String name, int price, String imgPath, context) {
-    Accessory accessory = Accessory(name: name, price: price, imgPath: imgPath);
-    // AppUser appUser = Provider.of<AppUser>(context);
-    return Padding(
-        padding: EdgeInsets.all(5.0),
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 3.0,
-                  blurRadius: 5.0,
-                )
-              ],
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 7.0,
-                ),
-                Hero(
-                  tag: imgPath,
-                  child: Container(
-                    height: 100.0,
-                    width: 100.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(imgPath),
-                          fit: BoxFit.fill,
-                        )
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Center(
-                  child: Text(
-                      "${price}",
-                      style: TextStyle(
-                        color: Colors.black,
-                      )
-                  ),
-                ),
-                Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.black,
+class AccessoryTile extends StatefulWidget {
+  String accessory;
+  AccessoryTile({required this.accessory});
+
+  @override
+  _AccessoryTileState createState() => _AccessoryTileState(name: this.accessory);
+}
+
+class _AccessoryTileState extends State<AccessoryTile> {
+  String name;
+  _AccessoryTileState({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Accessory>(
+      stream: DatabaseService().accessories(name),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text("something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
+        }
+
+        bool bought = snapshot.data!.bought;
+        bool inUse = snapshot.data!.inUse;
+        String name = snapshot.data!.name;
+        int price = snapshot.data!.price;
+        String imgPath = snapshot.data!.imgPath;
+        String num = snapshot.data!.num;
+        Accessory accessory = Accessory(
+            name: name,
+            price: price,
+            imgPath: imgPath,
+            num: num,
+            bought: bought,
+            inUse: inUse);
+
+        return Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 3.0,
+                      blurRadius: 5.0,
                     )
+                  ],
+                  color: Colors.white,
                 ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Expanded(
-                  child: FloatingActionButton.extended(
-                    onPressed: () async {
-                      // check if coins > price first!!
-                      // else return error message
-
-                      // then need to change to use or remove!
-                      // change buttons, new tiles, or gesture detectors
-                      setState(() {
-                        accessory.bought = true;
-                      });
-                      await DatabaseService().buyAccessory(accessory);
-                    },
-                    icon: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 7.0,
                     ),
-                    label: Text(
-                      "Buy",
-                      style: TextStyle(
-                        color: Colors.white,
+                    Hero(
+                      tag: imgPath,
+                      child: Container(
+                        height: 100.0,
+                        width: 100.0,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(imgPath),
+                              fit: BoxFit.fill,
+                            )),
                       ),
                     ),
-                    backgroundColor: Colors.lightBlue,
-                  ),
-                )
-              ],
-            )
-        )
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Center(
+                      child: Text("${price}",
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
+                    ),
+                    Text(name,
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Visibility(
+                      visible: !bought,
+                      child: Expanded(
+                        child: FloatingActionButton.extended(
+                          heroTag: name,
+                          onPressed: () async {
+                            // check if coins > price first!!
+                            // else return error message
+
+                            // then need to change to use or remove!
+                            // change buttons, new tiles, or gesture detectors
+                            int coins = await DatabaseService().coins();
+                            if (coins < price) {
+                              // pop up for not enough coins
+                              setState(() {
+                                showDialog(context: context, builder: (BuildContext context) => _errorPopup(context));
+                              });
+                            } else {
+                              await DatabaseService().buyAccessory(accessory);
+                            }// how to disable button!
+                          },
+                          icon: Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Buy",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !inUse && bought,
+                      child: Expanded(
+                        child: FloatingActionButton.extended(
+                          heroTag: name,
+                          onPressed: () async {
+                            // check if coins > price first!!
+                            // else return error message
+
+                            // then need to change to use or remove!
+                            // change buttons, new tiles, or gesture detectors
+
+                            // must remove then can apply!
+                            await DatabaseService().applyAccessory(accessory);
+                            // how to disable button!
+                          },
+                          icon: Icon(
+                            Icons.check_circle_outline_rounded,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Apply",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: inUse && bought,
+                      child: Expanded(
+                        child: FloatingActionButton.extended(
+                          heroTag: name,
+                          onPressed: () async {
+                            // check if coins > price first!!
+                            // else return error message
+
+                            // then need to change to use or remove!
+                            // change buttons, new tiles, or gesture detectors
+                            await DatabaseService().removeAccessory(accessory);
+                            // how to disable button!
+                          },
+                          icon: Icon(
+                            Icons.cancel_outlined,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Remove",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.lightBlue,
+                        ),
+                      ),
+                    )
+                  ],
+                )));
+      },
     );
   }
+}
+
+Widget _errorPopup(BuildContext context) {
+  return AlertDialog(
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+            "Not enough coins!"),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('ok'),
+        ),
+      ],
+    ),
+  );
 }

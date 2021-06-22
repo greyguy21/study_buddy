@@ -15,32 +15,9 @@ class DatabaseService {
         .collection("user")
         .doc(uid)
         .set({"coins": 0, "pet": "", "wallpaper": "1"}).then((value) {
-      FirebaseFirestore.instance
-          .collection("user")
-          .doc(uid)
-          .collection("clothes")
-          .add({
-        "name": "nothing",
-        "num": "00",
-      });
       DatabaseService().addClothes();
-      FirebaseFirestore.instance
-          .collection("user")
-          .doc(uid)
-          .collection("wallpapers")
-          .add({
-        "name": "nothing",
-        "num": "00",
-      });
       DatabaseService().addWallpapers();
-      FirebaseFirestore.instance
-          .collection("user")
-          .doc(uid)
-          .collection("accessories")
-          .add({
-        "name": "nothing",
-        "num": "00",
-      });
+      DatabaseService().addAccessories();
     });
   }
 
@@ -103,54 +80,63 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
+          .doc("nothing")
+          .set({
+            "name": "nothing",
+            "num": "00",
+          });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("clothes")
           .doc("Bee")
           .set({
-        "name": "Bee",
-        "price": 10,
-        "imgPath": "assets/store/beeClothes.png",
-        "num": "01",
-        "bought": false,
-        "inUse": false,
-      });
+            "name": "Bee",
+            "price": 10,
+            "imgPath": "assets/store/beeClothes.png",
+            "num": "01",
+            "bought": false,
+            "inUse": false,
+          });
       _db
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
           .doc("Overall")
           .set({
-        "name": "Overall",
-        "price": 10,
-        "imgPath": "assets/store/overallClothes.png",
-        "num": "02",
-        "bought": false,
-        "inUse": false,
-      });
+            "name": "Overall",
+            "price": 10,
+            "imgPath": "assets/store/overallClothes.png",
+            "num": "02",
+            "bought": false,
+            "inUse": false,
+          });
       _db
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
           .doc("Egg")
           .set({
-        "name": "Egg",
-        "price": 10,
-        "imgPath": "assets/store/eggClothes.png",
-        "num": "03",
-        "bought": false,
-        "inUse": false,
-      });
+            "name": "Egg",
+            "price": 10,
+            "imgPath": "assets/store/eggClothes.png",
+            "num": "03",
+            "bought": false,
+            "inUse": false,
+           });
       _db
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
           .doc("Bandanna")
           .set({
-        "name": "Bandanna",
-        "price": 10,
-        "imgPath": "assets/store/bandannaClothes.png",
-        "num": "04",
-        "bought": false,
-        "inUse": false,
-      });
+            "name": "Bandanna",
+            "price": 10,
+            "imgPath": "assets/store/bandannaClothes.png",
+            "num": "04",
+            "bought": false,
+            "inUse": false,
+          });
     });
   }
 
@@ -177,7 +163,7 @@ class DatabaseService {
     return _db
         .collection("user")
         .doc(this.uid)
-        .update({"clothesInUse": clothing.num}).then((value) {
+        .update({"clothesInUse": clothing.num, "clothes": clothing.name}).then((value) {
       _db
           .collection("user")
           .doc(this.uid)
@@ -198,26 +184,6 @@ class DatabaseService {
           .collection("clothes")
           .doc(clothing.name)
           .update({"inUse": false});
-    });
-  }
-
-  Future buyFurniture(Furniture furniture) async {
-    DocumentReference docRef = _db.collection("user").doc(this.uid);
-
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot snapshot = await transaction.get(docRef);
-
-      if (!snapshot.exists) {
-        throw Exception("user does not exist!");
-      }
-      int newCoinValue = snapshot.get("coins") - furniture.price;
-      transaction.update(docRef, {"coins": newCoinValue});
-    }).then((value) {
-      docRef.collection("furniture").doc(furniture.name).set({
-        "name": furniture.name,
-        "price": furniture.price,
-        "imgPath": furniture.imgPath,
-      });
     });
   }
 
@@ -344,6 +310,92 @@ class DatabaseService {
     });
   }
 
+  Accessory _accessoryFromFirestore(DocumentSnapshot snapshot) {
+    return Accessory(
+        name: snapshot.get("name"),
+        price: snapshot.get("price"),
+        imgPath: snapshot.get("imgPath"),
+        num: snapshot.get("num"),
+        bought: snapshot.get("bought"),
+        inUse: snapshot.get("inUse"));
+  }
+
+  Stream<Accessory> accessories(String name) {
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .collection("accessories")
+        .doc(name)
+        .snapshots()
+        .map(_accessoryFromFirestore);
+  }
+
+  Future addAccessories() {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db
+          .collection("user")
+          .doc(uid)
+          .collection("accessories")
+          .doc("nothing")
+          .set({
+            "name": "nothing",
+            "num": "00",
+          });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc("Bee")
+          .set({
+        "name": "Bee",
+        "price": 10,
+        "imgPath": "assets/store/beeAccessory.png",
+        "num": "01",
+        "bought": false,
+        "inUse": false,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc("Beret")
+          .set({
+        "name": "Beret",
+        "price": 10,
+        "imgPath": "assets/store/beretAccessory.png",
+        "num": "02",
+        "bought": false,
+        "inUse": false,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc("Bread")
+          .set({
+        "name": "Bread",
+        "price": 10,
+        "imgPath": "assets/store/breadAccessory.png",
+        "num": "03",
+        "bought": false,
+        "inUse": false,
+      });
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc("Party Hat")
+          .set({
+        "name": "Party Hat",
+        "price": 10,
+        "imgPath": "assets/store/partyhatAccessory.png",
+        "num": "04",
+        "bought": false,
+        "inUse": false,
+      });
+    });
+  }
+
   Future buyAccessory(Accessory accessory) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
@@ -356,11 +408,40 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") - accessory.price;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("accessories").doc(accessory.name).set({
+      docRef.collection("accessories").doc(accessory.name).update({
         "name": accessory.name,
         "price": accessory.price,
         "imgPath": accessory.imgPath,
+        "bought": true,
       });
+    });
+  }
+
+  Future applyAccessory(Accessory accessory) {
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({"accessoryInUse": accessory.num, "accessory": accessory.name}).then((value) {
+          _db
+            .collection("user")
+            .doc(this.uid)
+            .collection("accessories")
+            .doc(accessory.name)
+            .update({"inUse": true});
+    });
+  }
+
+  Future removeAccessory(Accessory accessory) {
+    return _db
+        .collection("user")
+        .doc(this.uid)
+        .update({"accessoryInUse": "00"}).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc(accessory.name)
+          .update({"inUse": false});
     });
   }
 
