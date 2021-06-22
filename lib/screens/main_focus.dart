@@ -64,9 +64,7 @@ class _MainFocusPageState extends State<MainFocusPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.6,
-                      child: Image(
-                        image: AssetImage(imgPath),
-                      ),
+                      child: Animal(pet, imgPath),
                     ),
                   ),
                   // timer widget
@@ -101,6 +99,53 @@ class _MainFocusPageState extends State<MainFocusPage> {
               Navigator.pop(context);
             },
             child: Text('ok'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Animal extends StatefulWidget {
+  late String animal;
+  late String imgPath;
+  Animal(String animal, String imgPath) {
+    this.animal = animal;
+    this.imgPath = imgPath;
+  }
+
+  @override
+  _AnimalState createState() => _AnimalState();
+}
+
+class _AnimalState extends State<Animal> {
+  @override
+  Widget build(BuildContext context) {
+    double topHeight = 0;
+    double bottomHeight = 0;
+    if (widget.animal == "hamster") {
+      topHeight = 170;
+      bottomHeight = 20;
+    } else if (widget.animal == "rabbit") {
+      topHeight = 100;
+      bottomHeight = 50;
+    } else if (widget.animal == "cat") {
+      topHeight = 40;
+      bottomHeight = 60;
+    } else {
+      // dog
+      topHeight = 30;
+    }
+
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(
+            height: topHeight,
+          ),
+          Expanded(child: Image.asset(widget.imgPath, fit: BoxFit.contain)),
+          SizedBox(
+            height: bottomHeight,
           ),
         ],
       ),

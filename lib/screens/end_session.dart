@@ -12,7 +12,7 @@ class EndSession extends StatefulWidget {
 }
 
 class _EndSessionState extends State<EndSession> {
-  int amt = globals.timeSliderValue.round();
+  int amt = globals.timeSliderValue.round() * 100;
 
   @override
   Widget build(BuildContext context) {
