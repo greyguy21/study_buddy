@@ -37,50 +37,53 @@ class _MainFocusPageState extends State<MainFocusPage> {
             String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
             String wallpaperstr = snapshot.data!.wallpaper;
 
-            return Scaffold(
-              body: Stack(
-                children: <Widget>[
-                  Image(
-                    image: AssetImage("assets/wallpaper/$wallpaperstr.png"),
-                    height: double.infinity,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  // task name to display
-                  Container(
-                      margin: EdgeInsets.only(top: 80),
-                      child: Row(
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: Scaffold(
+                body: Stack(
+                  children: <Widget>[
+                    Image(
+                      image: AssetImage("assets/wallpaper/$wallpaperstr.png"),
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    // task name to display
+                    Container(
+                        margin: EdgeInsets.only(top: 80),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('Task: $taskName',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    backgroundColor: Colors.white,
+                                  ))
+                            ])),
+                    // animal and items
+                    Positioned(
+                      top: 200,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: Animal(pet, imgPath),
+                      ),
+                    ),
+                    // timer widget
+                    Column(
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.8),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text('Task: $taskName',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  backgroundColor: Colors.white,
-                                ))
-                          ])),
-                  // animal and items
-                  Positioned(
-                    top: 200,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: Animal(pet, imgPath),
+                            CustomTimer(),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                  // timer widget
-                  Column(
-                    children: [
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CustomTimer(),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }
