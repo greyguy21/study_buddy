@@ -29,16 +29,15 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
                 mainAxisSpacing: 15.0,
                 childAspectRatio: 0.8,
                 children: [
-                  AccessoryTile(accessory: "Bee"),
-                  AccessoryTile(accessory: "Beret"),
-                  AccessoryTile(accessory: "Bread"),
-                  AccessoryTile(accessory: "Party Hat"),
+                  AccessoryTile(accessory: "01"),
+                  AccessoryTile(accessory: "02"),
+                  AccessoryTile(accessory: "03"),
+                  AccessoryTile(accessory: "04"),
                 ],
               ),
             )
           ],
-        )
-    );
+        ));
   }
 }
 
@@ -47,7 +46,8 @@ class AccessoryTile extends StatefulWidget {
   AccessoryTile({required this.accessory});
 
   @override
-  _AccessoryTileState createState() => _AccessoryTileState(name: this.accessory);
+  _AccessoryTileState createState() =>
+      _AccessoryTileState(name: this.accessory);
 }
 
 class _AccessoryTileState extends State<AccessoryTile> {
@@ -107,9 +107,9 @@ class _AccessoryTileState extends State<AccessoryTile> {
                         width: 100.0,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(imgPath),
-                              fit: BoxFit.fill,
-                            )),
+                          image: AssetImage(imgPath),
+                          fit: BoxFit.fill,
+                        )),
                       ),
                     ),
                     SizedBox(
@@ -143,11 +143,14 @@ class _AccessoryTileState extends State<AccessoryTile> {
                             if (coins < price) {
                               // pop up for not enough coins
                               setState(() {
-                                showDialog(context: context, builder: (BuildContext context) => _errorPopup(context));
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        _errorPopup(context));
                               });
                             } else {
                               await DatabaseService().buyAccessory(accessory);
-                            }// how to disable button!
+                            } // how to disable button!
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -176,6 +179,12 @@ class _AccessoryTileState extends State<AccessoryTile> {
                             // change buttons, new tiles, or gesture detectors
 
                             // must remove then can apply!
+                            String currAccessory =
+                                await DatabaseService().currAccessory();
+                            if (currAccessory != "00") {
+                              await DatabaseService()
+                                  .removeAccessory(currAccessory);
+                            }
                             await DatabaseService().applyAccessory(accessory);
                             // how to disable button!
                           },
@@ -204,7 +213,8 @@ class _AccessoryTileState extends State<AccessoryTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
-                            await DatabaseService().removeAccessory(accessory);
+                            await DatabaseService()
+                                .removeAccessory(accessory.num);
                             // how to disable button!
                           },
                           icon: Icon(
@@ -233,8 +243,7 @@ Widget _errorPopup(BuildContext context) {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-            "Not enough coins!"),
+        Text("Not enough coins!"),
         TextButton(
           onPressed: () {
             Navigator.pop(context);

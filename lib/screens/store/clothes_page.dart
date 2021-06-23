@@ -35,12 +35,12 @@ class _ClothesPageState extends State<ClothesPage> {
                 childAspectRatio: 0.8,
                 children: [
                   ClothesTile(
-                    clothing: "Bee",
+                    clothing: "01",
                   ),
-                  ClothesTile(clothing: "Overall"),
-                  ClothesTile(clothing: "Egg"),
+                  ClothesTile(clothing: "02"),
+                  ClothesTile(clothing: "03"),
                   ClothesTile(
-                    clothing: "Bandanna",
+                    clothing: "04",
                   )
                 ],
               ),
@@ -163,11 +163,14 @@ class _ClothesTileState extends State<ClothesTile> {
                             if (coins < price) {
                               // pop up for not enough coins
                               setState(() {
-                                showDialog(context: context, builder: (BuildContext context) => _errorPopup(context));
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        _errorPopup(context));
                               });
                             } else {
                               await DatabaseService().buyClothes(clothing);
-                            }// how to disable button!
+                            } // how to disable button!
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -196,6 +199,12 @@ class _ClothesTileState extends State<ClothesTile> {
                             // change buttons, new tiles, or gesture detectors
 
                             // must remove then can apply!
+                            String currClothes =
+                                await DatabaseService().currClothes();
+                            if (currClothes != "00") {
+                              await DatabaseService()
+                                  .removeClothes(currClothes);
+                            }
                             await DatabaseService().applyClothes(clothing);
                             // how to disable button!
                           },
@@ -224,7 +233,7 @@ class _ClothesTileState extends State<ClothesTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
-                            await DatabaseService().removeClothes(clothing);
+                            await DatabaseService().removeClothes(clothing.num);
                             // how to disable button!
                           },
                           icon: Icon(
@@ -253,8 +262,7 @@ Widget _errorPopup(BuildContext context) {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-            "Not enough coins!"),
+        Text("Not enough coins!"),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
