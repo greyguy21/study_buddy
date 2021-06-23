@@ -53,6 +53,18 @@ class DatabaseService {
     });
   }
 
+  Future currClothes() async {
+    return _db.collection("user").doc(this.uid).get().then((value) {
+      return value.get("clothesInUse");
+    });
+  }
+
+  Future currAccessory() async {
+    return _db.collection("user").doc(this.uid).get().then((value) {
+      return value.get("accessoryInUse");
+    });
+  }
+
   Clothes _clothesFromFirestore(DocumentSnapshot snapshot) {
     return Clothes(
         name: snapshot.get("name"),
@@ -76,67 +88,38 @@ class DatabaseService {
 
   Future addClothes() {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("clothes")
-          .doc("nothing")
-          .set({
-            "name": "nothing",
-            "num": "00",
-          });
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("clothes")
-          .doc("Bee")
-          .set({
-            "name": "Bee",
-            "price": 10,
-            "imgPath": "assets/store/beeClothes.png",
-            "num": "01",
-            "bought": false,
-            "inUse": false,
-          });
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("clothes")
-          .doc("Overall")
-          .set({
-            "name": "Overall",
-            "price": 10,
-            "imgPath": "assets/store/overallClothes.png",
-            "num": "02",
-            "bought": false,
-            "inUse": false,
-          });
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("clothes")
-          .doc("Egg")
-          .set({
-            "name": "Egg",
-            "price": 10,
-            "imgPath": "assets/store/eggClothes.png",
-            "num": "03",
-            "bought": false,
-            "inUse": false,
-           });
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("clothes")
-          .doc("Bandanna")
-          .set({
-            "name": "Bandanna",
-            "price": 10,
-            "imgPath": "assets/store/bandannaClothes.png",
-            "num": "04",
-            "bought": false,
-            "inUse": false,
-          });
+      _db.collection("user").doc(this.uid).collection("clothes").doc("01").set({
+        "name": "Bee",
+        "price": 10,
+        "imgPath": "assets/store/beeClothes.png",
+        "num": "01",
+        "bought": false,
+        "inUse": false,
+      });
+      _db.collection("user").doc(this.uid).collection("clothes").doc("02").set({
+        "name": "Overall",
+        "price": 10,
+        "imgPath": "assets/store/overallClothes.png",
+        "num": "02",
+        "bought": false,
+        "inUse": false,
+      });
+      _db.collection("user").doc(this.uid).collection("clothes").doc("03").set({
+        "name": "Egg",
+        "price": 10,
+        "imgPath": "assets/store/eggClothes.png",
+        "num": "03",
+        "bought": false,
+        "inUse": false,
+      });
+      _db.collection("user").doc(this.uid).collection("clothes").doc("04").set({
+        "name": "Bandanna",
+        "price": 10,
+        "imgPath": "assets/store/bandannaClothes.png",
+        "num": "04",
+        "bought": false,
+        "inUse": false,
+      });
     });
   }
 
@@ -152,28 +135,28 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") - clothing.price;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("clothes").doc(clothing.name).update({
+      docRef.collection("clothes").doc(clothing.num).update({
         "bought": true,
         "inUse": false,
       });
     });
   }
 
-  Future applyClothes(Clothes clothing) {
+  Future applyClothes(Clothes clothing) async {
     return _db
         .collection("user")
         .doc(this.uid)
-        .update({"clothesInUse": clothing.num, "clothes": clothing.name}).then((value) {
+        .update({"clothesInUse": clothing.num}).then((value) {
       _db
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
-          .doc(clothing.name)
+          .doc(clothing.num)
           .update({"inUse": true});
     });
   }
 
-  Future removeClothes(Clothes clothing) {
+  Future removeClothes(String clothing) {
     return _db
         .collection("user")
         .doc(this.uid)
@@ -182,7 +165,7 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("clothes")
-          .doc(clothing.name)
+          .doc(clothing)
           .update({"inUse": false});
     });
   }
@@ -287,7 +270,8 @@ class DatabaseService {
 
   Future applyWallpaper(Wallpaper wallpaper) async {
     // update inUse of prev wallpaper to false
-    String currWallpaper = await _db.collection("user").doc(this.uid).get().then((value) {
+    String currWallpaper =
+        await _db.collection("user").doc(this.uid).get().then((value) {
       return value.get("wallpaper");
     });
 
@@ -334,18 +318,9 @@ class DatabaseService {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
       _db
           .collection("user")
-          .doc(uid)
-          .collection("accessories")
-          .doc("nothing")
-          .set({
-            "name": "nothing",
-            "num": "00",
-          });
-      _db
-          .collection("user")
           .doc(this.uid)
           .collection("accessories")
-          .doc("Bee")
+          .doc("01")
           .set({
         "name": "Bee",
         "price": 10,
@@ -358,7 +333,7 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("accessories")
-          .doc("Beret")
+          .doc("02")
           .set({
         "name": "Beret",
         "price": 10,
@@ -371,7 +346,7 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("accessories")
-          .doc("Bread")
+          .doc("03")
           .set({
         "name": "Bread",
         "price": 10,
@@ -384,7 +359,7 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("accessories")
-          .doc("Party Hat")
+          .doc("04")
           .set({
         "name": "Party Hat",
         "price": 10,
@@ -408,7 +383,7 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") - accessory.price;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("accessories").doc(accessory.name).update({
+      docRef.collection("accessories").doc(accessory.num).update({
         "name": accessory.name,
         "price": accessory.price,
         "imgPath": accessory.imgPath,
@@ -418,20 +393,20 @@ class DatabaseService {
   }
 
   Future applyAccessory(Accessory accessory) {
-    return _db
-        .collection("user")
-        .doc(this.uid)
-        .update({"accessoryInUse": accessory.num, "accessory": accessory.name}).then((value) {
-          _db
-            .collection("user")
-            .doc(this.uid)
-            .collection("accessories")
-            .doc(accessory.name)
-            .update({"inUse": true});
+    return _db.collection("user").doc(this.uid).update({
+      "accessoryInUse": accessory.num,
+      "accessory": accessory.name
+    }).then((value) {
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("accessories")
+          .doc(accessory.num)
+          .update({"inUse": true});
     });
   }
 
-  Future removeAccessory(Accessory accessory) {
+  Future removeAccessory(String accessory) {
     return _db
         .collection("user")
         .doc(this.uid)
@@ -440,7 +415,7 @@ class DatabaseService {
           .collection("user")
           .doc(this.uid)
           .collection("accessories")
-          .doc(accessory.name)
+          .doc(accessory)
           .update({"inUse": false});
     });
   }

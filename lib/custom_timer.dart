@@ -33,8 +33,8 @@ class _CustomTimerState extends State<CustomTimer> {
               context: context,
               builder: (BuildContext context) => endSession(context),
             );
-            await DatabaseService()
-                .updateTimeline(taskName, globals.timeSliderValue.round() * 100);
+            await DatabaseService().updateTimeline(
+                taskName, globals.timeSliderValue.round() * 100);
           });
         }
       });
