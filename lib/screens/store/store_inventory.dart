@@ -24,8 +24,7 @@ class StoreInventory extends StatefulWidget {
 }
 
 class _StoreInventoryState extends State<StoreInventory>
-    with SingleTickerProviderStateMixin{
-
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -37,28 +36,26 @@ class _StoreInventoryState extends State<StoreInventory>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.home,
-            color: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlue,
+          elevation: 0.0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, "/");
+            },
           ),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, "/");
-          },
+          title: Text("Store/Inventory",
+              style: TextStyle(
+                color: Colors.white,
+              )),
         ),
-        title: Text(
-          "Store/Inventory",
-          style: TextStyle(
-            color: Colors.white,
-          )
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
+        body: SafeArea(
+            child: Column(
           children: <Widget>[
             StreamBuilder<AppUser>(
               stream: DatabaseService().users,
@@ -74,29 +71,32 @@ class _StoreInventoryState extends State<StoreInventory>
                 String clothes = snapshot.data!.clothesInUse;
                 String accessory = snapshot.data!.accessoryInUse;
                 String pet = snapshot.data!.pet;
-                String imgPath = "assets/$pet/${pet+clothes+accessory}.png";
+                String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
                 String wallpaper = snapshot.data!.wallpaper;
+                String aaa = "-square";
 
                 return Container(
                   // where the animal and things should be!!
                   color: Colors.white60,
-                  height: MediaQuery.of(context).size.height/2.2,
+                  height: MediaQuery.of(context).size.height / 2.2,
                   child: Stack(
                     children: <Widget>[
+                      // wallpaper
+                      // shift the wallpaper so the floor is higher
                       Image(
-                        image: AssetImage("assets/wallpaper/$wallpaper.png"),
-                        height: MediaQuery.of(context).size.width,
-                        width: MediaQuery.of(context).size.height,
+                        image: AssetImage(
+                            "assets/wallpaper/${wallpaper + aaa}.png"),
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
                       ),
+                      // coin display
                       Positioned(
                         top: 10,
-                        left: 320,
+                        right: 30,
                         child: Row(
                           children: [
                             Icon(Icons.attach_money),
-                            // Text(globals.coins.toString(),
-                            //     style: TextStyle(fontSize: 20)),
                             Text(
                               "${snapshot.data!.coins}",
                               style: TextStyle(fontSize: 20),
@@ -104,13 +104,12 @@ class _StoreInventoryState extends State<StoreInventory>
                           ],
                         ),
                       ),
+                      // animal
                       Positioned(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * 0.6,
-                          child: Image(
-                            image: AssetImage(imgPath),
-                          ),
+                          child: Image.asset(imgPath),
                         ),
                       )
                     ],
@@ -119,52 +118,44 @@ class _StoreInventoryState extends State<StoreInventory>
               },
             ),
             PreferredSize(
-              preferredSize: Size.fromHeight(50.0),
-              child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                children: <Widget>[
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.transparent,
-                    labelColor: Colors.lightBlue,
-                    isScrollable: true,
-                    labelPadding: EdgeInsets.only(right: 45.0),
-                    unselectedLabelColor: Colors.blueGrey,
-                    tabs: [
-                      Tab(
-                        child: Text("clothes"),
+                preferredSize: Size.fromHeight(50.0),
+                child: ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15.0,
                       ),
-                      Tab(
-                        child: Text("wallpaper"),
-                      ),
-                      Tab(
-                        child: Text("accessories"),
-                      ),
-                    ]
-                  ),
-                  Container(
-                    height: 250.0,
-                    width: double.infinity,
-                    color: Colors.grey[200],
-                    child: TabBarView(
-                      controller: _tabController,
-                      children:[
-                        ClothesPage(),
-                        WallpaperPage(),
-                        AccessoriesPage(),
-                      ]
-                    )
-                  ),
-                ]
-              )
-            )
+                      TabBar(
+                          controller: _tabController,
+                          indicatorColor: Colors.transparent,
+                          labelColor: Colors.lightBlue,
+                          isScrollable: true,
+                          labelPadding: EdgeInsets.only(right: 45.0),
+                          unselectedLabelColor: Colors.blueGrey,
+                          tabs: [
+                            Tab(
+                              child: Text("clothes"),
+                            ),
+                            Tab(
+                              child: Text("accessories"),
+                            ),
+                            Tab(
+                              child: Text("wallpaper"),
+                            ),
+                          ]),
+                      Container(
+                          height: 250.0,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child:
+                              TabBarView(controller: _tabController, children: [
+                            ClothesPage(),
+                            AccessoriesPage(),
+                            WallpaperPage(),
+                          ])),
+                    ]))
           ],
-        )
-      )
-    );
+        )));
   }
 }
