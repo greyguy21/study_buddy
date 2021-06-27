@@ -35,8 +35,8 @@ class _TimelineState extends State<Timeline> {
                   itemCount: docRef.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(docRef[index].get("name")),
-                      subtitle: Text(docRef[index].get("time").toString()),
+                      title: Text("Task: " + docRef[index].get("name")),
+                      subtitle: Text("Duration: " + docRef[index].get("time").toString()),
                     );
                   }
               ),
