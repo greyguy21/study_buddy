@@ -26,14 +26,11 @@ class _EndSessionState extends State<EndSession> {
           Text("good job! You've earned $amt coins!"),
           TextButton(
             onPressed: () async {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: HomePage(), type: PageTransitionType.fade));
-                DateTime now = DateTime.now();
-                String end = now.hour.toString() + ":" + now.minute.toString();
-                await DatabaseService().updateEndTime(taskName, end);
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: HomePage(), type: PageTransitionType.fade));
             },
             child: Text('ok'),
           ),

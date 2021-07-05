@@ -420,7 +420,8 @@ class DatabaseService {
     });
   }
 
-  Future updateTimeline(String name, int duration, String date, String start) async {
+  Future updateTimeline(
+      String name, int duration, String date, String start, String end) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -436,26 +437,15 @@ class DatabaseService {
         "name": name,
         "duration": duration,
         "date": date,
-        "start": start
+        "start": start,
+        "end": end
       });
     });
   }
 
-  Future updateEndTime(String name, String end) {
-    return _db.collection("user").doc(this.uid).update({})
-        .then((value) {
-          _db.collection("user").doc(this.uid)
-              .collection("tasks")
-              .doc(name)
-              .update({
-                "end": end,
-              });
-          }
-        );
-  }
-
   Stream<QuerySnapshot> get timeline {
-    return _db.collection("user")
+    return _db
+        .collection("user")
         .doc(this.uid)
         .collection("tasks")
         .orderBy("start", descending: true)
