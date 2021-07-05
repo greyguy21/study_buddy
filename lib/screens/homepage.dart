@@ -156,6 +156,9 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton.extended(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
+              DateTime now = DateTime.now();
+              globals.taskStart = now.hour.toString() + ":" + now.minute.toString();
+
               Navigator.push(
                   context,
                   PageTransition(

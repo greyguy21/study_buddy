@@ -420,7 +420,7 @@ class DatabaseService {
     });
   }
 
-  Future updateTimeline(String name, int time) async {
+  Future updateTimeline(String name, int duration, String date, String start) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -429,17 +429,36 @@ class DatabaseService {
       if (!snapshot.exists) {
         throw Exception("user does not exist!");
       }
-      int newCoinValue = snapshot.get("coins") + time;
+      int newCoinValue = snapshot.get("coins") + duration;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
       docRef.collection("tasks").doc(name).set({
         "name": name,
-        "time": time,
+        "duration": duration,
+        "date": date,
+        "start": start
       });
     });
   }
 
+  Future updateEndTime(String name, String end) {
+    return _db.collection("user").doc(this.uid).update({})
+        .then((value) {
+          _db.collection("user").doc(this.uid)
+              .collection("tasks")
+              .doc(name)
+              .update({
+                "end": end,
+              });
+          }
+        );
+  }
+
   Stream<QuerySnapshot> get timeline {
-    return _db.collection("user").doc(this.uid).collection("tasks").snapshots();
+    return _db.collection("user")
+        .doc(this.uid)
+        .collection("tasks")
+        .orderBy("start", descending: true)
+        .snapshots();
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/services/database.dart';
 import 'globals.dart' as globals;
@@ -33,8 +34,12 @@ class _CustomTimerState extends State<CustomTimer> {
               context: context,
               builder: (BuildContext context) => endSession(context),
             );
+            DateTime now = DateTime.now();
+            String date = now.month.toString() + "/" + now.day.toString();
+            String start = globals.taskStart;
+
             await DatabaseService().updateTimeline(
-                taskName, globals.timeSliderValue.round() * 100);
+                taskName, globals.timeSliderValue.round() * 100, date, start);
           });
         }
       });

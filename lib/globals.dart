@@ -18,3 +18,4 @@ import 'package:firebase_auth/firebase_auth.dart';
 var coins = 0;
 double timeSliderValue = 10;
 var taskName = '';
+var taskStart = '';

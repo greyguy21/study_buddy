@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:study_buddy/services/database.dart';
 import '../globals.dart' as globals;
 import 'package:page_transition/page_transition.dart';
 import 'package:study_buddy/screens/homepage.dart';
@@ -13,6 +14,7 @@ class EndSession extends StatefulWidget {
 
 class _EndSessionState extends State<EndSession> {
   int amt = globals.timeSliderValue.round() * 100;
+  String taskName = globals.taskName;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +25,15 @@ class _EndSessionState extends State<EndSession> {
         children: [
           Text("good job! You've earned $amt coins!"),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: HomePage(), type: PageTransitionType.fade));
+            onPressed: () async {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: HomePage(), type: PageTransitionType.fade));
+                DateTime now = DateTime.now();
+                String end = now.hour.toString() + ":" + now.minute.toString();
+                await DatabaseService().updateEndTime(taskName, end);
             },
             child: Text('ok'),
           ),

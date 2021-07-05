@@ -34,9 +34,34 @@ class _TimelineState extends State<Timeline> {
               body: new ListView.builder(
                   itemCount: docRef.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text("Task: " + docRef[index].get("name")),
-                      subtitle: Text("Duration: " + docRef[index].get("time").toString()),
+                    // return ListTile(
+                    //   title: Text("Task: " + docRef[index].get("name")),
+                    //   subtitle: Text("Duration: " + docRef[index].get("time").toString()),
+                    // );
+                    return Card(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Task:" + docRef[index].get("name"),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            "Duration: " + docRef[index].get("duration").toString(),
+                          ),
+                          Text(
+                            "Date: " + docRef[index].get("date"),
+                          ),
+                          Text(
+                            "Start: " + docRef[index].get("start"),
+                          ),
+                          Text(
+                            "End: " + docRef[index].get("end"),
+                          )
+                        ],
+                      ),
                     );
                   }
               ),
