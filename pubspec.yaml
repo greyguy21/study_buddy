@@ -33,6 +33,7 @@ dependencies:
   cloud_firestore: ^2.2.0
   provider: ^5.0.0
   page_transition: ^2.0.2
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:

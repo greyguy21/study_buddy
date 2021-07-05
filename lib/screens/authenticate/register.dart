@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
                   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
                   await _firebaseAuth.createUserWithEmailAndPassword(
                       email: email, password: password);
-                  _firebaseAuth.authStateChanges().listen((User? user) async{
+                  _firebaseAuth.authStateChanges().listen((User? user) async {
                     if (user == null) {
                       print("nothing");
                     } else {
@@ -76,7 +76,8 @@ class _RegisterState extends State<Register> {
                 if (e.code == "weak-password") {
                   error = "The password provided is too weak.";
                 } else if (e.code == "email-already-in-use") {
-                  error = "The account already exists for that email.";
+                  error =
+                      "The account already exists for that email, please log in instead.";
                 }
               } catch (e) {
                 print(e);

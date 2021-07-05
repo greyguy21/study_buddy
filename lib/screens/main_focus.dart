@@ -133,7 +133,7 @@ class _AnimalState extends State<Animal> {
       topHeight = 100;
       bottomHeight = 50;
     } else if (widget.animal == "cat") {
-      topHeight = 40;
+      topHeight = 50;
       bottomHeight = 60;
     } else {
       // dog

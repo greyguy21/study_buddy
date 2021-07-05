@@ -157,8 +157,10 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               DateTime now = DateTime.now();
-              globals.taskStart = now.hour.toString() + ":" + now.minute.toString();
-
+              String minuteStr = now.minute.toString().length == 1
+                  ? '0' + now.minute.toString()
+                  : now.minute.toString();
+              globals.taskStart = now.hour.toString() + ":" + minuteStr;
               Navigator.push(
                   context,
                   PageTransition(
@@ -251,7 +253,7 @@ class _AnimalState extends State<Animal> {
       topHeight = 100;
       bottomHeight = 50;
     } else if (widget.animal == "cat") {
-      topHeight = 40;
+      topHeight = 50;
       bottomHeight = 60;
     } else {
       // dog

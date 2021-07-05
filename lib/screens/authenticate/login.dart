@@ -73,7 +73,8 @@ class _LoginState extends State<Login> {
                 if (e.code == "user-not-found") {
                   error = "No user found for that email.";
                 } else if (e.code == "wrong-password") {
-                  error = "Wrong password provided for that user.";
+                  error =
+                      "Wrong password provided for that user, please try again.";
                 }
               }
             },

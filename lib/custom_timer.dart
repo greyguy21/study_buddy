@@ -37,9 +37,13 @@ class _CustomTimerState extends State<CustomTimer> {
             DateTime now = DateTime.now();
             String date = now.month.toString() + "/" + now.day.toString();
             String start = globals.taskStart;
+            String minuteStr = now.minute.toString().length == 1
+                ? '0' + now.minute.toString()
+                : now.minute.toString();
+            String end = now.hour.toString() + ":" + minuteStr;
 
-            await DatabaseService().updateTimeline(
-                taskName, globals.timeSliderValue.round() * 100, date, start);
+            await DatabaseService().updateTimeline(taskName,
+                globals.timeSliderValue.round() * 100, date, start, end);
           });
         }
       });
