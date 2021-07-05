@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/homepage.dart';
+import 'package:study_buddy/screens/statistics.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
 import 'package:study_buddy/screens/main_focus.dart';
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
           "/verify": (context) => Verify(),
           "/mainfocus": (context) => MainFocusPage(),
           "/endSession": (context) => EndSession(),
-          "/timeline" : (context) => Timeline(),
+          "/timeline": (context) => Timeline(),
+          "/statistics": (context) => StatisticsPage(),
         });
   }
 }

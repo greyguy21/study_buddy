@@ -40,6 +40,17 @@ class _MenuState extends State<Menu> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.auto_graph),
+              title: Text('Statistics'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/statistics");
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.timeline),
               title: Text('Timeline'),
               onTap: () {
