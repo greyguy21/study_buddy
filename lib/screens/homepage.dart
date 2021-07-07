@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
@@ -16,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +120,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _startPopup(BuildContext context) {
-    List tags = [];
     return new AlertDialog(
       title: const Text('Focus session settings'),
       content: new Column(
@@ -280,22 +277,3 @@ class _AnimalState extends State<Animal> {
   }
 }
 
-// stream of tags in database
-// user has a list of tags -> collection?
-// tag doc is name and color
-// streambuilder --> need a tag stream!
-
-// Tag Collection
-// -> build the tags in database (retrieve data)
-// -> add new tag (update data)
-// -> remove tag (update data)
-
-// User field
-// need to get current user
-// -> onPressed -> tag chosen -> update
-
-// Tasks
-// need to get current task -> another global variable??
-// need to add
-
-// figure out how to add & choose color palette

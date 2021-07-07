@@ -1,9 +1,12 @@
+import 'package:charts_flutter/flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:study_buddy/models/accessory.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
 import 'package:study_buddy/models/furniture.dart';
+import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/models/wallpaper.dart';
 
 class DatabaseService {
@@ -450,5 +453,44 @@ class DatabaseService {
         .collection("tasks")
         .orderBy("start", descending: true)
         .snapshots();
+  }
+
+  Future addTag(String title, int color) {
+    return _db.collection("user").doc(this.uid).update({})
+        .then((value) {
+          _db.collection("user").doc(this.uid)
+              .collection("tags")
+              .doc(title)
+              .set({
+            "title": title,
+            "color": color,
+          });
+        });
+  }
+
+  Future removeTag(String title) {
+    return _db.collection("user").doc(this.uid).update({})
+        .then((value) {
+          _db.collection("user").doc(this.uid)
+              .collection("tags")
+              .doc(title)
+              .delete();
+        });
+  }
+
+  List<TagModel> _tagsFromFirestore(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return TagModel(
+          title: doc.get("title"),
+          color: doc.get("color"),
+      );
+    }).toList();
+  }
+
+  Stream<List<TagModel>> get tags {
+    return _db.collection("user").doc(this.uid)
+        .collection("tags")
+        .snapshots()
+        .map(_tagsFromFirestore);
   }
 }

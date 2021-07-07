@@ -13,6 +13,7 @@ import 'package:study_buddy/screens/setup.dart';
 import 'package:study_buddy/screens/store/store_inventory.dart';
 import 'package:study_buddy/screens/authenticate/verify.dart';
 import 'package:study_buddy/screens/end_session.dart';
+import 'package:study_buddy/screens/tags.dart';
 import 'package:study_buddy/screens/timeline.dart';
 
 // void main() {
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           "/endSession": (context) => EndSession(),
           "/timeline": (context) => Timeline(),
           "/statistics": (context) => StatisticsPage(),
+          "/tags": (context) => TagsPage(),
         });
   }
 }
