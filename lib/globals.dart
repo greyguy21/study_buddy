@@ -19,3 +19,5 @@ var coins = 0;
 double timeSliderValue = 10;
 var taskName = '';
 var taskStart = '';
+var tagName = "";
+var tagColor;

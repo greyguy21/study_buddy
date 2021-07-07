@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TagModel{
-  String title;
-  Color color;
+  late String title;
+  late int value;
+  late Color color;
 
-  TagModel({required this.title, required this.color});
+  TagModel(String title, int value) {
+    this.title = title;
+    this.value = value;
+    this.color = Color(value);
+  }
 }

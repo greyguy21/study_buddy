@@ -43,6 +43,7 @@ class _TimelineState extends State<Timeline> {
                   beforeLineStyle:
                       LineStyle(color: Colors.black.withOpacity(0.2)),
                   endChild: Card(
+                    color: docRef[index].get("color") ?? Colors.white60,
                     child: Column(
                       children: [
                         Text(

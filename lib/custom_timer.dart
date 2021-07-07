@@ -15,6 +15,7 @@ class _CustomTimerState extends State<CustomTimer> {
 
   final int timerMaxSeconds = globals.timeSliderValue.round() * 60;
   final String taskName = globals.taskName;
+  final String tagName = globals.tagName;
 
   int currentSeconds = 0;
 
@@ -41,9 +42,8 @@ class _CustomTimerState extends State<CustomTimer> {
                 ? '0' + now.minute.toString()
                 : now.minute.toString();
             String end = now.hour.toString() + ":" + minuteStr;
-
             await DatabaseService().updateTimeline(taskName,
-                globals.timeSliderValue.round() * 100, date, start, end);
+                globals.timeSliderValue.round() * 100, date, start, end, tagName, globals.tagColor);
           });
         }
       });

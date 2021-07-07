@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+// import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
@@ -47,14 +48,38 @@ class _TagsPageState extends State<TagsPage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
-                        child: Row(
+                        elevation: 1.2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Column(
                           children: [
-                            Icon(
-                              Icons.circle,
-                              color: snapshot.data![index].color,
+                            SizedBox(
+                              height: 15.0,
                             ),
-                            Text(
-                              snapshot.data![index].title,
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Icon(
+                                  Icons.circle,
+                                  color: snapshot.data![index].color,
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text(
+                                  snapshot.data![index].title,
+                                  textScaleFactor: 1.2,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 15.0,
                             )
                           ],
                         ),
@@ -79,6 +104,7 @@ class _TagsPageState extends State<TagsPage> {
             color: Colors.white,
           ),
           backgroundColor: Colors.lightBlue,
+          heroTag: "add tag",
         ),
     );
   }
@@ -106,14 +132,19 @@ class _TagsPageState extends State<TagsPage> {
                 },
               ),
             ),
-            // MaterialColorPicker(
-            //   selectedColor: color,
-            //   onMainColorChange: (changed) {
-            //     setState(() {
-            //       color = changed;
-            //     });
-            //   },
-            // ),
+            SizedBox(
+              height: 20,
+            ),
+            ColorPicker(
+              pickerAreaHeightPercent: 0.8,
+              pickerColor: color,
+              onColorChanged: (changed) {
+                setState(() {
+                  color = changed;
+                });
+              },
+              paletteType: PaletteType.hsv,
+            ),
           ]
         ),
         actions: [
@@ -122,9 +153,11 @@ class _TagsPageState extends State<TagsPage> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   await DatabaseService().addTag(title, color.value);
+                  Navigator.pop(context);
                 }
               },
               label: Text("Add Tag"),
+              heroTag: title,
             ),
           )
         ],

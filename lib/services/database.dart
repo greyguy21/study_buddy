@@ -1,4 +1,4 @@
-import 'package:charts_flutter/flutter.dart';
+// import 'package:charts_flutter/flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,10 @@ class DatabaseService {
       DatabaseService().addClothes();
       DatabaseService().addWallpapers();
       DatabaseService().addAccessories();
+      DatabaseService().addTag("Unset", Colors.grey.value);
+      _db.collection("user").doc(this.uid).collection("tasks").doc("pls").set({
+        "name":"nothing",
+      });
     });
   }
 
@@ -423,10 +427,35 @@ class DatabaseService {
     });
   }
 
-  Future updateTimeline(
-      String name, int duration, String date, String start, String end) async {
-    DocumentReference docRef = _db.collection("user").doc(this.uid);
+  // Future addTask(String name, int duration, String date, String start, String end, String tagName, Color color) {
+  //   return _db.collection("user").doc(this.uid).update({}).then((value) {
+  //     _db.collection("user").doc(this.uid).collection("task").doc(name).set({
+  //       "name": name,
+  //       "duration": duration,
+  //       "date": date,
+  //       "start": start,
+  //       "end": end,
+  //       "tag": tagName,
+  //       "color": color,
+  //     });
+  //   });
+  // }
+  //
+  // Future updateCoins(int duration) async {
+  //   DocumentReference docRef = _db.collection("user").doc(this.uid);
+  //   FirebaseFirestore.instance.runTransaction((transaction) async {
+  //     DocumentSnapshot snapshot = await transaction.get(docRef);
+  //
+  //     if (!snapshot.exists) {
+  //       throw Exception("user does not exist!");
+  //     }
+  //     int newCoinValue = snapshot.get("coins") + duration;
+  //     transaction.update(docRef, {"coins": newCoinValue});
+  //   });
+  // }
 
+  Future updateTimeline(String name, int duration, String date, String start, String end, String tagName, Color color) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
     FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(docRef);
 
@@ -436,16 +465,17 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") + duration;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      docRef.collection("tasks").doc(name).set({
+      _db.collection("user").doc(this.uid).collection("tasks").doc(name).set({
         "name": name,
         "duration": duration,
         "date": date,
         "start": start,
-        "end": end
+        "end": end,
+        "tag": tagName,
+        "color": color,
       });
     });
   }
-
   Stream<QuerySnapshot> get timeline {
     return _db
         .collection("user")
@@ -480,10 +510,7 @@ class DatabaseService {
 
   List<TagModel> _tagsFromFirestore(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return TagModel(
-          title: doc.get("title"),
-          color: doc.get("color"),
-      );
+      return TagModel(doc.get("title"), doc.get("color"),);
     }).toList();
   }
 
