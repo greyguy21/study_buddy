@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
@@ -8,6 +7,7 @@ import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
 import 'package:study_buddy/screens/main_focus.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,7 +16,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
+  bool _visible = false;
+  PanelController _pc1 = new PanelController();
+  List tags = [];
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
           String pet = snapshot.data!.pet;
           String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
           String wallpaperstr = snapshot.data!.wallpaper;
+          // tags = (get list of user tags from firestore)
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
@@ -89,28 +92,164 @@ class _HomePageState extends State<HomePage> {
                     child: Animal(pet, imgPath),
                   ),
                 ),
+                Visibility(
+                    maintainState: true,
+                    maintainAnimation: true,
+                    visible: _visible,
+                    child: SlidingUpPanel(
+                        controller: _pc1,
+                        // onPanelOpened: () => PanelState.OPEN,
+                        onPanelClosed: () {
+                          setState(() {
+                            _visible = !_visible;
+                          });
+                        },
+                        header: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_upward_sharp),
+                          ],
+                        ),
+                        panel: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: Form(
+                                  key: _formKey,
+                                  child: TextFormField(
+                                    validator: (val) =>
+                                        val!.isEmpty || val.length < 1
+                                            ? "please enter task name"
+                                            : null,
+                                    decoration: InputDecoration(
+                                      labelText: 'Task:',
+                                      filled: true,
+                                    ),
+                                    onChanged: (val) {
+                                      // setState(() => globals.taskName = val);
+                                      globals.taskName = val;
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20.0, left: 30, right: 30),
+                                child: Column(
+                                  children: [
+                                    Text('Time (in minutes):'),
+                                    TimerSlider(),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20.0, left: 30, right: 30, bottom: 20),
+                                child: Column(
+                                  children: [
+                                    Text('Tag: '),
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Row(
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {},
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      shape: BoxShape.circle),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Text('assignments',
+                                                    style: TextStyle(
+                                                        color: Colors.black)),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FloatingActionButton.extended(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        DateTime now = DateTime.now();
+                                        String minuteStr =
+                                            now.minute.toString().length == 1
+                                                ? '0' + now.minute.toString()
+                                                : now.minute.toString();
+                                        globals.taskStart =
+                                            now.hour.toString() +
+                                                ":" +
+                                                minuteStr;
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: MainFocusPage(),
+                                                type: PageTransitionType.fade));
+                                        // Navigator.pushReplacementNamed(context, "/mainfocus");
+                                      }
+                                    },
+                                    label: Text(
+                                      'start',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.alarm_on,
+                                      color: Colors.green,
+                                    ),
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ))),
               ],
             ),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 80),
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  setState(() {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => _startPopup(context),
-                    );
-                  });
-                },
-                label: Text(
-                  'start',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
+            floatingActionButton: Visibility(
+              visible: !_visible,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 80),
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    setState(() {
+                      _visible = !_visible;
+                      _pc1.open();
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (BuildContext context) => _startPopup(context),
+                      // );
+                    });
+                    // _pc1.open();
+                  },
+                  label: Text(
+                    'start',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  icon: const Icon(Icons.alarm_on),
+                  backgroundColor: Colors.green.shade300,
                 ),
-                icon: const Icon(Icons.alarm_on),
-                backgroundColor: Colors.green.shade300,
               ),
             ),
             floatingActionButtonLocation:
