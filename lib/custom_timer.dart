@@ -36,7 +36,7 @@ class _CustomTimerState extends State<CustomTimer> {
               builder: (BuildContext context) => endSession(context),
             );
             DateTime now = DateTime.now();
-            String date = now.month.toString() + "/" + now.day.toString();
+            String date = now.day.toString() + "/" + now.month.toString();
             String start = globals.taskStart;
             String minuteStr = now.minute.toString().length == 1
                 ? '0' + now.minute.toString()
@@ -44,7 +44,8 @@ class _CustomTimerState extends State<CustomTimer> {
             String end = now.hour.toString() + ":" + minuteStr;
             globals.taskEnd = end;
             globals.date = date;
-            await DatabaseService().addCoins(globals.timeSliderValue.round() * 100);
+            await DatabaseService()
+                .addCoins(globals.timeSliderValue.round() * 100);
             // await DatabaseService().addTask(globals.taskName,
             //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
             // await DatabaseService().updateTimeline(taskName, globals.timeSliderValue.round() * 100,
