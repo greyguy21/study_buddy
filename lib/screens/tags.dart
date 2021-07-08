@@ -5,7 +5,6 @@ import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
 
-
 class TagsPage extends StatefulWidget {
   const TagsPage({Key? key}) : super(key: key);
 
@@ -17,95 +16,96 @@ class _TagsPageState extends State<TagsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.lightBlue,
-          elevation: 0.0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, "/");
-            },
-          ),
-          title: Text(
-              "Tags",
-              style: TextStyle(
-                color: Colors.white,
-              )),
-        ),
-        body: StreamBuilder<List<TagModel>>(
-            stream: DatabaseService().tags,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return _errorPopup(context);
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Loading();
-              } else {
-                return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 1.2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 15.0,
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Icon(
-                                  Icons.circle,
-                                  color: snapshot.data![index].color,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  snapshot.data![index].title,
-                                  textScaleFactor: 1.2,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                );
-              }
-            }
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // allow users to add tags
-            setState(() {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => _tagPopup(context),
-              );
-            });
-          },
-          child: Icon(
-            Icons.add,
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.home,
             color: Colors.white,
           ),
-          backgroundColor: Colors.lightBlue,
-          heroTag: "add tag",
+          onPressed: () {
+            Navigator.pushNamed(context, "/");
+          },
         ),
+        title: Text("Tags",
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
+      body: StreamBuilder<List<TagModel>>(
+          stream: DatabaseService().tags,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return _errorPopup(context);
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return Loading();
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 1.2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          ListTile(
+                              leading: Icon(
+                                Icons.circle,
+                                color: snapshot.data![index].color,
+                              ),
+                              title: Text(
+                                snapshot.data![index].title,
+                                textScaleFactor: 1.2,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.cancel),
+                                onPressed: () {
+                                  setState(() {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _deleteTagPopup(context,
+                                              snapshot.data![index].title),
+                                    );
+                                  });
+                                },
+                              )),
+                          SizedBox(
+                            height: 15.0,
+                          )
+                        ],
+                      ),
+                    );
+                  });
+            }
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // allow users to add tags
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => _tagPopup(context),
+            );
+          });
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.lightBlue,
+        heroTag: "add tag",
+      ),
     );
   }
 
@@ -117,36 +117,33 @@ class _TagsPageState extends State<TagsPage> {
     return SafeArea(
       child: new AlertDialog(
         title: const Text("Add Tag"),
-        content: new Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: TextFormField(
-                validator: (val) => val!.isEmpty
-                    ? "Enter a valid Tag title"
-                    : null,
-                onChanged: (val) {
-                  setState(() {
-                    title = val;
-                  });
-                },
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            ColorPicker(
-              pickerAreaHeightPercent: 0.8,
-              pickerColor: color,
-              onColorChanged: (changed) {
+        content: new Column(children: [
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              validator: (val) =>
+                  val!.isEmpty ? "Enter a valid Tag title" : null,
+              onChanged: (val) {
                 setState(() {
-                  color = changed;
+                  title = val;
                 });
               },
-              paletteType: PaletteType.hsv,
             ),
-          ]
-        ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ColorPicker(
+            pickerAreaHeightPercent: 0.8,
+            pickerColor: color,
+            onColorChanged: (changed) {
+              setState(() {
+                color = changed;
+              });
+            },
+            paletteType: PaletteType.hsv,
+          ),
+        ]),
         actions: [
           Center(
             child: FloatingActionButton.extended(
@@ -160,6 +157,28 @@ class _TagsPageState extends State<TagsPage> {
               heroTag: title,
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _deleteTagPopup(BuildContext context, String name) {
+    final _formKey = GlobalKey<FormState>();
+    Color color = Colors.blue;
+    String title = "";
+
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Confirm deletion of tag?'),
+          TextButton(
+            onPressed: () async {
+              // delete tag in firestore
+              // await DatabaseService.deleteTag()
+            },
+            child: Text('delete $name tag'),
+          ),
         ],
       ),
     );
@@ -183,7 +202,6 @@ Widget _errorPopup(BuildContext context) {
     ),
   );
 }
-
 
 // stream of tags in database
 // user has a list of tags -> collection?
