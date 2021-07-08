@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+// import 'package:flutter_tags/flutter_tags.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
@@ -153,74 +153,48 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return _errorPopup(context);
-                                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Loading();
                                   } else {
-                                    final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
+                                    // final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
+                                    List<TagModel>? taggs = snapshot.data;
+                                    List<Widget> buttons = taggs!
+                                        .map((tag) => TextButton(
+                                            onPressed: () {},
+                                            child: Row(
+                                              children: [
+                                                // circuel with color,
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                    color: tag.color,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                // text with word
+                                                Text(tag.title)
+                                              ],
+                                            )))
+                                        .toList();
 
                                     return Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 20.0, left: 30, right: 30, bottom: 20),
-                                      child: Tags(
-                                        key: _tagKey,
-                                        itemCount: snapshot.data!.length,
-                                        columns: 5,
-                                        itemBuilder: (index) {
-                                          return ItemTags(
-                                              index: index,
-                                              title: snapshot.data![index].title,
-                                              activeColor: snapshot.data![index].color,
-                                              color: Colors.black87,
-                                              textActiveColor: Colors.white,
-                                              textColor: Colors.white,
-                                              onPressed: (value) {
-                                                // setState(() {
-                                                //   globals.tagName = snapshot.data![index].title;
-                                                //   globals.tagColor = snapshot.data![index].color;
-                                                // });
-                                                globals.tagName = snapshot.data![index].title;
-                                                globals.tagColor = snapshot.data![index].color;
-                                              },
-                                          );
-                                        },
+                                          top: 20.0,
+                                          left: 30,
+                                          right: 30,
+                                          bottom: 20),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: buttons,
+                                        ),
                                       ),
                                     );
                                   }
                                 },
-                                // child: Padding(
-                                //   padding: const EdgeInsets.only(
-                                //       top: 20.0, left: 30, right: 30, bottom: 20),
-                                //   child: Column(
-                                //     children: [
-                                //       Text('Tag: '),
-                                //       Padding(
-                                //         padding: const EdgeInsets.all(20.0),
-                                //         child: Row(
-                                //           children: [
-                                //             TextButton(
-                                //               onPressed: () {},
-                                //               child: Row(
-                                //                 children: [
-                                //                   Container(
-                                //                     width: 20,
-                                //                     height: 20,
-                                //                     decoration: BoxDecoration(
-                                //                         color: Colors.red,
-                                //                         shape: BoxShape.circle),
-                                //                   ),
-                                //                   SizedBox(width: 10),
-                                //                   Text('assignments',
-                                //                       style: TextStyle(
-                                //                           color: Colors.black)),
-                                //                 ],
-                                //               ),
-                                //             )
-                                //           ],
-                                //         ),
-                                //       )
-                                //     ],
-                                //   ),
-                                // ),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

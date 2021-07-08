@@ -17,15 +17,48 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class _StatisticsPageState extends State<StatisticsPage> {
+  DateTime now = DateTime.now();
+  // String date = now.day.toString() + "/" + now.month.toString();
+  // int numTasks = ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            title: Text("Statistics"),
+      appBar: AppBar(
+        title: Text("Statistics"),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              "Today: ",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            ),
           ),
-          // body: ,
-        );
+          Row(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width / 2,
+                child: Column(
+                  children: [
+                    Text('Number of tasks completed'),
+                    Text(
+                      '',
+                      style: TextStyle(fontSize: 30),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 2,
+                child: Text('Amount of time focused'),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
-
-
