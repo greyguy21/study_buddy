@@ -200,6 +200,7 @@ class _HomePageState extends State<HomePage> {
                                             color: Colors.black87,
                                             textActiveColor: Colors.white,
                                             textColor: Colors.white,
+                                            singleItem: true,
                                             onPressed: (value) {
                                               // setState(() {
                                               //   globals.tagName = snapshot.data![index].title;
@@ -235,6 +236,8 @@ class _HomePageState extends State<HomePage> {
                                             now.hour.toString() +
                                                 ":" +
                                                 minuteStr;
+                                        String date = now.day.toString() + "/" + now.month.toString();
+                                        globals.date = date;
                                         Navigator.push(
                                             context,
                                             PageTransition(

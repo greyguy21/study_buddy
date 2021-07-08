@@ -50,7 +50,7 @@ class _TimelineState extends State<Timeline> {
                     child: Column(
                       children: [
                         Text(
-                          "Task: " + docRef[index].get("name"),
+                          docRef[index].get("tag") + ": " + docRef[index].get("name"),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,

@@ -67,18 +67,21 @@ class _TagsPageState extends State<TagsPage> {
                                   fontSize: 20,
                                 ),
                               ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.cancel),
-                                onPressed: () {
-                                  setState(() {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          _deleteTagPopup(context,
-                                              snapshot.data![index].title),
-                                    );
-                                  });
-                                },
+                              trailing: Visibility(
+                                visible: snapshot.data![index].title != "Unset",
+                                child: IconButton(
+                                  icon: Icon(Icons.cancel),
+                                  onPressed: () {
+                                    setState(() {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            _deleteTagPopup(context,
+                                                snapshot.data![index].title),
+                                      );
+                                    });
+                                  },
+                                ),
                               )),
                           SizedBox(
                             height: 15.0,
@@ -176,6 +179,8 @@ class _TagsPageState extends State<TagsPage> {
             onPressed: () async {
               // delete tag in firestore
               // await DatabaseService.deleteTag()
+              await DatabaseService().removeTag(name);
+              Navigator.pop(context);
             },
             child: Text('delete $name tag'),
           ),

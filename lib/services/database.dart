@@ -474,23 +474,6 @@ class DatabaseService {
       transaction.update(docRef, {"coins": newCoinValue});
     });
   }
-
-  Future updateTask(String name, int duration, String date, String start, String end, String tagName, Color color) {
-    return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db.collection("user").doc(this.uid)
-          .collection("sessions")
-          .doc(name)
-          .update({
-            "duration": duration,
-            "date": date,
-            "start": start,
-            "end": end,
-            "tagName": tagName,
-            "color": color,
-          });
-    });
-  }
-
   Future addNewTask(String name, int duration, String date, String start, String end, String tag, int color) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
       _db.collection("user").doc(this.uid)
@@ -509,10 +492,12 @@ class DatabaseService {
   }
 
   Stream<QuerySnapshot> get timeline {
+    String date = DateTime.now().day.toString() + "/" + DateTime.now().month.toString();
     return _db
         .collection("user")
         .doc(this.uid)
         .collection("sessions")
+        .where("date", isEqualTo: date)
         .orderBy("start", descending: true)
         .snapshots();
   }
