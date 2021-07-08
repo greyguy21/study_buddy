@@ -40,10 +40,13 @@ class _TimelineState extends State<Timeline> {
                   lineXY: 0.1,
                   isFirst: index == 0,
                   isLast: index == docRef.length - 1,
+                  indicatorStyle: IndicatorStyle(
+                    color: Color(docRef[index].get("color")),
+                  ),
                   beforeLineStyle:
                       LineStyle(color: Colors.black.withOpacity(0.2)),
                   endChild: Card(
-                    color: docRef[index].get("color") ?? Colors.white60,
+                    color: Color(docRef[index].get("color")),
                     child: Column(
                       children: [
                         Text(

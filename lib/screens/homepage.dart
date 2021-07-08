@@ -179,7 +179,9 @@ class _HomePageState extends State<HomePage> {
                                                 //   globals.tagColor = snapshot.data![index].color;
                                                 // });
                                                 globals.tagName = snapshot.data![index].title;
+                                                print(globals.tagName);
                                                 globals.tagColor = snapshot.data![index].color;
+                                                print(globals.tagColor.toString());
                                               },
                                           );
                                         },

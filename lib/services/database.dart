@@ -22,9 +22,21 @@ class DatabaseService {
       DatabaseService().addWallpapers();
       DatabaseService().addAccessories();
       DatabaseService().addTag("Unset", Colors.grey.value);
-      _db.collection("user").doc(this.uid).collection("tasks").doc("pls").set({
-        "name":"nothing",
-      });
+      // _db.collection("user").doc(this.uid).collection("tasks").doc("pls").set({
+      //   "name":"nothing",
+      // _db.collection("user").doc(this.uid)
+      //     .collection("sessions")
+      //     .doc("welcome")
+      //     .set({
+      //   "name": "welcome",
+      //   "duration": 0,
+      //   "date": "8/7",
+      //   "start": "",
+      //   "end": "",
+      //   "tagName": "",
+      //   "color": "",
+      // });
+      // });
     });
   }
 
@@ -438,7 +450,7 @@ class DatabaseService {
       int newCoinValue = snapshot.get("coins") + duration;
       transaction.update(docRef, {"coins": newCoinValue});
     }).then((value) {
-      _db.collection("user").doc(this.uid).collection("tasks").doc(name).set({
+      docRef.collection("task").doc(name).set({
         "name": name,
         "duration": duration,
         "date": date,
@@ -450,11 +462,57 @@ class DatabaseService {
     });
   }
 
+  Future addCoins(int coins) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newCoinValue = snapshot.get("coins") + coins;
+      transaction.update(docRef, {"coins": newCoinValue});
+    });
+  }
+
+  Future updateTask(String name, int duration, String date, String start, String end, String tagName, Color color) {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid)
+          .collection("sessions")
+          .doc(name)
+          .update({
+            "duration": duration,
+            "date": date,
+            "start": start,
+            "end": end,
+            "tagName": tagName,
+            "color": color,
+          });
+    });
+  }
+
+  Future addNewTask(String name, int duration, String date, String start, String end, String tag, int color) {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid)
+          .collection("sessions")
+          .doc(name)
+          .set({
+            "name": name,
+            "duration": duration,
+            "date": date,
+            "start": start,
+            "end": end,
+            "tag": tag,
+            "color": color,
+          });
+    });
+  }
+
   Stream<QuerySnapshot> get timeline {
     return _db
         .collection("user")
         .doc(this.uid)
-        .collection("tasks")
+        .collection("sessions")
         .orderBy("start", descending: true)
         .snapshots();
   }
