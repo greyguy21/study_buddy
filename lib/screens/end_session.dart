@@ -15,6 +15,12 @@ class EndSession extends StatefulWidget {
 class _EndSessionState extends State<EndSession> {
   int amt = globals.timeSliderValue.round() * 100;
   String taskName = globals.taskName;
+  int duration = globals.timeSliderValue.round();
+  String date = globals.date;
+  String start = globals.taskStart;
+  String end = globals.taskEnd;
+  String tagName = globals.tagName;
+  Color tagColor = globals.tagColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +32,10 @@ class _EndSessionState extends State<EndSession> {
           Text("good job! You've earned $amt coins!"),
           TextButton(
             onPressed: () async {
+              print(taskName);
+              await DatabaseService().addNewTask(taskName, duration, date, start, end, tagName, tagColor.value);
+              // await DatabaseService().updateTask(taskName,
+              //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
               Navigator.pop(context);
               Navigator.push(
                   context,

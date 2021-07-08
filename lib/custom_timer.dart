@@ -42,8 +42,13 @@ class _CustomTimerState extends State<CustomTimer> {
                 ? '0' + now.minute.toString()
                 : now.minute.toString();
             String end = now.hour.toString() + ":" + minuteStr;
-            await DatabaseService().updateTimeline(taskName,
-                globals.timeSliderValue.round() * 100, date, start, end, tagName, globals.tagColor);
+            globals.taskEnd = end;
+            globals.date = date;
+            await DatabaseService().addCoins(globals.timeSliderValue.round() * 100);
+            // await DatabaseService().addTask(globals.taskName,
+            //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
+            // await DatabaseService().updateTimeline(taskName, globals.timeSliderValue.round() * 100,
+            //     date, start, end, tagName, globals.tagColor);
           });
         }
       });

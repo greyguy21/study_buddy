@@ -182,16 +182,31 @@ class _HomePageState extends State<HomePage> {
 
                                     return Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 20.0,
-                                          left: 30,
-                                          right: 30,
-                                          bottom: 20),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: buttons,
-                                        ),
-                                      ),
+                                          top: 20.0, left: 30, right: 30, bottom: 20),
+                                      child: Tags(
+                                        key: _tagKey,
+                                        itemCount: snapshot.data!.length,
+                                        columns: 5,
+                                        itemBuilder: (index) {
+                                          return ItemTags(
+                                              index: index,
+                                              title: snapshot.data![index].title,
+                                              activeColor: snapshot.data![index].color,
+                                              color: Colors.black87,
+                                              textActiveColor: Colors.white,
+                                              textColor: Colors.white,
+                                              onPressed: (value) {
+                                                // setState(() {
+                                                //   globals.tagName = snapshot.data![index].title;
+                                                //   globals.tagColor = snapshot.data![index].color;
+                                                // });
+                                                globals.tagName = snapshot.data![index].title;
+                                                print(globals.tagName);
+                                                globals.tagColor = snapshot.data![index].color;
+                                                print(globals.tagColor.toString());
+                                              },
+                                          );
+                                        },
                                     );
                                   }
                                 },

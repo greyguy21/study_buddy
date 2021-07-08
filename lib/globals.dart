@@ -19,5 +19,7 @@ var coins = 0;
 double timeSliderValue = 10;
 var taskName = '';
 var taskStart = '';
+var taskEnd = "";
 var tagName = "";
 var tagColor;
+var date = "";
