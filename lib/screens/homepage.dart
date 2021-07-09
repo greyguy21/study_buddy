@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tags/flutter_tags.dart';
@@ -18,8 +19,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
-  bool _visible = false;
-  PanelController _pc1 = new PanelController();
+  // bool _visible = false;
+  // PanelController _pc1 = new PanelController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 // animal and items
-
                 //animal here
                 Positioned(
                   top: 200,
@@ -93,232 +93,33 @@ class _HomePageState extends State<HomePage> {
                     child: Animal(pet, imgPath),
                   ),
                 ),
-                Visibility(
-                    maintainState: true,
-                    maintainAnimation: true,
-                    visible: _visible,
-                    child: SlidingUpPanel(
-                        controller: _pc1,
-                        // onPanelOpened: () => PanelState.OPEN,
-                        onPanelClosed: () {
-                          setState(() {
-                            _visible = !_visible;
-                          });
-                        },
-                        header: Row(
-                          children: [
-                            SizedBox(
-                              width: 118,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 50),
-                              child: Center(
-                                child: Text(
-                                  "Focus Session",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        collapsed: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Icon(Icons.arrow_upward_rounded),
-                          ),
-                        ),
-                        // Row(
-                        //   mainAxisSize: MainAxisSize.max,
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Icon(Icons.arrow_upward_sharp),
-                        //   ],
-                        // ),
-                        panel: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, right: 30),
-                                child: Form(
-                                  key: _formKey,
-                                  child: TextFormField(
-                                    validator: (val) =>
-                                        val!.isEmpty || val.length < 1
-                                            ? "please enter task name"
-                                            : null,
-                                    decoration: InputDecoration(
-                                      labelText: 'Task:',
-                                      filled: true,
-                                    ),
-                                    onChanged: (val) {
-                                      // setState(() => globals.taskName = val);
-                                      globals.taskName = val;
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 20.0, left: 30, right: 30),
-                                child: Column(
-                                  children: [
-                                    Text('Time (in minutes):'),
-                                    TimerSlider(),
-                                  ],
-                                ),
-                              ),
-                              StreamBuilder<List<TagModel>>(
-                                stream: DatabaseService().tags,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return _errorPopup(context);
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Loading();
-                                  } else {
-                                    final GlobalKey<TagsState> _tagKey =
-                                        GlobalKey<TagsState>();
-                                    List<TagModel>? taggs = snapshot.data;
-                                    List<Widget> buttons = taggs!
-                                        .map((tag) => TextButton(
-                                            onPressed: () {},
-                                            child: Row(
-                                              children: [
-                                                // circuel with color,
-                                                Container(
-                                                  width: 20,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                    color: tag.color,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                // text with word
-                                                Text(tag.title)
-                                              ],
-                                            )))
-                                        .toList();
 
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 20.0,
-                                          left: 30,
-                                          right: 30,
-                                          bottom: 20),
-                                      child: Tags(
-                                        key: _tagKey,
-                                        itemCount: snapshot.data!.length,
-                                        columns: 5,
-                                        itemBuilder: (index) {
-                                          return ItemTags(
-                                            index: index,
-                                            title: snapshot.data![index].title,
-                                            activeColor:
-                                                snapshot.data![index].color,
-                                            color: Colors.black87,
-                                            textActiveColor: Colors.white,
-                                            textColor: Colors.white,
-                                            singleItem: true,
-                                            onPressed: (value) {
-                                              // setState(() {
-                                              //   globals.tagName = snapshot.data![index].title;
-                                              //   globals.tagColor = snapshot.data![index].color;
-                                              // });
-                                              globals.tagName =
-                                                  snapshot.data![index].title;
-                                              print(globals.tagName);
-                                              globals.tagColor =
-                                                  snapshot.data![index].color;
-                                              print(
-                                                  globals.tagColor.toString());
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FloatingActionButton.extended(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        DateTime now = DateTime.now();
-                                        String minuteStr =
-                                            now.minute.toString().length == 1
-                                                ? '0' + now.minute.toString()
-                                                : now.minute.toString();
-                                        globals.taskStart =
-                                            now.hour.toString() +
-                                                ":" +
-                                                minuteStr;
-                                        String date = now.day.toString() + "/" + now.month.toString();
-                                        globals.date = date;
-                                        Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                child: MainFocusPage(),
-                                                type: PageTransitionType.fade));
-                                        // Navigator.pushReplacementNamed(context, "/mainfocus");
-                                      }
-                                    },
-                                    label: Text(
-                                      'start',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.alarm_on,
-                                      color: Colors.green,
-                                    ),
-                                    backgroundColor: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ))),
               ],
             ),
-            floatingActionButton: Visibility(
-              visible: !_visible,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 80),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    setState(() {
-                      _visible = !_visible;
-                      _pc1.open();
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (BuildContext context) => _startPopup(context),
-                      // );
-                    });
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  setState(() {
+                    // _visible = !_visible;
+                    _showStartPanel(context);
                     // _pc1.open();
-                  },
-                  label: Text(
-                    'start',
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) => _startPopup(context),
+                    // );
+                  });
+                  // _pc1.open();
+                },
+                label: Text(
+                  'start',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  icon: const Icon(Icons.alarm_on),
-                  backgroundColor: Colors.green.shade300,
                 ),
+                icon: const Icon(Icons.alarm_on),
+                backgroundColor: Colors.green.shade300,
               ),
             ),
             floatingActionButtonLocation:
@@ -326,6 +127,176 @@ class _HomePageState extends State<HomePage> {
           );
         }
       },
+    );
+  }
+
+  void _showStartPanel(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: ListView(
+            children: <Widget>[
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 20),
+                  child: Text(
+                    "Focus Session",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.only(left: 30, right: 30),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    validator: (val) =>
+                    val!.isEmpty || val.length < 1
+                        ? "please enter task name"
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: 'Task:',
+                      filled: true,
+                    ),
+                    onChanged: (val) {
+                      // setState(() => globals.taskName = val);
+                      globals.taskName = val;
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 20.0, left: 30, right: 30),
+                child: Column(
+                  children: [
+                    Text('Time (in minutes):'),
+                    TimerSlider(),
+                  ],
+                ),
+              ),
+              StreamBuilder<List<TagModel>>(
+                stream: DatabaseService().tags,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return _errorPopup(context);
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Loading();
+                  } else {
+                    final GlobalKey<TagsState> _tagKey =
+                    GlobalKey<TagsState>();
+                    List<TagModel>? taggs = snapshot.data;
+                    List<Widget> buttons = taggs!
+                        .map((tag) => TextButton(
+                        onPressed: () {},
+                        child: Row(
+                          children: [
+                            // circuel with color,
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: tag.color,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            // text with word
+                            Text(tag.title)
+                          ],
+                        )))
+                        .toList();
+
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20.0,
+                          left: 30,
+                          right: 30,
+                          bottom: 20),
+                      child: Tags(
+                        key: _tagKey,
+                        itemCount: snapshot.data!.length,
+                        columns: 5,
+                        itemBuilder: (index) {
+                          return ItemTags(
+                            index: index,
+                            title: snapshot.data![index].title,
+                            activeColor:
+                            snapshot.data![index].color,
+                            color: Colors.black87,
+                            textActiveColor: Colors.white,
+                            textColor: Colors.white,
+                            singleItem: true,
+                            onPressed: (value) {
+                              // setState(() {
+                              //   globals.tagName = snapshot.data![index].title;
+                              //   globals.tagColor = snapshot.data![index].color;
+                              // });
+                              globals.tagName =
+                                  snapshot.data![index].title;
+                              print(globals.tagName);
+                              globals.tagColor =
+                                  snapshot.data![index].color;
+                              print(
+                                  globals.tagColor.toString());
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton.extended(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        DateTime now = DateTime.now();
+                        String minuteStr =
+                        now.minute.toString().length == 1
+                            ? '0' + now.minute.toString()
+                            : now.minute.toString();
+                        globals.taskStart =
+                            now.hour.toString() +
+                                ":" +
+                                minuteStr;
+                        String date = now.day.toString() + "/" + now.month.toString();
+                        globals.date = date;
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: MainFocusPage(),
+                                type: PageTransitionType.fade));
+                        // Navigator.pushReplacementNamed(context, "/mainfocus");
+                      }
+                    },
+                    label: Text(
+                      'start',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.green,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.alarm_on,
+                      color: Colors.green,
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 

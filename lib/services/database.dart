@@ -439,29 +439,6 @@ class DatabaseService {
     });
   }
 
-  Future updateTimeline(String name, int duration, String date, String start, String end, String tagName, Color color) async {
-    DocumentReference docRef = _db.collection("user").doc(this.uid);
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot snapshot = await transaction.get(docRef);
-
-      if (!snapshot.exists) {
-        throw Exception("user does not exist!");
-      }
-      int newCoinValue = snapshot.get("coins") + duration;
-      transaction.update(docRef, {"coins": newCoinValue});
-    }).then((value) {
-      docRef.collection("task").doc(name).set({
-        "name": name,
-        "duration": duration,
-        "date": date,
-        "start": start,
-        "end": end,
-        "tag": tagName,
-        "color": color,
-      });
-    });
-  }
-
   Future addCoins(int coins) async {
     DocumentReference docRef = _db.collection("user").doc(this.uid);
     FirebaseFirestore.instance.runTransaction((transaction) async {
