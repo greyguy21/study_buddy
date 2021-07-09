@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 // import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -67,22 +69,53 @@ class _TagsPageState extends State<TagsPage> {
                                   fontSize: 20,
                                 ),
                               ),
-                              trailing: Visibility(
-                                visible: snapshot.data![index].title != "Unset",
-                                child: IconButton(
-                                  icon: Icon(Icons.cancel),
-                                  onPressed: () {
-                                    setState(() {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            _deleteTagPopup(context,
-                                                snapshot.data![index].title),
-                                      );
-                                    });
-                                  },
-                                ),
-                              )),
+                              trailing: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Visibility(
+                                    visible: snapshot.data![index].title != "Unset",
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                _editTagPopUp(context,
+                                                    snapshot.data![index].title,
+                                                    snapshot.data![index].color,
+                                                )
+                                          );
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.edit_rounded,
+                                        color: Colors.lightBlue,
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: snapshot.data![index].title != "Unset",
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: Colors.lightBlue,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                _deleteTagPopup(context,
+                                                    snapshot.data![index].title),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ),
                           SizedBox(
                             height: 15.0,
                           )
@@ -165,6 +198,59 @@ class _TagsPageState extends State<TagsPage> {
     );
   }
 
+  Widget _editTagPopUp(BuildContext context, String old, Color col) {
+    final _formKey = GlobalKey<FormState>();
+    String title = old;
+    Color color = col;
+
+    return SafeArea(
+      child: new AlertDialog(
+        title: const Text("Add Tag"),
+        content: new Column(children: [
+          Form(
+            key: _formKey,
+            child: TextField(
+              controller: TextEditingController()..text = old,
+              onChanged: (changed) {
+                title = changed;
+              },
+            )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ColorPicker(
+            pickerAreaHeightPercent: 0.8,
+            pickerColor: color,
+            onColorChanged: (changed) {
+              setState(() {
+                color = changed;
+              });
+            },
+            paletteType: PaletteType.hsv,
+          ),
+        ]),
+        actions: [
+          Center(
+            child: FloatingActionButton.extended(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  if (title != old || color != col) {
+                    await DatabaseService().removeTag(old, title, color.value);
+                    await DatabaseService().addTag(title, color.value);
+                  }
+                  Navigator.pop(context);
+                }
+              },
+              label: Text("Edit Tag"),
+              heroTag: title,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _deleteTagPopup(BuildContext context, String name) {
     final _formKey = GlobalKey<FormState>();
     Color color = Colors.blue;
@@ -179,7 +265,7 @@ class _TagsPageState extends State<TagsPage> {
             onPressed: () async {
               // delete tag in firestore
               // await DatabaseService.deleteTag()
-              await DatabaseService().removeTag(name);
+              await DatabaseService().removeTag(name, "Unset", Colors.grey.value);
               Navigator.pop(context);
             },
             child: Text('delete $name tag'),

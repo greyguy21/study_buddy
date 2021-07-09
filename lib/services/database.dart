@@ -515,23 +515,23 @@ class DatabaseService {
         });
   }
 
-  Future removeTag(String title) {
+  Future removeTag(String old, String newTitle, int color) {
     return _db.collection("user").doc(this.uid).update({})
         .then((value) {
           _db.collection("user").doc(this.uid)
               .collection("tags")
-              .doc(title)
+              .doc(old)
               .delete();
           _db.collection("user").doc(this.uid)
               .collection("sessions")
-              .where("tag", isEqualTo: title)
+              .where("tag", isEqualTo: old)
               .snapshots()
               .forEach((snapshot) async {
                 List<DocumentSnapshot> docs = snapshot.docs; 
                 for (var doc in docs) {
                   await doc.reference.update({
-                    "tag": "Unset",
-                    "color": Colors.grey.value,
+                    "tag": newTitle,
+                    "color": color,
                   });
                 }
               });
