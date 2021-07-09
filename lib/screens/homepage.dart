@@ -106,12 +106,39 @@ class _HomePageState extends State<HomePage> {
                           });
                         },
                         header: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.arrow_upward_sharp),
+                            SizedBox(
+                              width: 118,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 50),
+                              child: Center(
+                                child: Text(
+                                  "Focus Session",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
+                        collapsed: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: Icon(Icons.arrow_upward_rounded),
+                          ),
+                        ),
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     Icon(Icons.arrow_upward_sharp),
+                        //   ],
+                        // ),
                         panel: Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
