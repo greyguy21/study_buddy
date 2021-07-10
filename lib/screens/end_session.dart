@@ -16,7 +16,8 @@ class _EndSessionState extends State<EndSession> {
   int amt = globals.timeSliderValue.round() * 100;
   String taskName = globals.taskName;
   int duration = globals.timeSliderValue.round();
-  String date = globals.date;
+  int day = globals.day;
+  int month = globals.month;
   String start = globals.taskStart;
   String end = globals.taskEnd;
   String tagName = globals.tagName;
@@ -33,7 +34,7 @@ class _EndSessionState extends State<EndSession> {
           TextButton(
             onPressed: () async {
               print(taskName);
-              await DatabaseService().addNewTask(taskName, duration, date, start, end, tagName, tagColor.value);
+              await DatabaseService().addNewTask(taskName, duration, "$day/$month", start, end, tagName, tagColor.value, day, month);
               // await DatabaseService().updateTask(taskName,
               //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
               Navigator.pop(context);

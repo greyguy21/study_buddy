@@ -452,7 +452,7 @@ class DatabaseService {
     });
   }
 
-  Future addNewTask(String name, int duration, String date, String start, String end, String tag, int color) {
+  Future addNewTask(String name, int duration, String date, String start, String end, String tag, int color, int day, int month) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
       _db.collection("user").doc(this.uid)
           .collection("sessions")
@@ -461,6 +461,8 @@ class DatabaseService {
             "name": name,
             "duration": duration,
             "date": date,
+            "day": day,
+            "month": month,
             "start": start,
             "end": end,
             "tag": tag,
@@ -469,12 +471,22 @@ class DatabaseService {
     });
   }
 
+  Future updateTask(String name, String tag, int color) {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid).collection("sessions").doc(name).update({
+        "tag": tag,
+        "color": color,
+      });
+    });
+  }
+
   Stream<QuerySnapshot> get timeline {
     return _db
         .collection("user")
         .doc(this.uid)
         .collection("sessions")
-        .orderBy("date", descending: true)
+        .orderBy("month", descending: true)
+        .orderBy("day", descending: true)
         .orderBy("start", descending: true)
         .snapshots();
   }

@@ -191,27 +191,6 @@ class _HomePageState extends State<HomePage> {
                   } else {
                     final GlobalKey<TagsState> _tagKey =
                     GlobalKey<TagsState>();
-                    List<TagModel>? taggs = snapshot.data;
-                    List<Widget> buttons = taggs!
-                        .map((tag) => TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            // circuel with color,
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: tag.color,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            // text with word
-                            Text(tag.title)
-                          ],
-                        )))
-                        .toList();
 
                     return Padding(
                       padding: const EdgeInsets.only(
@@ -268,8 +247,8 @@ class _HomePageState extends State<HomePage> {
                             now.hour.toString() +
                                 ":" +
                                 minuteStr;
-                        String date = now.day.toString() + "/" + now.month.toString();
-                        globals.date = date;
+                        globals.day = now.day;
+                        globals.month = now.month;
                         Navigator.push(
                             context,
                             PageTransition(

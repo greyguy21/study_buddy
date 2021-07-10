@@ -24,4 +24,5 @@ var taskStart = '';
 var taskEnd = "";
 var tagName = "Unset";
 var tagColor = Color(Colors.grey.value);
-var date = "";
+var day = 0;
+var month = 0;
