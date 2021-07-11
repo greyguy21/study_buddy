@@ -8,6 +8,7 @@ import 'package:study_buddy/screens/store/clothes_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
 import 'package:study_buddy/services/database.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -45,6 +46,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
               totalTime = totalTime + doc.get('duration');
             }
           });
+
+          List<charts.Series<QueryDocumentSnapshot, String>> _series = [];
+          _series.add(charts.Series(
+            id: 'Tag Distribution',
+            data: todaysTasks,
+            domainFn: (QueryDocumentSnapshot doc, _) => doc.get('name'),
+            measureFn: (QueryDocumentSnapshot doc, _) => doc.get('duration'),
+            colorFn: (QueryDocumentSnapshot doc, _) => doc.get('color'),
+            //     charts.ColorUtil.fromDartColor(doc.get('color')),
+          ));
 
           return Scaffold(
             appBar: AppBar(
@@ -89,6 +100,18 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   ],
                 ),
                 // add more statistics stuff here
+                Container(
+                    child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Tag Distribution'),
+                      ],
+                    ),
+                    charts.PieChart(_series),
+                  ],
+                )),
               ],
             ),
           );
