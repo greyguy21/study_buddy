@@ -93,22 +93,21 @@ class _HomePageState extends State<HomePage> {
                     child: Animal(pet, imgPath),
                   ),
                 ),
-
               ],
             ),
             floatingActionButton: Padding(
               padding: const EdgeInsets.only(bottom: 80),
               child: FloatingActionButton.extended(
                 onPressed: () {
-                  setState(() {
-                    // _visible = !_visible;
-                    _showStartPanel(context);
-                    // _pc1.open();
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (BuildContext context) => _startPopup(context),
-                    // );
-                  });
+                  // setState(() {
+                  // _visible = !_visible;
+                  _showStartPanel(context);
+                  // _pc1.open();
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) => _startPopup(context),
+                  // );
+                  // });
                   // _pc1.open();
                 },
                 label: Text(
@@ -132,219 +131,138 @@ class _HomePageState extends State<HomePage> {
 
   void _showStartPanel(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: ListView(
-            children: <Widget>[
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 20),
-                  child: Text(
-                    "Focus Session",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.only(left: 30, right: 30),
-                child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    validator: (val) =>
-                    val!.isEmpty || val.length < 1
-                        ? "please enter task name"
-                        : null,
-                    decoration: InputDecoration(
-                      labelText: 'Task:',
-                      filled: true,
-                    ),
-                    onChanged: (val) {
-                      // setState(() => globals.taskName = val);
-                      globals.taskName = val;
-                    },
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 20.0, left: 30, right: 30),
-                child: Column(
-                  children: [
-                    Text('Time (in minutes):'),
-                    TimerSlider(),
-                  ],
-                ),
-              ),
-              StreamBuilder<List<TagModel>>(
-                stream: DatabaseService().tags,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return _errorPopup(context);
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Loading();
-                  } else {
-                    final GlobalKey<TagsState> _tagKey =
-                    GlobalKey<TagsState>();
-
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0,
-                          left: 30,
-                          right: 30,
-                          bottom: 20),
-                      child: Tags(
-                        key: _tagKey,
-                        itemCount: snapshot.data!.length,
-                        columns: 5,
-                        itemBuilder: (index) {
-                          return ItemTags(
-                            index: index,
-                            title: snapshot.data![index].title,
-                            activeColor:
-                            snapshot.data![index].color,
-                            color: Colors.black87,
-                            textActiveColor: Colors.white,
-                            textColor: Colors.white,
-                            singleItem: true,
-                            onPressed: (value) {
-                              // setState(() {
-                              //   globals.tagName = snapshot.data![index].title;
-                              //   globals.tagColor = snapshot.data![index].color;
-                              // });
-                              globals.tagName =
-                                  snapshot.data![index].title;
-                              print(globals.tagName);
-                              globals.tagColor =
-                                  snapshot.data![index].color;
-                              print(
-                                  globals.tagColor.toString());
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingActionButton.extended(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        DateTime now = DateTime.now();
-                        String minuteStr =
-                        now.minute.toString().length == 1
-                            ? '0' + now.minute.toString()
-                            : now.minute.toString();
-                        globals.taskStart =
-                            now.hour.toString() +
-                                ":" +
-                                minuteStr;
-                        globals.day = now.day;
-                        globals.month = now.month;
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: MainFocusPage(),
-                                type: PageTransitionType.fade));
-                        // Navigator.pushReplacementNamed(context, "/mainfocus");
-                      }
-                    },
-                    label: Text(
-                      'start',
+        context: context,
+        builder: (context) {
+          return Center(
+            child: ListView(
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 20),
+                    child: Text(
+                      "Focus Session",
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: Form(
+                    key: _formKey,
+                    child: TextFormField(
+                      validator: (val) => val!.isEmpty || val.length < 1
+                          ? "please enter task name"
+                          : null,
+                      decoration: InputDecoration(
+                        labelText: 'Task:',
+                        filled: true,
+                      ),
+                      onChanged: (val) {
+                        // setState(() => globals.taskName = val);
+                        globals.taskName = val;
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 20.0, left: 30, right: 30),
+                  child: Column(
+                    children: [
+                      Text('Time (in minutes):'),
+                      TimerSlider(),
+                    ],
+                  ),
+                ),
+                StreamBuilder<List<TagModel>>(
+                  stream: DatabaseService().tags,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return _errorPopup(context);
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Loading();
+                    } else {
+                      final GlobalKey<TagsState> _tagKey =
+                          GlobalKey<TagsState>();
+
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            top: 20.0, left: 30, right: 30, bottom: 20),
+                        child: Tags(
+                          key: _tagKey,
+                          itemCount: snapshot.data!.length,
+                          columns: 5,
+                          itemBuilder: (index) {
+                            return ItemTags(
+                              index: index,
+                              title: snapshot.data![index].title,
+                              activeColor: snapshot.data![index].color,
+                              color: Colors.black87,
+                              textActiveColor: Colors.white,
+                              textColor: Colors.white,
+                              singleItem: true,
+                              onPressed: (value) {
+                                // setState(() {
+                                //   globals.tagName = snapshot.data![index].title;
+                                //   globals.tagColor = snapshot.data![index].color;
+                                // });
+                                globals.tagName = snapshot.data![index].title;
+                                print(globals.tagName);
+                                globals.tagColor = snapshot.data![index].color;
+                                print(globals.tagColor.toString());
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          DateTime now = DateTime.now();
+                          String minuteStr = now.minute.toString().length == 1
+                              ? '0' + now.minute.toString()
+                              : now.minute.toString();
+                          globals.taskStart =
+                              now.hour.toString() + ":" + minuteStr;
+                          globals.day = now.day;
+                          globals.month = now.month;
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: MainFocusPage(),
+                                  type: PageTransitionType.fade));
+                          // Navigator.pushReplacementNamed(context, "/mainfocus");
+                        }
+                      },
+                      label: Text(
+                        'start',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.green,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.alarm_on,
                         color: Colors.green,
                       ),
+                      backgroundColor: Colors.white,
                     ),
-                    icon: const Icon(
-                      Icons.alarm_on,
-                      color: Colors.green,
-                    ),
-                    backgroundColor: Colors.white,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
-  }
-
-  Widget _startPopup(BuildContext context) {
-    return new AlertDialog(
-      title: const Text('Focus session settings'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Form(
-            key: _formKey,
-            child: TextFormField(
-              validator: (val) => val!.isEmpty || val.length < 1
-                  ? "please enter task name"
-                  : null,
-              decoration: InputDecoration(
-                labelText: 'Task:',
-                filled: true,
-              ),
-              onChanged: (val) {
-                // setState(() => globals.taskName = val);
-                globals.taskName = val;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Column(
-              children: [
-                Text('Time (in minutes):'),
-                TimerSlider(),
+                  ],
+                ),
               ],
             ),
-          )
-        ],
-      ),
-      actions: <Widget>[
-        FloatingActionButton.extended(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              DateTime now = DateTime.now();
-              String minuteStr = now.minute.toString().length == 1
-                  ? '0' + now.minute.toString()
-                  : now.minute.toString();
-              globals.taskStart = now.hour.toString() + ":" + minuteStr;
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: MainFocusPage(), type: PageTransitionType.fade));
-              // Navigator.pushReplacementNamed(context, "/mainfocus");
-            }
-          },
-          label: Text(
-            'start',
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.green,
-            ),
-          ),
-          icon: const Icon(
-            Icons.alarm_on,
-            color: Colors.green,
-          ),
-          backgroundColor: Colors.white,
-        )
-      ],
-      // backgroundColor: Colors., (of start popup)
-    );
+          );
+        });
   }
 
   Widget _errorPopup(BuildContext context) {

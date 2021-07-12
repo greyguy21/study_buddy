@@ -39,23 +39,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
           });
 
           List<QueryDocumentSnapshot> todaysTasks = [];
+          List<Task> listOfTasks = [];
           num totalTime = 0;
           snapshot.data!.docs.forEach((doc) {
             if (doc.get('date') == date) {
               todaysTasks.add(doc);
               totalTime = totalTime + doc.get('duration');
+              listOfTasks.add(new Task(doc.get('name'), doc.get('tag'),
+                  doc.get('duration'), Color(doc.get('color'))));
             }
           });
-
-          List<charts.Series<QueryDocumentSnapshot, String>> _series = [];
-          _series.add(charts.Series(
-            id: 'Tag Distribution',
-            data: todaysTasks,
-            domainFn: (QueryDocumentSnapshot doc, _) => doc.get('name'),
-            measureFn: (QueryDocumentSnapshot doc, _) => doc.get('duration'),
-            colorFn: (QueryDocumentSnapshot doc, _) => doc.get('color'),
-            //     charts.ColorUtil.fromDartColor(doc.get('color')),
-          ));
 
           return Scaffold(
             appBar: AppBar(
@@ -109,7 +102,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         Text('Tag Distribution'),
                       ],
                     ),
-                    charts.PieChart(_series),
+                    // charts.PieChart(_series),
+                    SizedBox(
+                      height: 400,
+                      child: TagPieChart(data: listOfTasks),
+                    ),
                   ],
                 )),
               ],
@@ -117,4 +114,54 @@ class _StatisticsPageState extends State<StatisticsPage> {
           );
         });
   }
+}
+
+class TagPieChart extends StatelessWidget {
+  final List<Task> data;
+
+  TagPieChart({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    List<charts.Series<Task, String>> series = [
+      charts.Series(
+        data: data,
+        id: 'Tag Distribution',
+        domainFn: (Task task, _) => task.tagName,
+        measureFn: (Task task, _) => task.duration,
+        colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.color),
+        // new Color(doc.get('color')),
+        labelAccessorFn: (Task task, _) => task.duration.toString(),
+      )
+    ];
+
+    return charts.PieChart(
+      series,
+      animate: true,
+      behaviors: [
+        new charts.DatumLegend(
+            outsideJustification: charts.OutsideJustification.endDrawArea,
+            horizontalFirst: true,
+            desiredMaxRows: 2,
+            // cellPadding: EdgeInsets.only(),
+            entryTextStyle: charts.TextStyleSpec(
+              fontSize: 15,
+              color: charts.MaterialPalette.black,
+            ))
+      ],
+      defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
+        new charts.ArcLabelDecorator(
+            labelPosition: charts.ArcLabelPosition.inside)
+      ]),
+    );
+  }
+}
+
+class Task {
+  final String taskName;
+  final String tagName;
+  final int duration;
+  final Color color;
+
+  Task(this.taskName, this.tagName, this.duration, this.color);
 }
