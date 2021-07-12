@@ -232,8 +232,10 @@ class _HomePageState extends State<HomePage> {
                           String minuteStr = now.minute.toString().length == 1
                               ? '0' + now.minute.toString()
                               : now.minute.toString();
-                          globals.taskStart =
-                              now.hour.toString() + ":" + minuteStr;
+                          String hourStr = now.hour.toString().length == 1
+                              ? '0' + now.hour.toString()
+                              : now.hour.toString();
+                          globals.taskStart = hourStr + ":" + minuteStr;
                           globals.day = now.day;
                           globals.month = now.month;
                           Navigator.push(

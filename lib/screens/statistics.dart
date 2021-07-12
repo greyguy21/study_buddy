@@ -8,6 +8,7 @@ import 'package:study_buddy/screens/store/clothes_page.dart';
 import 'package:study_buddy/screens/store/items_page.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
 import 'package:study_buddy/services/database.dart';
+import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class StatisticsPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String date = now.day.toString() + "/" + now.month.toString();
+    var dateString = DateFormat.yMMMMd().format(now);
 
     return StreamBuilder<QuerySnapshot>(
         stream: DatabaseService().timeline,
@@ -59,7 +61,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    "Today: $date",
+                    "Today: $dateString",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20),
                   ),

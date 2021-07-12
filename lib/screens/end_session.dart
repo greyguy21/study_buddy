@@ -34,7 +34,16 @@ class _EndSessionState extends State<EndSession> {
           TextButton(
             onPressed: () async {
               print(taskName);
-              await DatabaseService().addNewTask(taskName, duration, "$day/$month", start, end, tagName, tagColor.value, day, month);
+              await DatabaseService().addNewTask(
+                  taskName,
+                  duration,
+                  "$day/$month",
+                  start,
+                  end,
+                  tagName,
+                  tagColor.value,
+                  day,
+                  month);
               // await DatabaseService().updateTask(taskName,
               //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
               Navigator.pop(context);
