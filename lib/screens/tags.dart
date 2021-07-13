@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import '../globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 // import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -47,6 +48,8 @@ class _TagsPageState extends State<TagsPage> {
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
+                    globals.numOfTags = snapshot.data!.length;
+                    print(globals.numOfTags);
                     return Card(
                       elevation: 1.2,
                       shape: RoundedRectangleBorder(
