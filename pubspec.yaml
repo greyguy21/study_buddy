@@ -41,6 +41,7 @@ dependencies:
   flutter_colorpicker: ^0.4.0
   flutter_tags: "^0.4.9+1"
   intl: ^0.17.0
+  date_util: ^0.1.4
 
   
 dev_dependencies:

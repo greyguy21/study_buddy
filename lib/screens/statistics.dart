@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/models/app_user.dart';
-import 'package:study_buddy/models/tag_model.dart';
-import 'package:study_buddy/screens/homepage.dart';
+import '../globals.dart' as globals;
 import 'package:study_buddy/screens/loading.dart';
-import 'package:study_buddy/screens/store/accessories_page.dart';
-import 'package:study_buddy/screens/store/clothes_page.dart';
-import 'package:study_buddy/screens/store/items_page.dart';
-import 'package:study_buddy/screens/store/wallpapers_page.dart';
+import 'package:date_util/date_util.dart';
 import 'package:study_buddy/services/database.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import '../globals.dart' as globals;
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -27,6 +22,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
     String date = now.day.toString() + "/" + now.month.toString();
     var dateString = DateFormat.yMMMMd().format(now);
     var monthStr = DateFormat.MMMM().format(now);
+    var dateUtility = DateUtil();
+    var numDays = dateUtility.daysInMonth(now.month, now.year);
 
     return StreamBuilder<QuerySnapshot>(
         stream: DatabaseService().timeline,
@@ -38,85 +35,71 @@ class _StatisticsPageState extends State<StatisticsPage> {
             return Loading();
           }
 
-
-          // list of tags
+          // adding all focus sessions into this list docRef
           List<QueryDocumentSnapshot> docRef = [];
           snapshot.data!.docs.forEach((doc) {
             docRef.add(doc);
           });
 
-          List<QueryDocumentSnapshot> todaysTasks = [];
-          List<QueryDocumentSnapshot> monthsTasks = [];
-          List<Task> listOfTasks = [];
+          List<Task> listDayTasks = [];
           List<Task> listMonthTasks = [];
+          List<DataPoint> lineData = List.filled(numDays, new DataPoint(0, 0));
+          for (int i = 0; i < numDays; i++) {
+            lineData[i] = new DataPoint(i + 1, 0);
+          }
+          List<String> listOfTags = List.filled(globals.numOfTags, '');
+          List<PieData> pieDataDay = List.filled(
+              globals.numOfTags, new PieData('', 0, Color(0000000000)));
+          List<PieData> pieDataMonth = List.filled(
+              globals.numOfTags, new PieData('', 0, Color(0000000000)));
+
           num totalDayTime = 0;
           num totalMonthTime = 0;
 
-          List<String> tags = List.filled(globals.numOfTags, "");
-          List<int> colors = List.filled(globals.numOfTags, 0);
-          List<DataTag> dailyTasks = List.filled(globals.numOfTags, DataTag("", 0, 0));
-          List<int> dailyDuration = List.filled(globals.numOfTags, 0);
-          List<DataTag> monthlyTasks = List.filled(globals.numOfTags, DataTag("", 0, 0));
-          List<int> monthlyDuration = List.filled(globals.numOfTags, 0);
-
+          // processing data
           snapshot.data!.docs.forEach((doc) {
-            // if (doc.get('month') == now.month) {
-            //   monthsTasks.add(doc);
-            //   totalMonthTime = totalMonthTime + doc.get('duration');
-            //   listMonthTasks.add(new Task(
-            //       doc.get('name'),
-            //       doc.get('tag'),
-            //       doc.get('duration'),
-            //       Color(doc.get('color')),
-            //       doc.get('day')));
-            //
-            //   if (doc.get('date') == date) {
-            //     todaysTasks.add(doc);
-            //     totalDayTime = totalDayTime + doc.get('duration');
-            //     listOfTasks.add(new Task(
-            //         doc.get('name'),
-            //         doc.get('tag'),
-            //         doc.get('duration'),
-            //         Color(doc.get('color')),
-            //         doc.get('day')));
-            //   }
-
-            if (doc.get("date") == date) {
-              todaysTasks.add(doc);
-              totalDayTime = totalDayTime + doc.get('duration');
-              print(doc.get("name"));
-              if (tags.contains(doc.get("name"))) {
-                int index = tags.indexOf(doc.get("name"));
-                print(index);
-                dailyDuration[index] = doc.get("duration");
-                colors[index] = doc.get("color");
+            if (doc.get('month') == now.month) {
+              String docTag = doc.get('tag');
+              totalMonthTime = totalMonthTime + doc.get('duration');
+              listMonthTasks.add(new Task(
+                  doc.get('name'),
+                  docTag,
+                  doc.get('duration'),
+                  Color(doc.get('color')),
+                  doc.get('day')));
+              lineData[doc.get('day') - 1].duration += doc.get('duration');
+              if (listOfTags.contains(docTag)) {
+                int index = listOfTags.indexOf(docTag);
+                pieDataMonth[index].duration += doc.get('duration');
               } else {
-                int index = tags.indexOf("");
-                tags[index] = doc.get("name");
-                dailyDuration[index] = doc.get("duration");
-                colors[index] = doc.get("color");
+                int index = listOfTags.indexOf('');
+                listOfTags[index] = docTag;
+                pieDataMonth[index] = new PieData(
+                    docTag, doc.get('duration'), Color(doc.get('color')));
+              }
+
+              if (doc.get('date') == date) {
+                totalDayTime = totalDayTime + doc.get('duration');
+                listDayTasks.add(new Task(
+                    doc.get('name'),
+                    doc.get('tag'),
+                    doc.get('duration'),
+                    Color(doc.get('color')),
+                    doc.get('day')));
+
+                // adding data to pieDataDay
+                // tags alr processed in month so all the tags
+                // in this day would have been added already
+                // update color and tag name
+                int index = listOfTags.indexOf(docTag);
+                // pieDataDay[index].duration += doc.get('duration');
+                // pieDataDay[index].tagName = docTag;
+                // pieDataDay[index].color = Color(doc.get('color'));
+                num curr = pieDataDay[index].duration;
+                pieDataDay[index] = new PieData(docTag,
+                    doc.get('duration') + curr, Color(doc.get('color')));
               }
             }
-
-            if (doc.get("month") == now.month) {
-              monthsTasks.add(doc);
-              totalMonthTime = totalMonthTime + doc.get("duration");
-              if (tags.contains(doc.get("name"))) {
-                int index = tags.indexOf(doc.get("name"));
-                monthlyDuration[index] += doc.get("duration") as int;
-              } else {
-                int index = tags.indexOf(doc.get(""));
-                tags[index] = doc.get("name");
-                monthlyDuration[index] = doc.get("duration") as int;
-                colors[index] = doc.get("color");
-              }
-            }
-          });
-
-          tags.forEach((tag) {
-            int index = tags.indexOf(tag);
-            dailyTasks.add(DataTag(tag, dailyDuration[index], colors[index]));
-            monthlyTasks.add(DataTag(tag, monthlyDuration[index], colors[index]));
           });
 
           return DefaultTabController(
@@ -148,7 +131,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             children: [
                               Text('Number of tasks completed'),
                               Text(
-                                '${todaysTasks.length}',
+                                '${listDayTasks.length}',
                                 style: TextStyle(fontSize: 50),
                               ),
                             ],
@@ -181,10 +164,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
-                            // charts.PieChart(_series),
                             SizedBox(
                               height: 400,
-                              child: TagPieChart(data: dailyTasks),
+                              child: TagPieChart(data: pieDataDay),
                             ),
                           ],
                         )),
@@ -209,7 +191,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             children: [
                               Text('Number of tasks completed'),
                               Text(
-                                '${monthsTasks.length}',
+                                '${listMonthTasks.length}',
                                 style: TextStyle(fontSize: 50),
                               ),
                             ],
@@ -242,10 +224,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
-                            // charts.PieChart(_series),
                             SizedBox(
                               height: 400,
-                              child: TagPieChart(data: monthlyTasks),
+                              child: TagPieChart(data: pieDataMonth),
                             ),
                           ],
                         )),
@@ -266,7 +247,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             // charts.PieChart(_series),
                             SizedBox(
                               child: MonthLineChart(
-                                data: listMonthTasks,
+                                data: lineData,
                               ),
                               height: 300,
                             ),
@@ -282,21 +263,21 @@ class _StatisticsPageState extends State<StatisticsPage> {
 }
 
 class TagPieChart extends StatelessWidget {
-  final List<DataTag> data;
+  final List<PieData> data;
 
   TagPieChart({required this.data});
 
   @override
   Widget build(BuildContext context) {
-    List<charts.Series<DataTag, String>> series = [
+    List<charts.Series<PieData, String>> series = [
       charts.Series(
         data: data,
         id: 'Tag Distribution',
-        domainFn: (DataTag task, _) => task.tagName, //x
-        measureFn: (DataTag task, _) => task.duration, //y
-        colorFn: (DataTag task, _) => charts.ColorUtil.fromDartColor(Color(task.color)),
-        // new Color(doc.get('color')),
-        labelAccessorFn: (DataTag task, _) => task.duration.toString(),
+        domainFn: (PieData task, _) => task.tagName, //x
+        measureFn: (PieData task, _) => task.duration, //y
+        colorFn: (PieData task, _) =>
+            charts.ColorUtil.fromDartColor(task.color),
+        labelAccessorFn: (PieData task, _) => task.duration.toString(),
       )
     ];
 
@@ -306,7 +287,7 @@ class TagPieChart extends StatelessWidget {
       behaviors: [
         new charts.DatumLegend(
             outsideJustification: charts.OutsideJustification.endDrawArea,
-            horizontalFirst: true,
+            horizontalFirst: false,
             desiredMaxRows: 2,
             // cellPadding: EdgeInsets.only(),
             entryTextStyle: charts.TextStyleSpec(
@@ -323,42 +304,27 @@ class TagPieChart extends StatelessWidget {
 }
 
 class MonthLineChart extends StatelessWidget {
-  final List<Task> data;
+  final List<DataPoint> data;
 
   MonthLineChart({required this.data});
 
   @override
   Widget build(BuildContext context) {
-    List<charts.Series<Task, int>> series = [
+    List<charts.Series<DataPoint, int>> series = [
       charts.Series(
         data: data,
         id: 'Month Task Duration',
-        domainFn: (Task task, _) => task.day,
-        measureFn: (Task task, _) => task.duration,
+        domainFn: (DataPoint dp, _) => dp.name,
+        measureFn: (DataPoint dp, _) => dp.duration,
         // colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.color),
         // new Color(doc.get('color')),
-        labelAccessorFn: (Task task, _) => task.duration.toString(),
+        labelAccessorFn: (DataPoint dp, _) => dp.duration.toString(),
       )
     ];
 
     return charts.LineChart(
       series,
       animate: true,
-      // behaviors: [
-      //   new charts.DatumLegend(
-      //       outsideJustification: charts.OutsideJustification.endDrawArea,
-      //       horizontalFirst: true,
-      //       desiredMaxRows: 2,
-      //       // cellPadding: EdgeInsets.only(),
-      //       entryTextStyle: charts.TextStyleSpec(
-      //         fontSize: 15,
-      //         color: charts.MaterialPalette.black,
-      //       ))
-      // ],
-      // defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
-      //   new charts.ArcLabelDecorator(
-      //       labelPosition: charts.ArcLabelPosition.inside)
-      // ]),
     );
   }
 }
@@ -373,14 +339,17 @@ class Task {
   Task(this.taskName, this.tagName, this.duration, this.color, this.day);
 }
 
-class DataTag {
-  final String tagName;
-  int duration;
-  final int color;
+class DataPoint {
+  final int name;
+  num duration;
 
-  DataTag(this.tagName, this.duration, this.color);
+  DataPoint(this.name, this.duration);
+}
 
-  updateDuration(int duration) {
-    this.duration += duration;
-  }
+class PieData {
+  String tagName;
+  num duration;
+  Color color;
+
+  PieData(this.tagName, this.duration, this.color);
 }
