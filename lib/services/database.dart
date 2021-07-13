@@ -452,28 +452,36 @@ class DatabaseService {
     });
   }
 
-  Future addNewTask(String name, int duration, String date, String start, String end, String tag, int color, int day, int month) {
+  Future addNewTask(String name, int duration, String date, String start,
+      String end, String tag, int color, int day, int month) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db.collection("user").doc(this.uid)
+      _db
+          .collection("user")
+          .doc(this.uid)
           .collection("sessions")
           .doc(name)
           .set({
-            "name": name,
-            "duration": duration,
-            "date": date,
-            "day": day,
-            "month": month,
-            "start": start,
-            "end": end,
-            "tag": tag,
-            "color": color,
-          });
+        "name": name,
+        "duration": duration,
+        "date": date,
+        "day": day,
+        "month": month,
+        "start": start,
+        "end": end,
+        "tag": tag,
+        "color": color,
+      });
     });
   }
 
   Future updateTask(String name, String tag, int color) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db.collection("user").doc(this.uid).collection("sessions").doc(name).update({
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("sessions")
+          .doc(name)
+          .update({
         "tag": tag,
         "color": color,
       });
@@ -503,49 +511,48 @@ class DatabaseService {
   }
 
   Future addTag(String title, int color) {
-    return _db.collection("user").doc(this.uid).update({})
-        .then((value) {
-          _db.collection("user").doc(this.uid)
-              .collection("tags")
-              .doc(title)
-              .set({
-            "title": title,
-            "color": color,
-          });
-        });
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid).collection("tags").doc(title).set({
+        "title": title,
+        "color": color,
+      });
+    });
   }
 
   Future removeTag(String old, String newTitle, int color) {
-    return _db.collection("user").doc(this.uid).update({})
-        .then((value) {
-          _db.collection("user").doc(this.uid)
-              .collection("tags")
-              .doc(old)
-              .delete();
-          _db.collection("user").doc(this.uid)
-              .collection("sessions")
-              .where("tag", isEqualTo: old)
-              .snapshots()
-              .forEach((snapshot) async {
-                List<DocumentSnapshot> docs = snapshot.docs; 
-                for (var doc in docs) {
-                  await doc.reference.update({
-                    "tag": newTitle,
-                    "color": color,
-                  });
-                }
-              });
-        });
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid).collection("tags").doc(old).delete();
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("sessions")
+          .where("tag", isEqualTo: old)
+          .snapshots()
+          .forEach((snapshot) async {
+        List<DocumentSnapshot> docs = snapshot.docs;
+        for (var doc in docs) {
+          await doc.reference.update({
+            "tag": newTitle,
+            "color": color,
+          });
+        }
+      });
+    });
   }
 
   List<TagModel> _tagsFromFirestore(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return TagModel(doc.get("title"), doc.get("color"),);
+      return TagModel(
+        doc.get("title"),
+        doc.get("color"),
+      );
     }).toList();
   }
 
   Stream<List<TagModel>> get tags {
-    return _db.collection("user").doc(this.uid)
+    return _db
+        .collection("user")
+        .doc(this.uid)
         .collection("tags")
         .snapshots()
         .map(_tagsFromFirestore);
