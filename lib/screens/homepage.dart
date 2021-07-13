@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return Center(
-          child: ListView(
+          child: Column(
             children: <Widget>[
               Center(
                 child: Padding(

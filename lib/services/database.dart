@@ -480,6 +480,17 @@ class DatabaseService {
     });
   }
 
+  Future updateExtension(String name, int extended, String end) {
+    return _db.collection("user").doc(this.uid).update({}).then((value) {
+      _db.collection("user").doc(this.uid).collection("sessions")
+          .doc(name)
+          .update({
+        "extended": extended,
+        "end": end,
+      });
+    });
+  }
+
   Stream<QuerySnapshot> get timeline {
     return _db
         .collection("user")

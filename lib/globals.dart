@@ -26,3 +26,4 @@ var tagName = "Unset";
 var tagColor = Color(Colors.grey.value);
 var day = 0;
 var month = 0;
+var extended = false;
