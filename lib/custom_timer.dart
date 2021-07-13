@@ -169,7 +169,7 @@ class _CustomTimerState extends State<CustomTimer> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Are you sure you have completed your task?"),
-        content: Text("some motivational message"),
+        content: Text("Note: you will only receive the coins for the amount of time you put in!"),
         actions: [
           TextButton(
             onPressed: () async {
@@ -188,12 +188,14 @@ class _CustomTimerState extends State<CustomTimer> {
                   : now.minute.toString();
               String end = now.hour.toString() + ":" + minuteStr;
               globals.taskEnd = end;
+              int actual =  (currentSeconds/60).round() == 0 ? 1 : (currentSeconds/60).round();
+              globals.earned = actual * 100;
               await DatabaseService()
-                  .addCoins(globals.timeSliderValue.round() * 100);
+                  .addCoins(actual);
               if (globals.extended) {
-                await DatabaseService().updateExtension(taskName, currentSeconds, end);
+                await DatabaseService().updateExtension(taskName, actual, end);
               } else {
-                await DatabaseService().addNewTask(taskName, currentSeconds, "$day/$month", start, end, tagName, tagColor.value, day, month);
+                await DatabaseService().addNewTask(taskName, actual, "$day/$month", start, end, tagName, tagColor.value, day, month);
               }
             },
             child: Text("Yes"),
@@ -224,18 +226,19 @@ class _CustomTimerState extends State<CustomTimer> {
                 child: Column(
                   children: [
                     Text('Please indicate how long you want to extend the session and click yes to continue.'),
-                    Slider(
-                      value: globals.timeSliderValue,
-                      onChanged: (newTiming) {
-                        setState(() {
-                          globals.timeSliderValue = newTiming;
-                        });
-                      },
-                      min: 1,
-                      max: 120,
-                      label: globals.timeSliderValue.round().toString(),
-                      divisions: 22,
-                    ),
+                    // Slider(
+                    //   value: globals.timeSliderValue,
+                    //   onChanged: (newTiming) {
+                    //     setState(() {
+                    //       globals.timeSliderValue = newTiming;
+                    //     });
+                    //   },
+                    //   min: 1,
+                    //   max: 120,
+                    //   label: globals.timeSliderValue.round().toString(),
+                    //   divisions: 22,
+                    // ),
+                    TimerSlider(),
                   ],
                 ),
               )
@@ -247,8 +250,10 @@ class _CustomTimerState extends State<CustomTimer> {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/mainfocus");
                 globals.extended = true;
+                int earned = globals.timeSliderValue.round() * 100;
+                globals.earned = earned;
                 await DatabaseService()
-                    .addCoins(globals.timeSliderValue.round() * 100);
+                    .addCoins(earned);
                 await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
                 // how to update in database hmm
               },
@@ -263,8 +268,10 @@ class _CustomTimerState extends State<CustomTimer> {
                     builder: (BuildContext context) => endSession(context),
                   );
                 });
+                var earned = globals.timeSliderValue.round() * 100;
+                globals.earned = earned;
                 await DatabaseService()
-                    .addCoins(globals.timeSliderValue.round() * 100);
+                    .addCoins(earned);
                 await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
               },
               child: Text("No"),

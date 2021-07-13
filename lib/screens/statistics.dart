@@ -244,8 +244,8 @@ class TagPieChart extends StatelessWidget {
       charts.Series(
         data: data,
         id: 'Tag Distribution',
-        domainFn: (Task task, _) => task.tagName,
-        measureFn: (Task task, _) => task.duration,
+        domainFn: (Task task, _) => task.tagName, //x
+        measureFn: (Task task, _) => task.duration, //y
         colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.color),
         // new Color(doc.get('color')),
         labelAccessorFn: (Task task, _) => task.duration.toString(),
