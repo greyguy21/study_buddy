@@ -6,13 +6,14 @@ import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/services/database.dart';
 import 'globals.dart' as globals;
 import 'screens/end_session.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class CustomTimer extends StatefulWidget {
   @override
   _CustomTimerState createState() => _CustomTimerState();
 }
 
-class _CustomTimerState extends State<CustomTimer> {
+class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   final interval = const Duration(seconds: 1);
 
   final int timerMaxSeconds = globals.timeSliderValue.round() * 60;
@@ -91,7 +92,46 @@ class _CustomTimerState extends State<CustomTimer> {
   @override
   void initState() {
     startTimeout();
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  Stopwatch stopwatch = Stopwatch();
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    if (AppLifecycleState.paused == state) {
+      stopwatch.start();
+      NotificationService().showNotification();
+      if (stopwatch.elapsedTicks >= 10) {
+        setState(() {
+          cancelTimer();
+          _incompleteSession(context);
+        });
+        stopwatch.stop();
+      }
+    }
+
+    if (AppLifecycleState.detached == state) {
+      Stopwatch stopwatch = Stopwatch();
+      stopwatch.start();
+      if (stopwatch.elapsedTicks == 10) {
+        cancelTimer();
+        Navigator.pop(context);
+        setState(() {
+          _incompleteSession(context);
+        });
+        stopwatch.stop();
+      }
+    }
   }
 
   @override
@@ -128,6 +168,26 @@ class _CustomTimerState extends State<CustomTimer> {
     );
   }
 
+  Future _incompleteSession(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Incomplete Session!"),
+        content: Text("Don't give up!"),
+        actions: [
+          Center(
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/");
+              },
+              child: Text("ok"),
+            ),
+          )
+        ],
+      )
+    );
+  }
   Future _exitSessionPopUp(BuildContext context) {
     // when back and home button events are triggered
     return showDialog(
@@ -282,5 +342,40 @@ class _CustomTimerState extends State<CustomTimer> {
 
   Widget endSession(BuildContext context) {
     return EndSession();
+  }
+}
+
+class NotificationService {
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      "main_focus",
+      "Main Focus",
+      "ask users to return to app",
+      importance: Importance.high
+  );
+  static const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  Future<void> init() async {
+    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings("logo");
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: null,
+      macOS: null,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: selectNotification,
+    );
+  }
+
+  int counter = 0;
+  void showNotification() {
+    flutterLocalNotificationsPlugin.show(0, "Study Buddy", "GO BACK!! 10s before session is terminated!", platformChannelSpecifics);
+  }
+
+  Future selectNotification(String? payload) async {
+    // handle notification tapped logic
+    print("hope it works");
   }
 }

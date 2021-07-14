@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:study_buddy/custom_timer.dart';
 import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/screens/statistics.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
@@ -23,6 +24,7 @@ import 'package:study_buddy/screens/timeline.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService().init();
   runApp(MyApp());
 }
 
