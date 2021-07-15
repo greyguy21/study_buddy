@@ -237,8 +237,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                     globals.earned = actual * 100;
                     await DatabaseService().addCoins(globals.earned);
                     if (globals.extended) {
-                      await DatabaseService()
-                          .updateExtension(taskName, actual, end);
+                      await DatabaseService().updateExtension(taskName, actual, end);
                     } else {
                       await DatabaseService().addNewTask(
                           taskName,
@@ -275,16 +274,29 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
         : now.minute.toString();
     String end = now.hour.toString() + ":" + minuteStr;
     globals.taskEnd = end;
+    int earned = globals.timeSliderValue.round() * 100;
+    globals.earned = earned;
     return AlertDialog(
-          title: Text("Do you want to extend your session?"),
+          title: Text("End of Session!"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Container(
+                child: Text("good job! you have earned $earned coins!"),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  "Do you want to extend your session?",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
                 child: Column(
                   children: [
-                    Text('Please indicate how long you want to extend the session and click yes to continue.'),
+                    Text('Please indicate how long you want to extend the session and click yes to proceed.'),
                     TimerSlider(),
                   ],
                 ),
@@ -299,8 +311,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 globals.extended = true;
                 int earned = globals.timeSliderValue.round() * 100;
                 globals.earned = earned;
-                await DatabaseService()
-                    .addCoins(earned);
+                await DatabaseService().addCoins(earned);
                 await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
                 // how to update in database hmm
               },
@@ -309,12 +320,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                setState(() {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => endSession(context),
-                  );
-                });
+                Navigator.pushNamed(context, "/");
                 var earned = globals.timeSliderValue.round() * 100;
                 globals.earned = earned;
                 await DatabaseService().addCoins(earned);

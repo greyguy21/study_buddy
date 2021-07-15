@@ -82,12 +82,6 @@ class _TimelineState extends State<Timeline> {
                           Text(
                             "End: " + docRef[index].get("end"),
                           ),
-                          Visibility(
-                            visible: docRef[index].get("extension"),
-                            child: Text(
-                              "Extended: " + docRef[index].get("extended").toString(),
-                            ),
-                          )
                         ],
                       ),
                     ),

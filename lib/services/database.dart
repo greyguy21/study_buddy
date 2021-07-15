@@ -18,7 +18,7 @@ class DatabaseService {
       "coins": 0,
       "pet": "",
       "wallpaper": "1",
-      "numOfTags": "1",
+      "numOfTags": 1,
     }).then((value) {
       DatabaseService().addClothes();
       DatabaseService().addWallpapers();
@@ -492,7 +492,6 @@ class DatabaseService {
         "end": end,
         "tag": tag,
         "color": color,
-        "extension": false,
       });
     });
   }
@@ -513,15 +512,14 @@ class DatabaseService {
 
   Future updateExtension(String name, int extended, String end) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db
-          .collection("user")
-          .doc(this.uid)
-          .collection("sessions")
-          .doc(name)
-          .update({
-        "extended": extended,
-        "end": end,
-        "extension": true,
+      DocumentReference documentReference = _db.collection("user").doc(this.uid).collection("sessions").doc(name);
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(documentReference);
+        if (!snapshot.exists) {
+          throw Exception("Failed to update duration!");
+        }
+        int newDuration = snapshot.get("duration") + extended;
+        transaction.update(documentReference, {"duration": newDuration});
       });
     });
   }

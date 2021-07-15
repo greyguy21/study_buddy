@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
       stream: DatabaseService().users,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          print(snapshot.error);
           return _errorPopup(context);
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return Loading();
