@@ -470,6 +470,7 @@ class DatabaseService {
         "end": end,
         "tag": tag,
         "color": color,
+        "extension": false,
       });
     });
   }
@@ -495,6 +496,7 @@ class DatabaseService {
           .update({
         "extended": extended,
         "end": end,
+        "extension": true,
       });
     });
   }

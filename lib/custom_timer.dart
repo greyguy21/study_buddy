@@ -40,30 +40,18 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
         currentSeconds = timer.tick;
         if (timer.tick >= timerMaxSeconds) {
           timer.cancel();
-          // setState(() async {
-          //   showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) => _timeExtension(context),
-          // //   );
-          //   DateTime now = DateTime.now();
-          //   String minuteStr = now.minute.toString().length == 1
-          //       ? '0' + now.minute.toString()
-          //       : now.minute.toString();
-          //   String end = now.hour.toString() + ":" + minuteStr;
-          //   globals.taskEnd = end;
-          // });
+          DateTime now = DateTime.now();
+          String minuteStr = now.minute.toString().length == 1
+              ? '0' + now.minute.toString()
+              : now.minute.toString();
+          String end = now.hour.toString() + ":" + minuteStr;
+          globals.taskEnd = end;
           if (globals.extended) {
             setState(() async {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => endSession(context),
               );
-              DateTime now = DateTime.now();
-              String minuteStr = now.minute.toString().length == 1
-                  ? '0' + now.minute.toString()
-                  : now.minute.toString();
-              String end = now.hour.toString() + ":" + minuteStr;
-              globals.taskEnd = end;
               await DatabaseService().updateExtension(taskName, globals.timeSliderValue.round(), end);
             });
           } else {
@@ -72,12 +60,6 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                   context: context,
                   builder: (BuildContext context) => _timeExtension(context),
               );
-              DateTime now = DateTime.now();
-              String minuteStr = now.minute.toString().length == 1
-                  ? '0' + now.minute.toString()
-                  : now.minute.toString();
-              String end = now.hour.toString() + ":" + minuteStr;
-              globals.taskEnd = end;
             });
           }
         }
@@ -276,6 +258,12 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   // or just final duration
   Widget _timeExtension(BuildContext context) {
     // change global value issit or add to global value
+    DateTime now = DateTime.now();
+    String minuteStr = now.minute.toString().length == 1
+        ? '0' + now.minute.toString()
+        : now.minute.toString();
+    String end = now.hour.toString() + ":" + minuteStr;
+    globals.taskEnd = end;
     return AlertDialog(
           title: Text("Do you want to extend your session?"),
           content: Column(
@@ -286,18 +274,6 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     Text('Please indicate how long you want to extend the session and click yes to continue.'),
-                    // Slider(
-                    //   value: globals.timeSliderValue,
-                    //   onChanged: (newTiming) {
-                    //     setState(() {
-                    //       globals.timeSliderValue = newTiming;
-                    //     });
-                    //   },
-                    //   min: 1,
-                    //   max: 120,
-                    //   label: globals.timeSliderValue.round().toString(),
-                    //   divisions: 22,
-                    // ),
                     TimerSlider(),
                   ],
                 ),
@@ -330,8 +306,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 });
                 var earned = globals.timeSliderValue.round() * 100;
                 globals.earned = earned;
-                await DatabaseService()
-                    .addCoins(earned);
+                await DatabaseService().addCoins(earned);
                 await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
               },
               child: Text("No"),
