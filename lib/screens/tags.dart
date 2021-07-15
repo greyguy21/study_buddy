@@ -191,8 +191,8 @@ class _TagsPageState extends State<TagsPage> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   await DatabaseService().addTag(title, color.value);
-                  Navigator.pop(context);
                   await DatabaseService().updateNumOfTags(1);
+                  Navigator.pop(context);
                 }
               },
               label: Text("Add Tag"),
@@ -272,8 +272,8 @@ class _TagsPageState extends State<TagsPage> {
               // await DatabaseService.deleteTag()
               await DatabaseService()
                   .removeTag(name, "Unset", Colors.grey.value);
-              Navigator.pop(context);
               await DatabaseService().updateNumOfTags(-1);
+              Navigator.pop(context);
             },
             child: Text('delete $name tag'),
           ),

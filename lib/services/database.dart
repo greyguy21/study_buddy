@@ -470,7 +470,7 @@ class DatabaseService {
         throw Exception("user does not exist!");
       }
       int newTagNum = snapshot.get("numOfTags") + x;
-      transaction.update(docRef, {"coins": newTagNum});
+      transaction.update(docRef, {"numOfTags": newTagNum});
     });
   }
 
@@ -512,7 +512,8 @@ class DatabaseService {
 
   Future updateExtension(String name, int extended, String end) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      DocumentReference documentReference = _db.collection("user").doc(this.uid).collection("sessions").doc(name);
+      DocumentReference documentReference =
+          _db.collection("user").doc(this.uid).collection("sessions").doc(name);
       FirebaseFirestore.instance.runTransaction((transaction) async {
         DocumentSnapshot snapshot = await transaction.get(documentReference);
         if (!snapshot.exists) {
