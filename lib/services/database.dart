@@ -520,6 +520,8 @@ class DatabaseService {
         }
         int newDuration = snapshot.get("duration") + extended;
         transaction.update(documentReference, {"duration": newDuration});
+      }).then((value) {
+        documentReference.update({"end": end});
       });
     });
   }
