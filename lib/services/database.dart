@@ -19,26 +19,12 @@ class DatabaseService {
       "pet": "",
       "wallpaper": "1",
       "numOfTags": 1,
+      "notification": true,
     }).then((value) {
       DatabaseService().addClothes();
       DatabaseService().addWallpapers();
       DatabaseService().addAccessories();
       DatabaseService().addTag("Unset", Colors.grey.value);
-      // _db.collection("user").doc(this.uid).collection("tasks").doc("pls").set({
-      //   "name":"nothing",
-      // _db.collection("user").doc(this.uid)
-      //     .collection("sessions")
-      //     .doc("welcome")
-      //     .set({
-      //   "name": "welcome",
-      //   "duration": 0,
-      //   "date": "8/7",
-      //   "start": "",
-      //   "end": "",
-      //   "tagName": "",
-      //   "color": "",
-      // });
-      // });
     });
   }
 
@@ -58,9 +44,16 @@ class DatabaseService {
         wallpaper: snapshot.get("wallpaper"),
         clothesInUse: snapshot.get("clothesInUse"),
         accessoryInUse: snapshot.get("accessoryInUse"),
-        numOfTags: snapshot.get("numOfTags"));
+        numOfTags: snapshot.get("numOfTags"),
+        notification: snapshot.get("notification"),
+    );
   }
 
+  Future updateNotification(bool notification) {
+    return _db.collection("user").doc(this.uid).update({
+      "notification": notification,
+    });
+  }
   Stream<AppUser> get users {
     return _db
         .collection("user")

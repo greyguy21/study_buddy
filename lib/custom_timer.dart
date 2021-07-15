@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/homepage.dart';
 import 'package:study_buddy/services/database.dart';
 import 'globals.dart' as globals;
+import 'models/app_user.dart';
 import 'screens/end_session.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -85,15 +86,18 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  Stopwatch stopwatch = Stopwatch();
+  late bool notifs;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    Stopwatch stopwatch = Stopwatch();
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
     if (AppLifecycleState.paused == state) {
       stopwatch.start();
-      NotificationService().showNotification();
+      if (notifs) {
+        NotificationService().showNotification();
+      }
       if (stopwatch.elapsedTicks >= 10) {
         setState(() {
           cancelTimer();
@@ -119,35 +123,41 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        setState(() {
-          _exitSessionPopUp(context);
-        });
-        return false;
-      },
-      child: Column(
-        children: [
-          Text(
-            timerText,
-            style: TextStyle(fontSize: 50),
-            textAlign: TextAlign.center,
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _endTaskEarly(context);
-              });
-            },
-            child: Text(
-              "Task Completed",
-              style: TextStyle(
-                color: Colors.white,
+    return StreamBuilder<AppUser>(
+      stream: DatabaseService().users,
+      builder: (context, snapshot) {
+        notifs = snapshot.data!.notification;
+        return WillPopScope(
+          onWillPop: () async {
+            setState(() {
+              _exitSessionPopUp(context);
+            });
+            return false;
+          },
+          child: Column(
+            children: [
+              Text(
+                timerText,
+                style: TextStyle(fontSize: 50),
+                textAlign: TextAlign.center,
               ),
-            ),
-          )
-        ],
-      ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _endTaskEarly(context);
+                  });
+                },
+                child: Text(
+                  "Task Completed",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      }
     );
   }
 

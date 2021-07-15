@@ -9,6 +9,7 @@ class AppUser {
   String accessoryInUse;
   String wallpaper;
   int numOfTags;
+  bool notification;
 
   AppUser(
       {required this.coins,
@@ -17,5 +18,6 @@ class AppUser {
       required this.clothesInUse,
       required this.accessoryInUse,
       required this.wallpaper,
-      required this.numOfTags});
+      required this.numOfTags,
+      required this.notification});
 }
