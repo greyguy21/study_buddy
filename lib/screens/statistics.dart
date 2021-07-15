@@ -35,229 +35,237 @@ class _StatisticsPageState extends State<StatisticsPage> {
             return Loading();
           }
 
-          // adding all focus sessions into this list docRef
-          List<QueryDocumentSnapshot> docRef = [];
-          snapshot.data!.docs.forEach((doc) {
-            docRef.add(doc);
-          });
+          return StreamBuilder<AppUser>(
+              stream: DatabaseService().users,
+              builder: (context, tags_snapshot) {
+                int numOfTags = tags_snapshot.data!.numOfTags;
 
-          List<Task> listDayTasks = [];
-          List<Task> listMonthTasks = [];
-          List<DataPoint> lineData = List.filled(numDays, new DataPoint(0, 0));
-          for (int i = 0; i < numDays; i++) {
-            lineData[i] = new DataPoint(i + 1, 0);
-          }
-          List<String> listOfTags = List.filled(globals.numOfTags, '');
-          List<PieData> pieDataDay = List.filled(
-              globals.numOfTags, new PieData('', 0, Color(0000000000)));
-          List<PieData> pieDataMonth = List.filled(
-              globals.numOfTags, new PieData('', 0, Color(0000000000)));
+                // adding all focus sessions into this list docRef
+                List<QueryDocumentSnapshot> docRef = [];
+                snapshot.data!.docs.forEach((doc) {
+                  docRef.add(doc);
+                });
 
-          num totalDayTime = 0;
-          num totalMonthTime = 0;
+                List<Task> listDayTasks = [];
+                List<Task> listMonthTasks = [];
+                List<DataPoint> lineData =
+                    List.filled(numDays, new DataPoint(0, 0));
+                for (int i = 0; i < numDays; i++) {
+                  lineData[i] = new DataPoint(i + 1, 0);
+                }
+                List<String> listOfTags = List.filled(numOfTags, '');
+                List<PieData> pieDataDay = List.filled(
+                    numOfTags, new PieData('', 0, Color(0000000000)));
+                List<PieData> pieDataMonth = List.filled(
+                    numOfTags, new PieData('', 0, Color(0000000000)));
 
-          // processing data
-          snapshot.data!.docs.forEach((doc) {
-            if (doc.get('month') == now.month) {
-              String docTag = doc.get('tag');
-              totalMonthTime = totalMonthTime + doc.get('duration');
-              listMonthTasks.add(new Task(
-                  doc.get('name'),
-                  docTag,
-                  doc.get('duration'),
-                  Color(doc.get('color')),
-                  doc.get('day')));
-              lineData[doc.get('day') - 1].duration += doc.get('duration');
-              if (listOfTags.contains(docTag)) {
-                int index = listOfTags.indexOf(docTag);
-                pieDataMonth[index].duration += doc.get('duration');
-              } else {
-                int index = listOfTags.indexOf('');
-                listOfTags[index] = docTag;
-                pieDataMonth[index] = new PieData(
-                    docTag, doc.get('duration'), Color(doc.get('color')));
-              }
+                num totalDayTime = 0;
+                num totalMonthTime = 0;
 
-              if (doc.get('date') == date) {
-                totalDayTime = totalDayTime + doc.get('duration');
-                listDayTasks.add(new Task(
-                    doc.get('name'),
-                    doc.get('tag'),
-                    doc.get('duration'),
-                    Color(doc.get('color')),
-                    doc.get('day')));
+                // processing data
+                snapshot.data!.docs.forEach((doc) {
+                  if (doc.get('month') == now.month) {
+                    String docTag = doc.get('tag');
+                    totalMonthTime = totalMonthTime + doc.get('duration');
+                    listMonthTasks.add(new Task(
+                        doc.get('name'),
+                        docTag,
+                        doc.get('duration'),
+                        Color(doc.get('color')),
+                        doc.get('day')));
+                    lineData[doc.get('day') - 1].duration +=
+                        doc.get('duration');
+                    if (listOfTags.contains(docTag)) {
+                      int index = listOfTags.indexOf(docTag);
+                      pieDataMonth[index].duration += doc.get('duration');
+                    } else {
+                      int index = listOfTags.indexOf('');
+                      listOfTags[index] = docTag;
+                      pieDataMonth[index] = new PieData(
+                          docTag, doc.get('duration'), Color(doc.get('color')));
+                    }
 
-                // adding data to pieDataDay
-                // tags alr processed in month so all the tags
-                // in this day would have been added already
-                // update color and tag name
-                int index = listOfTags.indexOf(docTag);
-                // pieDataDay[index].duration += doc.get('duration');
-                // pieDataDay[index].tagName = docTag;
-                // pieDataDay[index].color = Color(doc.get('color'));
-                num curr = pieDataDay[index].duration;
-                pieDataDay[index] = new PieData(docTag,
-                    doc.get('duration') + curr, Color(doc.get('color')));
-              }
-            }
-          });
+                    if (doc.get('date') == date) {
+                      totalDayTime = totalDayTime + doc.get('duration');
+                      listDayTasks.add(new Task(
+                          doc.get('name'),
+                          doc.get('tag'),
+                          doc.get('duration'),
+                          Color(doc.get('color')),
+                          doc.get('day')));
 
-          return DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text("Statistics"),
-                bottom: TabBar(
-                  tabs: [Tab(text: 'Day'), Tab(text: 'Month')],
-                ),
-              ),
-              body: TabBarView(children: [
-                // daily statistics
-                ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Today: $dateString",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 25),
+                      // adding data to pieDataDay
+                      // tags alr processed in month so all the tags
+                      // in this day would have been added already
+                      // update color and tag name
+                      int index = listOfTags.indexOf(docTag);
+                      // pieDataDay[index].duration += doc.get('duration');
+                      // pieDataDay[index].tagName = docTag;
+                      // pieDataDay[index].color = Color(doc.get('color'));
+                      num curr = pieDataDay[index].duration;
+                      pieDataDay[index] = new PieData(docTag,
+                          doc.get('duration') + curr, Color(doc.get('color')));
+                    }
+                  }
+                });
+
+                return DefaultTabController(
+                  length: 2,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      title: Text("Statistics"),
+                      bottom: TabBar(
+                        tabs: [Tab(text: 'Day'), Tab(text: 'Month')],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
+                    body: TabBarView(children: [
+                      // daily statistics
+                      ListView(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Today: $dateString",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Text('Number of tasks completed'),
-                              Text(
-                                '${listDayTasks.length}',
-                                style: TextStyle(fontSize: 50),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [
+                                    Text('Number of tasks completed'),
+                                    Text(
+                                      '${listDayTasks.length}',
+                                      style: TextStyle(fontSize: 50),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [
+                                    Text('Amount of time focused'),
+                                    Text(
+                                      '$totalDayTime',
+                                      style: TextStyle(fontSize: 50),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
-                            children: [
-                              Text('Amount of time focused'),
-                              Text(
-                                '$totalDayTime',
-                                style: TextStyle(fontSize: 50),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Tag Distribution',
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 400,
-                              child: TagPieChart(data: pieDataDay),
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-                // monthly statistics
-                ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "This month: $monthStr",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 25),
+                          Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Tag Distribution',
+                                          style: TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 400,
+                                    child: TagPieChart(data: pieDataDay),
+                                  ),
+                                ],
+                              )),
+                        ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
+                      // monthly statistics
+                      ListView(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "This month: $monthStr",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Text('Number of tasks completed'),
-                              Text(
-                                '${listMonthTasks.length}',
-                                style: TextStyle(fontSize: 50),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [
+                                    Text('Number of tasks completed'),
+                                    Text(
+                                      '${listMonthTasks.length}',
+                                      style: TextStyle(fontSize: 50),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [
+                                    Text('Amount of time focused'),
+                                    Text(
+                                      '$totalMonthTime',
+                                      style: TextStyle(fontSize: 50),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
-                            children: [
-                              Text('Amount of time focused'),
-                              Text(
-                                '$totalMonthTime',
-                                style: TextStyle(fontSize: 50),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Tag Distribution',
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 400,
-                              child: TagPieChart(data: pieDataMonth),
-                            ),
-                          ],
-                        )),
-                    // add more month stats here
-                    Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Monthly Focus Time Distribution',
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            // charts.PieChart(_series),
-                            SizedBox(
-                              child: MonthLineChart(
-                                data: lineData,
-                              ),
-                              height: 300,
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-              ]),
-            ),
-          );
+                          Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Tag Distribution',
+                                          style: TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 400,
+                                    child: TagPieChart(data: pieDataMonth),
+                                  ),
+                                ],
+                              )),
+                          // add more month stats here
+                          Container(
+                              padding: EdgeInsets.only(top: 20, bottom: 20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Monthly Focus Time Distribution',
+                                          style: TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  // charts.PieChart(_series),
+                                  SizedBox(
+                                    child: MonthLineChart(
+                                      data: lineData,
+                                    ),
+                                    height: 300,
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
+                    ]),
+                  ),
+                );
+              });
         });
   }
 }

@@ -48,8 +48,8 @@ class _TagsPageState extends State<TagsPage> {
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    globals.numOfTags = snapshot.data!.length;
-                    print(globals.numOfTags);
+                    // globals.numOfTags = snapshot.data!.length;
+                    // print(globals.numOfTags);
                     return Card(
                       elevation: 1.2,
                       shape: RoundedRectangleBorder(
@@ -61,63 +61,65 @@ class _TagsPageState extends State<TagsPage> {
                             height: 15.0,
                           ),
                           ListTile(
-                              leading: Icon(
-                                Icons.circle,
-                                color: snapshot.data![index].color,
+                            leading: Icon(
+                              Icons.circle,
+                              color: snapshot.data![index].color,
+                            ),
+                            title: Text(
+                              snapshot.data![index].title,
+                              textScaleFactor: 1.2,
+                              style: TextStyle(
+                                fontSize: 20,
                               ),
-                              title: Text(
-                                snapshot.data![index].title,
-                                textScaleFactor: 1.2,
-                                style: TextStyle(
-                                  fontSize: 20,
+                            ),
+                            trailing: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Visibility(
+                                  visible:
+                                      snapshot.data![index].title != "Unset",
+                                  child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                _editTagPopUp(
+                                                  context,
+                                                  snapshot.data![index].title,
+                                                  snapshot.data![index].color,
+                                                ));
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.edit_rounded,
+                                      color: Colors.lightBlue,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              trailing: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Visibility(
-                                    visible: snapshot.data![index].title != "Unset",
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                _editTagPopUp(context,
-                                                    snapshot.data![index].title,
-                                                    snapshot.data![index].color,
-                                                )
-                                          );
-                                        });
-                                      },
-                                      icon: Icon(
-                                        Icons.edit_rounded,
-                                        color: Colors.lightBlue,
-                                      ),
+                                Visibility(
+                                  visible:
+                                      snapshot.data![index].title != "Unset",
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: Colors.lightBlue,
                                     ),
+                                    onPressed: () {
+                                      setState(() {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              _deleteTagPopup(context,
+                                                  snapshot.data![index].title),
+                                        );
+                                      });
+                                    },
                                   ),
-                                  Visibility(
-                                    visible: snapshot.data![index].title != "Unset",
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: Colors.lightBlue,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                _deleteTagPopup(context,
-                                                    snapshot.data![index].title),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 15.0,
@@ -190,6 +192,7 @@ class _TagsPageState extends State<TagsPage> {
                 if (_formKey.currentState!.validate()) {
                   await DatabaseService().addTag(title, color.value);
                   Navigator.pop(context);
+                  await DatabaseService().updateNumOfTags(1);
                 }
               },
               label: Text("Add Tag"),
@@ -211,14 +214,13 @@ class _TagsPageState extends State<TagsPage> {
         title: const Text("Add Tag"),
         content: new Column(children: [
           Form(
-            key: _formKey,
-            child: TextField(
-              controller: TextEditingController()..text = old,
-              onChanged: (changed) {
-                title = changed;
-              },
-            )
-          ),
+              key: _formKey,
+              child: TextField(
+                controller: TextEditingController()..text = old,
+                onChanged: (changed) {
+                  title = changed;
+                },
+              )),
           SizedBox(
             height: 20,
           ),
@@ -268,8 +270,10 @@ class _TagsPageState extends State<TagsPage> {
             onPressed: () async {
               // delete tag in firestore
               // await DatabaseService.deleteTag()
-              await DatabaseService().removeTag(name, "Unset", Colors.grey.value);
+              await DatabaseService()
+                  .removeTag(name, "Unset", Colors.grey.value);
               Navigator.pop(context);
+              await DatabaseService().updateNumOfTags(-1);
             },
             child: Text('delete $name tag'),
           ),

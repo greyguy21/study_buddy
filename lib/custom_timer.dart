@@ -52,13 +52,14 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 context: context,
                 builder: (BuildContext context) => endSession(context),
               );
+              await DatabaseService().addCoins(globals.timeSliderValue.round() * 100);
               await DatabaseService().updateExtension(taskName, globals.timeSliderValue.round(), end);
             });
           } else {
             setState(() {
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) => _timeExtension(context),
+                context: context,
+                builder: (BuildContext context) => _timeExtension(context),
               );
             });
           }
@@ -175,28 +176,27 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Are you sure you want to leave?"),
-          content: Text("You will lose coins earned!"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/");
-                cancelTimer();
-                // mark as incomplete on timeline?
-              },
-              child: Text("Yes"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // how to pause timer
-              },
-              child: Text("No"),
-            )
-          ],
-        )
-    );
+              title: Text("Are you sure you want to leave?"),
+              content: Text("You will lose coins earned!"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, "/");
+                    cancelTimer();
+                    // mark as incomplete on timeline?
+                  },
+                  child: Text("Yes"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // how to pause timer
+                  },
+                  child: Text("No"),
+                )
+              ],
+            ));
   }
 
   // figure out hardware buttons
@@ -208,49 +208,60 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   // end early -> earn coins + go back to main page + cancel timer
   Future _endTaskEarly(BuildContext context) {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Are you sure you have completed your task?"),
-        content: Text("Note: you will only receive the coins for the amount of time you put in!"),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              setState(() {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => endSession(context),
-                );
-              });
-              currentSeconds = timer.tick;
-              cancelTimer();
-              DateTime now = DateTime.now();
-              String minuteStr = now.minute.toString().length == 1
-                  ? '0' + now.minute.toString()
-                  : now.minute.toString();
-              String end = now.hour.toString() + ":" + minuteStr;
-              globals.taskEnd = end;
-              int actual =  (currentSeconds/60).round() == 0 ? 1 : (currentSeconds/60).round();
-              globals.earned = actual * 100;
-              await DatabaseService()
-                  .addCoins(actual);
-              if (globals.extended) {
-                await DatabaseService().updateExtension(taskName, actual, end);
-              } else {
-                await DatabaseService().addNewTask(taskName, actual, "$day/$month", start, end, tagName, tagColor.value, day, month);
-              }
-            },
-            child: Text("Yes"),
-          ), 
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-            },
-            child: Text("No"),
-          )
-        ],
-      )
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Are you sure you have completed your task?"),
+              content: Text(
+                  "Note: you will only receive the coins for the amount of time you have focused for!"),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    setState(() {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => endSession(context),
+                      );
+                    });
+                    currentSeconds = timer.tick;
+                    cancelTimer();
+                    DateTime now = DateTime.now();
+                    String minuteStr = now.minute.toString().length == 1
+                        ? '0' + now.minute.toString()
+                        : now.minute.toString();
+                    String end = now.hour.toString() + ":" + minuteStr;
+                    globals.taskEnd = end;
+                    int actual = (currentSeconds / 60).round() == 0
+                        ? 1
+                        : (currentSeconds / 60).round();
+                    globals.earned = actual * 100;
+                    await DatabaseService().addCoins(globals.earned);
+                    if (globals.extended) {
+                      await DatabaseService()
+                          .updateExtension(taskName, actual, end);
+                    } else {
+                      await DatabaseService().addNewTask(
+                          taskName,
+                          actual,
+                          "$day/$month",
+                          start,
+                          end,
+                          tagName,
+                          tagColor.value,
+                          day,
+                          month);
+                    }
+                  },
+                  child: Text("Yes"),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Text("No"),
+                )
+              ],
+            ));
   }
 
   // on same task

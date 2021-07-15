@@ -14,10 +14,12 @@ class DatabaseService {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   Future newUser() async {
-    return await _db
-        .collection("user")
-        .doc(uid)
-        .set({"coins": 0, "pet": "", "wallpaper": "1"}).then((value) {
+    return await _db.collection("user").doc(uid).set({
+      "coins": 0,
+      "pet": "",
+      "wallpaper": "1",
+      "numOfTags": "1",
+    }).then((value) {
       DatabaseService().addClothes();
       DatabaseService().addWallpapers();
       DatabaseService().addAccessories();
@@ -55,7 +57,8 @@ class DatabaseService {
         pet: snapshot.get("pet"),
         wallpaper: snapshot.get("wallpaper"),
         clothesInUse: snapshot.get("clothesInUse"),
-        accessoryInUse: snapshot.get("accessoryInUse"));
+        accessoryInUse: snapshot.get("accessoryInUse"),
+        numOfTags: snapshot.get("numOfTags"));
   }
 
   Stream<AppUser> get users {
@@ -69,6 +72,12 @@ class DatabaseService {
   Future coins() {
     return _db.collection("user").doc(this.uid).get().then((value) {
       return value.get("coins");
+    });
+  }
+
+  Future numOfTags() {
+    return _db.collection("user").doc(this.uid).get().then((value) {
+      return value.get("numOfTags");
     });
   }
 
@@ -452,6 +461,19 @@ class DatabaseService {
     });
   }
 
+  Future updateNumOfTags(int x) async {
+    DocumentReference docRef = _db.collection("user").doc(this.uid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) {
+        throw Exception("user does not exist!");
+      }
+      int newTagNum = snapshot.get("numOfTags") + x;
+      transaction.update(docRef, {"coins": newTagNum});
+    });
+  }
+
   Future addNewTask(String name, int duration, String date, String start,
       String end, String tag, int color, int day, int month) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
@@ -491,7 +513,10 @@ class DatabaseService {
 
   Future updateExtension(String name, int extended, String end) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
-      _db.collection("user").doc(this.uid).collection("sessions")
+      _db
+          .collection("user")
+          .doc(this.uid)
+          .collection("sessions")
           .doc(name)
           .update({
         "extended": extended,
