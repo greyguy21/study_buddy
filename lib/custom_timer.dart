@@ -77,6 +77,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   void initState() {
     startTimeout();
     WidgetsBinding.instance!.addObserver(this);
+    countdown = Timer(Duration(seconds: 0), () {print("init!");});
     super.initState();
   }
 
@@ -87,37 +88,31 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   }
 
   late bool notifs;
+  late Timer countdown;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    Stopwatch stopwatch = Stopwatch();
-    // TODO: implement didChangeAppLifecycleState
-    super.didChangeAppLifecycleState(state);
     if (AppLifecycleState.paused == state) {
-      stopwatch.start();
       if (notifs) {
         NotificationService().showNotification();
+        print("notifs");
       }
-      if (stopwatch.elapsedTicks >= 10) {
-        setState(() {
-          cancelTimer();
-          _incompleteSession(context);
-        });
-        stopwatch.stop();
-      }
+      print("timer starts");
+      countdown = Timer(Duration(seconds: 10), () {
+          print("time's up!");
+          setState(() {
+            cancelTimer();
+            _incompleteSession(context);
+          });
+      });
     }
 
-    if (AppLifecycleState.detached == state) {
-      Stopwatch stopwatch = Stopwatch();
-      stopwatch.start();
-      if (stopwatch.elapsedTicks == 10) {
-        cancelTimer();
-        Navigator.pop(context);
-        setState(() {
-          _incompleteSession(context);
-        });
-        stopwatch.stop();
+    if (AppLifecycleState.resumed == state) {
+      if (countdown.isActive) {
+        print("cancel timer");
+        countdown.cancel();
       }
+      print(countdown.isActive);
     }
   }
 
