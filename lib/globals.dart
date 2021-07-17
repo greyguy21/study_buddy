@@ -28,4 +28,5 @@ var day = 0;
 var month = 0;
 var extended = false;
 int earned = 0;
-// int numOfTags = 0;
+List<String> tasks = [];
+List<String> tags = ['Unset'];

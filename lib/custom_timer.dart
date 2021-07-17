@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/screens/homepage.dart';
+import 'package:study_buddy/screens/main_focus.dart';
 import 'package:study_buddy/services/database.dart';
 import 'globals.dart' as globals;
 import 'models/app_user.dart';
@@ -53,10 +55,14 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 context: context,
                 builder: (BuildContext context) => endSession(context),
               );
-              await DatabaseService().addCoins(globals.timeSliderValue.round() * 100);
-              await DatabaseService().updateExtension(taskName, globals.timeSliderValue.round(), end);
+              await DatabaseService()
+                  .addCoins(globals.timeSliderValue.round() * 100);
+              await DatabaseService().updateExtension(
+                  taskName, globals.timeSliderValue.round(), end);
             });
           } else {
+            // they passed the first focus session
+            globals.tasks.add(globals.taskName);
             setState(() {
               showDialog(
                 context: context,
@@ -77,7 +83,9 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   void initState() {
     startTimeout();
     WidgetsBinding.instance!.addObserver(this);
-    countdown = Timer(Duration(seconds: 0), () {print("init!");});
+    countdown = Timer(Duration(seconds: 0), () {
+      print("init!");
+    });
     super.initState();
   }
 
@@ -99,11 +107,11 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
       }
       print("timer starts");
       countdown = Timer(Duration(seconds: 10), () {
-          print("time's up!");
-          setState(() {
-            cancelTimer();
-            _incompleteSession(context);
-          });
+        print("time's up!");
+        setState(() {
+          cancelTimer();
+          _incompleteSession(context);
+        });
       });
     }
 
@@ -119,63 +127,66 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<AppUser>(
-      stream: DatabaseService().users,
-      builder: (context, snapshot) {
-        notifs = snapshot.data!.notification;
-        return WillPopScope(
-          onWillPop: () async {
-            setState(() {
-              _exitSessionPopUp(context);
-            });
-            return false;
-          },
-          child: Column(
-            children: [
-              Text(
-                timerText,
-                style: TextStyle(fontSize: 50),
-                textAlign: TextAlign.center,
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _endTaskEarly(context);
-                  });
-                },
-                child: Text(
-                  "Task Completed",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+        stream: DatabaseService().users,
+        builder: (context, snapshot) {
+          notifs = snapshot.data!.notification;
+          return WillPopScope(
+            onWillPop: () async {
+              setState(() {
+                _exitSessionPopUp(context);
+              });
+              return false;
+            },
+            child: Column(
+              children: [
+                Text(
+                  timerText,
+                  style: TextStyle(fontSize: 50),
+                  textAlign: TextAlign.center,
                 ),
-              )
-            ],
-          ),
-        );
-      }
-    );
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _endTaskEarly(context);
+                    });
+                  },
+                  child: Text(
+                    "Task Completed",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 
   Future _incompleteSession(BuildContext context) {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Incomplete Session!"),
-        content: Text("Don't give up!"),
-        actions: [
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/");
-              },
-              child: Text("ok"),
-            ),
-          )
-        ],
-      )
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Incomplete Session!"),
+              content: Text("Don't give up!"),
+              actions: [
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: HomePage(),
+                              type: PageTransitionType.fade));
+                    },
+                    child: Text("ok"),
+                  ),
+                )
+              ],
+            ));
   }
+
   Future _exitSessionPopUp(BuildContext context) {
     // when back and home button events are triggered
     return showDialog(
@@ -187,7 +198,10 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, "/");
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child: HomePage(), type: PageTransitionType.fade));
                     cancelTimer();
                     // mark as incomplete on timeline?
                   },
@@ -197,6 +211,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                   onPressed: () {
                     Navigator.pop(context);
                     // how to pause timer
+                    // i think its fine to leave timer running in the bg
                   },
                   child: Text("No"),
                 )
@@ -242,7 +257,8 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                     globals.earned = actual * 100;
                     await DatabaseService().addCoins(globals.earned);
                     if (globals.extended) {
-                      await DatabaseService().updateExtension(taskName, actual, end);
+                      await DatabaseService()
+                          .updateExtension(taskName, actual, end);
                     } else {
                       await DatabaseService().addNewTask(
                           taskName,
@@ -282,59 +298,84 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     int earned = globals.timeSliderValue.round() * 100;
     globals.earned = earned;
     return AlertDialog(
-          title: Text("End of Session!"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                child: Text("good job! you have earned $earned coins!"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  "Do you want to extend your session?",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text('Please indicate how long you want to extend the session and click yes to proceed.'),
-                    TimerSlider(),
-                  ],
-                ),
-              )
-            ],
+      title: Text("End of Session!"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            child: Text("good job! you have earned $earned coins!"),
           ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/mainfocus");
-                globals.extended = true;
-                int earned = globals.timeSliderValue.round() * 100;
-                globals.earned = earned;
-                await DatabaseService().addCoins(earned);
-                await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
-                // how to update in database hmm
-              },
-              child: Text("Yes"),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Text(
+              "Do you want to extend your session?",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/");
-                var earned = globals.timeSliderValue.round() * 100;
-                globals.earned = earned;
-                await DatabaseService().addCoins(earned);
-                await DatabaseService().addNewTask(taskName, globals.timeSliderValue.round(), "$day/$month", start, end, tagName, tagColor.value, day, month);
-              },
-              child: Text("No"),
-            )
-          ],
-        );
+          ),
+          Container(
+            child: Column(
+              children: [
+                Text(
+                    'Please indicate how long you want to extend the session and click yes to proceed.'),
+                TimerSlider(),
+              ],
+            ),
+          )
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: MainFocusPage(), type: PageTransitionType.fade));
+            globals.extended = true;
+            int earned = globals.timeSliderValue.round() * 100;
+            globals.earned = earned;
+            await DatabaseService().addCoins(earned);
+            await DatabaseService().addNewTask(
+                taskName,
+                globals.timeSliderValue.round(),
+                "$day/$month",
+                start,
+                end,
+                tagName,
+                tagColor.value,
+                day,
+                month);
+            // how to update in database hmm
+          },
+          child: Text("Yes"),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: HomePage(), type: PageTransitionType.fade));
+            var earned = globals.timeSliderValue.round() * 100;
+            globals.earned = earned;
+            await DatabaseService().addCoins(earned);
+            await DatabaseService().addNewTask(
+                taskName,
+                globals.timeSliderValue.round(),
+                "$day/$month",
+                start,
+                end,
+                tagName,
+                tagColor.value,
+                day,
+                month);
+          },
+          child: Text("No"),
+        )
+      ],
+    );
   }
 
   Widget endSession(BuildContext context) {
@@ -343,18 +384,20 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
 }
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  static const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      "main_focus",
-      "Main Focus",
-      "ask users to return to app",
-      importance: Importance.high
-  );
-  static const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  static const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+          "main_focus", "Main Focus", "ask users to return to app",
+          importance: Importance.high);
+  static const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
 
   Future<void> init() async {
-    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings("logo");
-    final InitializationSettings initializationSettings = InitializationSettings(
+    final AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings("logo");
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: null,
       macOS: null,
@@ -368,7 +411,11 @@ class NotificationService {
 
   int counter = 0;
   void showNotification() {
-    flutterLocalNotificationsPlugin.show(0, "Study Buddy", "GO BACK!! 10s before session is terminated!", platformChannelSpecifics);
+    flutterLocalNotificationsPlugin.show(
+        0,
+        "Study Buddy",
+        "GO BACK!! 10s before session is terminated!",
+        platformChannelSpecifics);
   }
 
   Future selectNotification(String? payload) async {

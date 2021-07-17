@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/models/accessory.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
-import 'package:study_buddy/models/furniture.dart';
+import 'package:study_buddy/globals.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/models/wallpaper.dart';
 
@@ -38,14 +38,14 @@ class DatabaseService {
 
   AppUser _userFromFirestore(DocumentSnapshot snapshot) {
     return AppUser(
-        coins: snapshot.get("coins"),
-        uid: this.uid,
-        pet: snapshot.get("pet"),
-        wallpaper: snapshot.get("wallpaper"),
-        clothesInUse: snapshot.get("clothesInUse"),
-        accessoryInUse: snapshot.get("accessoryInUse"),
-        numOfTags: snapshot.get("numOfTags"),
-        notification: snapshot.get("notification"),
+      coins: snapshot.get("coins"),
+      uid: this.uid,
+      pet: snapshot.get("pet"),
+      wallpaper: snapshot.get("wallpaper"),
+      clothesInUse: snapshot.get("clothesInUse"),
+      accessoryInUse: snapshot.get("accessoryInUse"),
+      numOfTags: snapshot.get("numOfTags"),
+      notification: snapshot.get("notification"),
     );
   }
 
@@ -54,6 +54,7 @@ class DatabaseService {
       "notification": notification,
     });
   }
+
   Stream<AppUser> get users {
     return _db
         .collection("user")

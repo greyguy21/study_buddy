@@ -132,17 +132,17 @@ class _HomePageState extends State<HomePage> {
 
   void _showStartPanel(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 20),
-                  child: Text(
-                    "Focus Session",
-                    style: TextStyle(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: Column(
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 20),
+                    child: Text(
+                      "Focus Session",
+                      style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
@@ -156,7 +156,9 @@ class _HomePageState extends State<HomePage> {
                     child: TextFormField(
                       validator: (val) => val!.isEmpty || val.length < 1
                           ? "please enter task name"
-                          : null,
+                          : globals.tasks.contains(val)
+                              ? "task with the same name exists, name your task differently."
+                              : null,
                       decoration: InputDecoration(
                         labelText: 'Task:',
                         filled: true,

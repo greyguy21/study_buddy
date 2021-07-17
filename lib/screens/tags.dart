@@ -16,6 +16,7 @@ class TagsPage extends StatefulWidget {
 }
 
 class _TagsPageState extends State<TagsPage> {
+  List<String> tags = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +46,10 @@ class _TagsPageState extends State<TagsPage> {
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Loading();
             } else {
+              snapshot.data!.forEach((element) {
+                tags.add(element.title);
+              });
+
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
@@ -86,10 +91,10 @@ class _TagsPageState extends State<TagsPage> {
                                             context: context,
                                             builder: (BuildContext context) =>
                                                 _editTagPopUp(
-                                                  context,
-                                                  snapshot.data![index].title,
-                                                  snapshot.data![index].color,
-                                                ));
+                                                    context,
+                                                    snapshot.data![index].title,
+                                                    snapshot
+                                                        .data![index].color));
                                       });
                                     },
                                     icon: Icon(
@@ -162,8 +167,11 @@ class _TagsPageState extends State<TagsPage> {
           Form(
             key: _formKey,
             child: TextFormField(
-              validator: (val) =>
-                  val!.isEmpty ? "Enter a valid Tag title" : null,
+              validator: (val) => val!.isEmpty
+                  ? "Enter a valid Tag title"
+                  : tags.contains(val)
+                      ? "tag with the same name exists"
+                      : null,
               onChanged: (val) {
                 setState(() {
                   title = val;
@@ -211,11 +219,16 @@ class _TagsPageState extends State<TagsPage> {
 
     return SafeArea(
       child: new AlertDialog(
-        title: const Text("Add Tag"),
+        title: const Text("Edit Tag"),
         content: new Column(children: [
           Form(
               key: _formKey,
-              child: TextField(
+              child: TextFormField(
+                validator: (val) => val!.isEmpty
+                    ? "Enter a valid Tag title"
+                    : tags.contains(val)
+                        ? "tag with the same name exists"
+                        : null,
                 controller: TextEditingController()..text = old,
                 onChanged: (changed) {
                   title = changed;
