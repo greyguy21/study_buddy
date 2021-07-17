@@ -37,8 +37,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
           return StreamBuilder<AppUser>(
               stream: DatabaseService().users,
-              builder: (context, tags_snapshot) {
-                int numOfTags = tags_snapshot.data!.numOfTags;
+              builder: (context, tagsSnapshot) {
+                int numOfTags = tagsSnapshot.data!.numOfTags;
 
                 // adding all focus sessions into this list docRef
                 List<QueryDocumentSnapshot> docRef = [];

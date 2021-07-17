@@ -37,22 +37,7 @@ class _StoreInventoryState extends State<StoreInventory>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue,
-          elevation: 0.0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, "/");
-            },
-          ),
-          title: Text("Store/Inventory",
-              style: TextStyle(
-                color: Colors.white,
-              )),
+          title: Text("Store/Inventory"),
         ),
         body: SafeArea(
             child: Column(

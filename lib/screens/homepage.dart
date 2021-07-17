@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/tag_model.dart';
@@ -21,6 +22,15 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
   // bool _visible = false;
   // PanelController _pc1 = new PanelController();
+
+  // bool repeatedTaskName(String taskName) {
+  //   Stream<QuerySnapshot> xxx = DatabaseService().timeline;
+  //   List<String> listOfTaskNames = [];
+  //   xxx.forEach((element) {
+  //     listOfTaskNames.add(element.);
+  //   });
+  //   return listOfTaskNames.contains(taskName);
+  // }
 
   @override
   Widget build(BuildContext context) {

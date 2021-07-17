@@ -21,22 +21,7 @@ class _TagsPageState extends State<TagsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, "/");
-          },
-        ),
-        title: Text("Tags",
-            style: TextStyle(
-              color: Colors.white,
-            )),
+        title: Text("Tags"),
       ),
       body: StreamBuilder<List<TagModel>>(
           stream: DatabaseService().tags,
