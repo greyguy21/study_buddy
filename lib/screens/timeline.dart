@@ -33,6 +33,7 @@ class _TimelineState extends State<Timeline> {
         return Scaffold(
           appBar: AppBar(
             title: Text("Timeline"),
+            centerTitle: true,
           ),
           body: new ListView.builder(
               itemCount: docRef.length,
@@ -53,8 +54,11 @@ class _TimelineState extends State<Timeline> {
                       setState(() {
                         showDialog(
                           context: context,
-                          builder: (BuildContext context) => _editTaskPopUp(context, docRef[index].get("name"),
-                              docRef[index].get("tag"), docRef[index].get("color")),
+                          builder: (BuildContext context) => _editTaskPopUp(
+                              context,
+                              docRef[index].get("name"),
+                              docRef[index].get("tag"),
+                              docRef[index].get("color")),
                         );
                       });
                     },
@@ -63,7 +67,9 @@ class _TimelineState extends State<Timeline> {
                       child: Column(
                         children: [
                           Text(
-                            docRef[index].get("tag") + ": " + docRef[index].get("name"),
+                            docRef[index].get("tag") +
+                                ": " +
+                                docRef[index].get("name"),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -93,70 +99,66 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  Widget _editTaskPopUp(BuildContext context, String name, String prevTag, int prevColor) {
+  Widget _editTaskPopUp(
+      BuildContext context, String name, String prevTag, int prevColor) {
     String tag = prevTag;
     int color = prevColor;
 
     return new AlertDialog(
       title: const Text("Edit Task"),
-      content: new Column(children: [
-        SizedBox(
-          height: 20,
-        ),
-        StreamBuilder<List<TagModel>>(
-          stream: DatabaseService().tags,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return _errorPopup(context);
-            } else if (snapshot.connectionState ==
-                ConnectionState.waiting) {
-              return Loading();
-            } else {
-              final GlobalKey<TagsState> _tagKey =
-              GlobalKey<TagsState>();
+      content: new Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          StreamBuilder<List<TagModel>>(
+            stream: DatabaseService().tags,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return _errorPopup(context);
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Loading();
+              } else {
+                final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
 
-              return Padding(
-                padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 30,
-                    right: 30,
-                    bottom: 20),
-                child: Tags(
-                  key: _tagKey,
-                  itemCount: snapshot.data!.length,
-                  columns: 5,
-                  itemBuilder: (index) {
-                    return ItemTags(
-                      index: index,
-                      title: snapshot.data![index].title,
-                      activeColor:
-                      snapshot.data![index].color,
-                      color: Colors.black87,
-                      textActiveColor: Colors.white,
-                      textColor: Colors.white,
-                      singleItem: true,
-                      onPressed: (value) {
-                       tag = snapshot.data![index].title;
-                       color = snapshot.data![index].color.value;
-                      },
-                    );
-                  },
-                ),
-              );
-            }
-          },
-        ),
-      ],
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20.0, left: 30, right: 30, bottom: 20),
+                  child: Tags(
+                    key: _tagKey,
+                    itemCount: snapshot.data!.length,
+                    columns: 5,
+                    itemBuilder: (index) {
+                      return ItemTags(
+                        index: index,
+                        title: snapshot.data![index].title,
+                        activeColor: snapshot.data![index].color,
+                        color: Colors.black87,
+                        textActiveColor: Colors.white,
+                        textColor: Colors.white,
+                        singleItem: true,
+                        onPressed: (value) {
+                          tag = snapshot.data![index].title;
+                          color = snapshot.data![index].color.value;
+                        },
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         mainAxisSize: MainAxisSize.min,
       ),
       actions: [
         Center(
           child: FloatingActionButton.extended(
             onPressed: () async {
-                if (tag != prevTag || color != prevColor) {
-                  await DatabaseService().updateTask(name, tag, color);
-                }
-                Navigator.pop(context);
+              if (tag != prevTag || color != prevColor) {
+                await DatabaseService().updateTask(name, tag, color);
+              }
+              Navigator.pop(context);
             },
             label: Text("Edit Task"),
             heroTag: name,

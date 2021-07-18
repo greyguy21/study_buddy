@@ -22,6 +22,7 @@ class _TagsPageState extends State<TagsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Tags"),
+        centerTitle: true,
       ),
       body: StreamBuilder<List<TagModel>>(
           stream: DatabaseService().tags,

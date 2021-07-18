@@ -38,6 +38,7 @@ class _StoreInventoryState extends State<StoreInventory>
     return Scaffold(
         appBar: AppBar(
           title: Text("Store/Inventory"),
+          centerTitle: true,
         ),
         body: SafeArea(
             child: Column(

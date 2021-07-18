@@ -47,7 +47,10 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
           String minuteStr = now.minute.toString().length == 1
               ? '0' + now.minute.toString()
               : now.minute.toString();
-          String end = now.hour.toString() + ":" + minuteStr;
+          String hourStr = now.hour.toString().length == 1
+              ? '0' + now.hour.toString()
+              : now.hour.toString();
+          String end = hourStr + ":" + minuteStr;
           globals.taskEnd = end;
           if (globals.extended) {
             setState(() async {
@@ -249,7 +252,10 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                     String minuteStr = now.minute.toString().length == 1
                         ? '0' + now.minute.toString()
                         : now.minute.toString();
-                    String end = now.hour.toString() + ":" + minuteStr;
+                    String hourStr = now.hour.toString().length == 1
+                        ? '0' + now.hour.toString()
+                        : now.hour.toString();
+                    String end = hourStr + ":" + minuteStr;
                     globals.taskEnd = end;
                     int actual = (currentSeconds / 60).round() == 0
                         ? 1
@@ -293,7 +299,10 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     String minuteStr = now.minute.toString().length == 1
         ? '0' + now.minute.toString()
         : now.minute.toString();
-    String end = now.hour.toString() + ":" + minuteStr;
+    String hourStr = now.hour.toString().length == 1
+        ? '0' + now.hour.toString()
+        : now.hour.toString();
+    String end = hourStr + ":" + minuteStr;
     globals.taskEnd = end;
     int earned = globals.timeSliderValue.round() * 100;
     globals.earned = earned;

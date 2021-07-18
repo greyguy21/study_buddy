@@ -114,6 +114,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   child: Scaffold(
                     appBar: AppBar(
                       title: Text("Statistics"),
+                      centerTitle: true,
                       bottom: TabBar(
                         tabs: [Tab(text: 'Day'), Tab(text: 'Month')],
                       ),
