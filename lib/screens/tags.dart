@@ -213,7 +213,7 @@ class _TagsPageState extends State<TagsPage> {
               child: TextFormField(
                 validator: (val) => val!.isEmpty
                     ? "Enter a valid Tag title"
-                    : tags.contains(val)
+                    : tags.contains(val) && val != old
                         ? "tag with the same name exists"
                         : null,
                 controller: TextEditingController()..text = old,
