@@ -68,6 +68,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
             globals.tasks.add(globals.taskName);
             setState(() {
               showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (BuildContext context) => _timeExtension(context),
               );
