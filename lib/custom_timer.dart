@@ -277,6 +277,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                           day,
                           month);
                     }
+                    globals.tasks.add(globals.taskName);
                   },
                   child: Text("Yes"),
                 ),

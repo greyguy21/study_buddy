@@ -199,8 +199,7 @@ class _HomePageState extends State<HomePage> {
                         ConnectionState.waiting) {
                       return Loading();
                     } else {
-                      final GlobalKey<TagsState> _tagKey =
-                          GlobalKey<TagsState>();
+                      final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
 
                       return Padding(
                         padding: const EdgeInsets.only(
