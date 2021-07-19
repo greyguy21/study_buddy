@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'study buddy',
-        theme: ThemeData(primaryColor: Color(0xff)),
+        theme: ThemeData(primaryColor: Colors.white),
         initialRoute: "/authenticate",
         routes: {
           "/": (context) => HomePage(),

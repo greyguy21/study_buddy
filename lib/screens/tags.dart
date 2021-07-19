@@ -32,6 +32,7 @@ class _TagsPageState extends State<TagsPage> {
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Loading();
             } else {
+              tags = [];
               snapshot.data!.forEach((element) {
                 tags.add(element.title);
               });
