@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -104,28 +105,36 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
   late Timer countdown;
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (AppLifecycleState.paused == state && timer.isActive) {
-      if (notifs) {
-        NotificationService().showNotification();
-        print("notifs");
-      }
-      print("timer starts");
-      countdown = Timer(Duration(seconds: 10), () {
-        print("time's up!");
-        setState(() {
-          cancelTimer();
-          _incompleteSession(context);
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    print(state.toString());
+    bool? locked = await isLockScreen();
+    print(locked!.toString());
+    if (locked) {
+      // do nothing,,
+      print("timer running");
+    } else {
+      if (AppLifecycleState.paused == state && timer.isActive) {
+        if (notifs) {
+          NotificationService().showNotification();
+          print("notifs");
+        }
+        print("timer starts");
+        countdown = Timer(Duration(seconds: 10), () {
+          print("time's up!");
+          setState(() {
+            cancelTimer();
+            _incompleteSession(context);
+          });
         });
-      });
-    }
-
-    if (AppLifecycleState.resumed == state && timer.isActive) {
-      if (countdown.isActive) {
-        print("cancel timer");
-        countdown.cancel();
       }
-      print(countdown.isActive);
+
+      if (AppLifecycleState.resumed == state && timer.isActive) {
+        if (countdown.isActive) {
+          print("cancel timer");
+          countdown.cancel();
+        }
+        print(countdown.isActive);
+      }
     }
   }
 

@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   date_util: ^0.1.4
   flutter_local_notifications: ^6.0.0
+  is_lock_screen: ^2.0.0
 
   
 dev_dependencies:
