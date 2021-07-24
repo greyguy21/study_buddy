@@ -50,90 +50,97 @@ class _HomePageState extends State<HomePage> {
           String wallpaperstr = snapshot.data!.wallpaper;
           // tags = (get list of user tags from firestore)
 
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: Stack(
-              children: <Widget>[
-                Image(
-                  image: AssetImage("assets/wallpaper/$wallpaperstr.png"),
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                // menu button and coins
-                Padding(
-                  padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // menu button
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: Menu(),
-                                  type: PageTransitionType.leftToRight));
-                        },
-                        icon: Icon(
-                          Icons.menu,
-                          size: 30.0,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.attach_money),
-                          // Text(globals.coins.toString(),
-                          //     style: TextStyle(fontSize: 20)),
-                          Text(
-                            "${snapshot.data!.coins}",
-                            style: TextStyle(fontSize: 20),
+          return WillPopScope(
+            onWillPop: () async {
+              // SystemNavigator.pop();
+              SystemChannels.platform.invokeMethod("SystemNavigator.pop");
+              return false;
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: Stack(
+                children: <Widget>[
+                  Image(
+                    image: AssetImage("assets/wallpaper/$wallpaperstr.png"),
+                    height: double.infinity,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  // menu button and coins
+                  Padding(
+                    padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // menu button
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: Menu(),
+                                    type: PageTransitionType.leftToRight));
+                          },
+                          icon: Icon(
+                            Icons.menu,
+                            size: 30.0,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.attach_money),
+                            // Text(globals.coins.toString(),
+                            //     style: TextStyle(fontSize: 20)),
+                            Text(
+                              "${snapshot.data!.coins}",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                // animal and items
-                //animal here
-                Positioned(
-                  top: 200,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: Animal(pet, imgPath),
+                  // animal and items
+                  //animal here
+                  Positioned(
+                    top: 200,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: Animal(pet, imgPath),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 80),
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  // setState(() {
-                  // _visible = !_visible;
-                  _showStartPanel(context);
-                  // _pc1.open();
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (BuildContext context) => _startPopup(context),
-                  // );
-                  // });
-                  // _pc1.open();
-                },
-                label: Text(
-                  'start',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                icon: const Icon(Icons.alarm_on),
-                backgroundColor: Colors.green.shade300,
+                ],
               ),
+              floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 80),
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    // setState(() {
+                    // _visible = !_visible;
+                    _showStartPanel(context);
+                    // _pc1.open();
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) => _startPopup(context),
+                    // );
+                    // });
+                    // _pc1.open();
+                  },
+                  label: Text(
+                    'start',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  icon: const Icon(Icons.alarm_on),
+                  backgroundColor: Colors.green.shade300,
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
           );
         }
       },

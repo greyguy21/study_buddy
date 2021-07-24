@@ -83,6 +83,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     timer.cancel();
   }
 
+
   @override
   void initState() {
     startTimeout();
@@ -104,7 +105,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (AppLifecycleState.paused == state) {
+    if (AppLifecycleState.paused == state && timer.isActive) {
       if (notifs) {
         NotificationService().showNotification();
         print("notifs");
@@ -119,7 +120,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
       });
     }
 
-    if (AppLifecycleState.resumed == state) {
+    if (AppLifecycleState.resumed == state && timer.isActive) {
       if (countdown.isActive) {
         print("cancel timer");
         countdown.cancel();
