@@ -532,6 +532,9 @@ class DatabaseService {
         .snapshots();
   }
 
+
+
+
   Future addTag(String title, int color) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {
       _db.collection("user").doc(this.uid).collection("tags").doc(title).set({

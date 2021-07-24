@@ -159,26 +159,36 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      validator: (val) => val!.isEmpty || val.length < 1
-                          ? "please enter task name"
-                          : globals.tasks.contains(val)
+                StreamBuilder<QuerySnapshot>(
+                  stream: DatabaseService().timeline,
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    List<String> names = [];
+                    snapshot.data!.docs.forEach((doc) {
+                      names.add(doc.get("name"));
+                    });
+                    print(names);
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          validator: (val) => val!.isEmpty || val.length < 1
+                              ? "please enter task name"
+                              : names.contains(val)
                               ? "task with the same name exists, name your task differently."
                               : null,
-                      decoration: InputDecoration(
-                        labelText: 'Task:',
-                        filled: true,
+                          decoration: InputDecoration(
+                            labelText: 'Task:',
+                            filled: true,
+                          ),
+                          onChanged: (val) {
+                            // setState(() => globals.taskName = val);
+                            globals.taskName = val;
+                          },
+                        ),
                       ),
-                      onChanged: (val) {
-                        // setState(() => globals.taskName = val);
-                        globals.taskName = val;
-                      },
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 Padding(
                   padding:
