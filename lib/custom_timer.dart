@@ -149,7 +149,7 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                   style: TextStyle(fontSize: 50),
                   textAlign: TextAlign.center,
                 ),
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     setState(() {
                       _endTaskEarly(context);
@@ -158,7 +158,13 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
                   child: Text(
                     "Task Completed",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
                     ),
                   ),
                 )

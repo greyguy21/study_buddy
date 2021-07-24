@@ -52,8 +52,6 @@ class _HomePageState extends State<HomePage> {
 
           return WillPopScope(
             onWillPop: () async {
-              // SystemNavigator.pop();
-              SystemChannels.platform.invokeMethod("SystemNavigator.pop");
               return false;
             },
             child: Scaffold(
@@ -174,6 +172,7 @@ class _HomePageState extends State<HomePage> {
                       names.add(doc.get("name"));
                     });
                     print(names);
+
                     return Padding(
                       padding: const EdgeInsets.only(left: 30, right: 30),
                       child: Form(

@@ -30,6 +30,22 @@ class _TimelineState extends State<Timeline> {
         snapshot.data!.docs.forEach((doc) {
           docRef.add(doc);
         });
+
+        if (docRef.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Timeline"),
+              centerTitle: true,
+            ),
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Text(
+                "You currently have no completed tasks.",
+              ),
+            ),
+          );
+        }
+
         return Scaffold(
           appBar: AppBar(
             title: Text("Timeline"),
