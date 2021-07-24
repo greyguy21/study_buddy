@@ -132,6 +132,9 @@ class _AccessoryTileState extends State<AccessoryTile> {
                       visible: !bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -150,6 +153,13 @@ class _AccessoryTileState extends State<AccessoryTile> {
                               });
                             } else {
                               await DatabaseService().buyAccessory(accessory);
+                              String currAccessory =
+                              await DatabaseService().currAccessory();
+                              if (currAccessory != "00") {
+                                await DatabaseService()
+                                    .removeAccessory(currAccessory);
+                              }
+                              await DatabaseService().applyAccessory(accessory);
                             } // how to disable button!
                           },
                           icon: Icon(
@@ -170,6 +180,9 @@ class _AccessoryTileState extends State<AccessoryTile> {
                       visible: !inUse && bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -206,6 +219,9 @@ class _AccessoryTileState extends State<AccessoryTile> {
                       visible: inUse && bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -213,8 +229,7 @@ class _AccessoryTileState extends State<AccessoryTile> {
 
                             // then need to change to use or remove!
                             // change buttons, new tiles, or gesture detectors
-                            await DatabaseService()
-                                .removeAccessory(accessory.num);
+                            await DatabaseService().removeAccessory(accessory.num);
                             // how to disable button!
                           },
                           icon: Icon(
@@ -230,6 +245,9 @@ class _AccessoryTileState extends State<AccessoryTile> {
                           backgroundColor: Colors.lightBlue,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 3.0,
                     )
                   ],
                 )));

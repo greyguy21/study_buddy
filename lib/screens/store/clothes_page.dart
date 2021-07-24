@@ -152,6 +152,9 @@ class _ClothesTileState extends State<ClothesTile> {
                       visible: !bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -170,6 +173,13 @@ class _ClothesTileState extends State<ClothesTile> {
                               });
                             } else {
                               await DatabaseService().buyClothes(clothing);
+                              String currClothes =
+                              await DatabaseService().currClothes();
+                              if (currClothes != "00") {
+                                await DatabaseService()
+                                    .removeClothes(currClothes);
+                              }
+                              await DatabaseService().applyClothes(clothing);
                             } // how to disable button!
                           },
                           icon: Icon(
@@ -190,6 +200,9 @@ class _ClothesTileState extends State<ClothesTile> {
                       visible: !inUse && bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -226,6 +239,9 @@ class _ClothesTileState extends State<ClothesTile> {
                       visible: inUse && bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -249,6 +265,9 @@ class _ClothesTileState extends State<ClothesTile> {
                           backgroundColor: Colors.lightBlue,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 3.0,
                     )
                   ],
                 )));

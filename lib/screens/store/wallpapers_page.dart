@@ -135,6 +135,9 @@ class _WallpaperTileState extends State<WallpaperTile> {
                       visible: !bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -153,7 +156,8 @@ class _WallpaperTileState extends State<WallpaperTile> {
                               });
                             } else {
                               await DatabaseService().buyWallpaper(wpp);
-                            } // how to disable button!
+                              await DatabaseService().applyWallpaper(wpp);
+                            }
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -173,6 +177,9 @@ class _WallpaperTileState extends State<WallpaperTile> {
                       visible: !inUse && bought,
                       child: Expanded(
                         child: FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           heroTag: name,
                           onPressed: () async {
                             // check if coins > price first!!
@@ -197,34 +204,9 @@ class _WallpaperTileState extends State<WallpaperTile> {
                         ),
                       ),
                     ),
-                    // Visibility(
-                    //   visible: inUse && bought,
-                    //   child: Expanded(
-                    //     child: FloatingActionButton.extended(
-                    //       heroTag: name,
-                    //       onPressed: () async {
-                    //         // check if coins > price first!!
-                    //         // else return error message
-
-                    //         // then need to change to use or remove!
-                    //         // change buttons, new tiles, or gesture detectors
-                    //         await DatabaseService().removeClothes(clothing);
-                    //         // how to disable button!
-                    //       },
-                    //       icon: Icon(
-                    //         Icons.cancel_outlined,
-                    //         color: Colors.white,
-                    //       ),
-                    //       label: Text(
-                    //         "Remove",
-                    //         style: TextStyle(
-                    //           color: Colors.white,
-                    //         ),
-                    //       ),
-                    //       backgroundColor: Colors.lightBlue,
-                    //     ),
-                    //   ),
-                    // )
+                    SizedBox(
+                      height: 3.0,
+                    )
                   ],
                 )));
       },

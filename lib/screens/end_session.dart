@@ -30,7 +30,8 @@ class _EndSessionState extends State<EndSession> {
               Navigator.push(
                   context,
                   PageTransition(
-                      child: HomePage(), type: PageTransitionType.fade));
+                      child: HomePage(), type: PageTransitionType.fade)
+              );
               globals.extended = false;
             },
             child: Text('ok'),
