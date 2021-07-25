@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +13,13 @@ class _LoginState extends State<Login> {
   String email = "";
   String password = "";
   String error = "";
+  bool err = false;
+
+  @override
+  void initState() {
+    super.initState();
+    err = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +79,15 @@ class _LoginState extends State<Login> {
                 }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "user-not-found") {
-                  error = "No user found for that email.";
+                  setState(() {
+                    error = "No user found for that email.";
+                    err = true;
+                  });
                 } else if (e.code == "wrong-password") {
-                  error =
-                      "Wrong password provided for that user, please try again.";
+                  setState(() {
+                    error = "Wrong password provided for that user, please try again.";
+                    err = true;
+                  });
                 }
               }
             },
@@ -86,10 +99,13 @@ class _LoginState extends State<Login> {
           ),
         ),
         SizedBox(height: 10.0),
-        Text(error,
-            style: TextStyle(
-              color: Colors.red,
-            ))
+        Visibility(
+          visible: err,
+          child: Text(error,
+              style: TextStyle(
+                color: Colors.red,
+              )),
+        )
       ],
       // backgroundColor: Colors., (of start popup)
     );

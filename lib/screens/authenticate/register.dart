@@ -14,6 +14,12 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String error = '';
+  bool err = false;
+
+  @override
+  void initState() {
+    err = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +80,22 @@ class _RegisterState extends State<Register> {
                 }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "weak-password") {
-                  error = "The password provided is too weak.";
+                  setState(() {
+                    error = "The password provided is too weak.";
+                    err = true;
+                  });
                 } else if (e.code == "email-already-in-use") {
-                  error =
-                      "The account already exists for that email, please log in instead.";
+                  setState(() {
+                    error = "The account already exists for that email, please log in instead.";
+                    err = true;
+                  });
                 }
               } catch (e) {
                 print(e);
-                error = "Error occurred when registering";
+                setState(() {
+                  error = "Error occurred when registering";
+                  err = true;
+                });
               }
             },
             label: Text("CONTINUE",
@@ -94,11 +108,15 @@ class _RegisterState extends State<Register> {
         SizedBox(
           height: 10.0,
         ),
-        Center(
-          child: Text(error,
-              style: TextStyle(
-                color: Colors.red,
-              )),
+        Visibility(
+          visible: err,
+          child: Center(
+            child: Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                )),
+          ),
         )
       ],
       // backgroundColor: Colors., (of start popup)
