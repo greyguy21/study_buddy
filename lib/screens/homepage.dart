@@ -182,6 +182,8 @@ class _HomePageState extends State<HomePage> {
                               ? "please enter task name"
                               : names.contains(val)
                               ? "task with the same name exists, name your task differently."
+                              : val.length >= 30
+                              ? "task name exceeds char limit of 30"
                               : null,
                           decoration: InputDecoration(
                             labelText: 'Task:',
@@ -205,6 +207,10 @@ class _HomePageState extends State<HomePage> {
                       TimerSlider(),
                     ],
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0, left: 30, right: 30),
+                  child: Text("Please select a tag"),
                 ),
                 StreamBuilder<List<TagModel>>(
                   stream: DatabaseService().tags,

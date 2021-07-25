@@ -158,7 +158,9 @@ class _TagsPageState extends State<TagsPage> {
                   ? "Enter a valid Tag title"
                   : tags.contains(val)
                       ? "tag with the same name exists"
-                      : null,
+                      : val.length >= 20
+                          ? "tag name exceeds char limit of 20"
+                          : null,
               onChanged: (val) {
                 setState(() {
                   title = val;
@@ -215,7 +217,9 @@ class _TagsPageState extends State<TagsPage> {
                     ? "Enter a valid Tag title"
                     : tags.contains(val) && val != old
                         ? "tag with the same name exists"
-                        : null,
+                        : val.length >= 20
+                            ? "tag name exceeds char limit of 20"
+                            : null,
                 controller: TextEditingController()..text = old,
                 onChanged: (changed) {
                   title = changed;
