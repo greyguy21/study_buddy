@@ -49,30 +49,33 @@ class _TimelineState extends State<Timeline> {
               ),
             ),
             backgroundColor: Colors.white,
-            body: Center(
-              child: Column(
-                children: [
-                  Text(
-                    "Start your first task now!",
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/');
-                    },
-                    child: Row(
-                      children: [
-                        Icon(Icons.home_outlined),
-                        SizedBox(width: 10),
-                        Text('Homepage'),
-                      ],
+            body: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                Text("Start your first task now!",
+                    style: TextStyle(fontSize: 20)),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/');
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.home_outlined),
+                          SizedBox(width: 10),
+                          Text('Homepage'),
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
+                  ],
+                )
+              ],
             ),
           );
         }
