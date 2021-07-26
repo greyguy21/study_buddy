@@ -7,6 +7,8 @@ import 'package:date_util/date_util.dart';
 import 'package:study_buddy/services/database.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:study_buddy/screens/menu.dart';
+import 'package:page_transition/page_transition.dart';
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -115,6 +117,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     appBar: AppBar(
                       title: Text("Statistics"),
                       centerTitle: true,
+                      leading: IconButton(
+                        icon: Icon(Icons.menu),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: Menu(),
+                                  type: PageTransitionType.leftToRight));
+                        },
+                      ),
                       bottom: TabBar(
                         tabs: [Tab(text: 'Day'), Tab(text: 'Month')],
                       ),

@@ -29,6 +29,17 @@ class _MenuState extends State<Menu> {
               child: Text('Menu'),
             ),
             ListTile(
+              leading: Icon(Icons.home_outlined),
+              title: Text('Homepage'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/");
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.shopping_cart_outlined),
               title: Text('Store/Inventory'),
               onTap: () {
@@ -82,6 +93,23 @@ class _MenuState extends State<Menu> {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: ListTile(
+                tileColor: Colors.grey.shade100,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Back'),
+                    SizedBox(width: 10),
+                    Icon(Icons.arrow_forward),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ],
         ),

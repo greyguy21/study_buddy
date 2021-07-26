@@ -6,6 +6,8 @@ import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:study_buddy/screens/menu.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Timeline extends StatefulWidget {
   @override
@@ -36,11 +38,40 @@ class _TimelineState extends State<Timeline> {
             appBar: AppBar(
               title: Text("Timeline"),
               centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: Menu(), type: PageTransitionType.leftToRight));
+                },
+              ),
             ),
             backgroundColor: Colors.white,
             body: Center(
-              child: Text(
-                "You currently have no completed tasks.",
+              child: Column(
+                children: [
+                  Text(
+                    "Start your first task now!",
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.home_outlined),
+                        SizedBox(width: 10),
+                        Text('Homepage'),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           );
@@ -50,6 +81,15 @@ class _TimelineState extends State<Timeline> {
           appBar: AppBar(
             title: Text("Timeline"),
             centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: Menu(), type: PageTransitionType.leftToRight));
+              },
+            ),
           ),
           body: new ListView.builder(
               itemCount: docRef.length,

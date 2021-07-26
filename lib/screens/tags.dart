@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import '../globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -7,6 +5,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
+import 'package:study_buddy/screens/menu.dart';
+import 'package:page_transition/page_transition.dart';
 
 class TagsPage extends StatefulWidget {
   const TagsPage({Key? key}) : super(key: key);
@@ -23,6 +23,15 @@ class _TagsPageState extends State<TagsPage> {
       appBar: AppBar(
         title: Text("Tags"),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: Menu(), type: PageTransitionType.leftToRight));
+          },
+        ),
       ),
       body: StreamBuilder<List<TagModel>>(
           stream: DatabaseService().tags,
