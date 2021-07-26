@@ -11,7 +11,6 @@ import '../globals.dart' as globals;
 import 'package:study_buddy/screens/menu.dart';
 import 'package:study_buddy/screens/main_focus.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -66,7 +65,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   // menu button and coins
                   Padding(
-                    padding: const EdgeInsets.only(top: 60, left: 20, right: 50),
+                    padding:
+                        const EdgeInsets.only(top: 60, left: 20, right: 50),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -181,10 +181,10 @@ class _HomePageState extends State<HomePage> {
                           validator: (val) => val!.isEmpty || val.length < 1
                               ? "please enter task name"
                               : names.contains(val)
-                              ? "task with the same name exists, name your task differently."
-                              : val.length >= 30
-                              ? "task name exceeds char limit of 30"
-                              : null,
+                                  ? "task with the same name exists, name your task differently."
+                                  : val.length >= 30
+                                      ? "task name exceeds char limit of 30"
+                                      : null,
                           decoration: InputDecoration(
                             labelText: 'Task:',
                             filled: true,
@@ -221,7 +221,8 @@ class _HomePageState extends State<HomePage> {
                         ConnectionState.waiting) {
                       return Loading();
                     } else {
-                      final GlobalKey<TagsState> _tagKey = GlobalKey<TagsState>();
+                      final GlobalKey<TagsState> _tagKey =
+                          GlobalKey<TagsState>();
 
                       return Padding(
                         padding: const EdgeInsets.only(

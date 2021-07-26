@@ -4,6 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/screens/authenticate/authentication.dart';
 import 'package:study_buddy/services/database.dart';
+import 'package:study_buddy/screens/menu.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -23,6 +24,15 @@ class _SettingsPageState extends State<SettingsPage> {
               actions: [],
               title: Text('Settings'),
               centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: Menu(), type: PageTransitionType.leftToRight));
+                },
+              ),
             ),
             body: ListView(
               // Important: Remove any padding from the ListView.
@@ -31,8 +41,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ListTile(
                   leading: Icon(Icons.account_circle),
                   title: Text('User details:'),
-                  subtitle:
-                  Text('Email: ${FirebaseAuth.instance.currentUser!.email}'),
+                  subtitle: Text(
+                      'Email: ${FirebaseAuth.instance.currentUser!.email}'),
                 ),
                 ListTile(
                   leading: Icon(Icons.circle_notifications_outlined),

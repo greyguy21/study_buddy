@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:study_buddy/models/app_user.dart';
-import 'package:study_buddy/screens/homepage.dart';
+import 'package:study_buddy/screens/menu.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/screens/store/accessories_page.dart';
 import 'package:study_buddy/screens/store/clothes_page.dart';
-import 'package:study_buddy/screens/store/items_page.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
 import 'package:study_buddy/services/database.dart';
 
@@ -39,6 +39,15 @@ class _StoreInventoryState extends State<StoreInventory>
         appBar: AppBar(
           title: Text("Store/Inventory"),
           centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: Menu(), type: PageTransitionType.leftToRight));
+            },
+          ),
         ),
         body: SafeArea(
             child: Column(
