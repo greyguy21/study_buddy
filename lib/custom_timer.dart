@@ -84,7 +84,6 @@ class _CustomTimerState extends State<CustomTimer> with WidgetsBindingObserver {
     timer.cancel();
   }
 
-
   @override
   void initState() {
     startTimeout();
