@@ -1,6 +1,3 @@
-import 'package:study_buddy/globals.dart' as global;
-import 'package:study_buddy/models/clothes.dart';
-
 class AppUser {
   final uid;
   int coins;

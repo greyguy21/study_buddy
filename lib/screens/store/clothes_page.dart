@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
@@ -50,12 +46,6 @@ class _ClothesPageState extends State<ClothesPage> {
     //   },
     // );
   }
-
-  // should be clothes function?
-  // just the build function ?
-  // Widget _buildClothes(String name, int price, String imgPath, String num, context) {
-  //   Clothes clothing = Clothes(name: name, price: price, imgPath: imgPath, num: num, bought: false, inUse: false);
-  //   return ClothesTile(clothing: clothing);
 }
 
 // ignore: must_be_immutable
@@ -157,11 +147,6 @@ class _ClothesTileState extends State<ClothesTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             int coins = await DatabaseService().coins();
                             if (coins < price) {
                               // pop up for not enough coins
@@ -173,14 +158,12 @@ class _ClothesTileState extends State<ClothesTile> {
                               });
                             } else {
                               await DatabaseService().buyClothes(clothing);
-                              String currClothes =
-                              await DatabaseService().currClothes();
+                              String currClothes = await DatabaseService().currClothes();
                               if (currClothes != "00") {
-                                await DatabaseService()
-                                    .removeClothes(currClothes);
+                                await DatabaseService().removeClothes(currClothes);
                               }
                               await DatabaseService().applyClothes(clothing);
-                            } // how to disable button!
+                            }
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -205,13 +188,6 @@ class _ClothesTileState extends State<ClothesTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
-
-                            // must remove then can apply!
                             String currClothes =
                                 await DatabaseService().currClothes();
                             if (currClothes != "00") {
@@ -219,7 +195,6 @@ class _ClothesTileState extends State<ClothesTile> {
                                   .removeClothes(currClothes);
                             }
                             await DatabaseService().applyClothes(clothing);
-                            // how to disable button!
                           },
                           icon: Icon(
                             Icons.check_circle_outline_rounded,
@@ -244,13 +219,7 @@ class _ClothesTileState extends State<ClothesTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             await DatabaseService().removeClothes(clothing.num);
-                            // how to disable button!
                           },
                           icon: Icon(
                             Icons.cancel_outlined,

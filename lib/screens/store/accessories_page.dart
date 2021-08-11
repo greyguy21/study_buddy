@@ -137,11 +137,6 @@ class _AccessoryTileState extends State<AccessoryTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             int coins = await DatabaseService().coins();
                             if (coins < price) {
                               // pop up for not enough coins
@@ -160,7 +155,7 @@ class _AccessoryTileState extends State<AccessoryTile> {
                                     .removeAccessory(currAccessory);
                               }
                               await DatabaseService().applyAccessory(accessory);
-                            } // how to disable button!
+                            }
                           },
                           icon: Icon(
                             Icons.shopping_cart,
@@ -185,13 +180,6 @@ class _AccessoryTileState extends State<AccessoryTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
-
-                            // must remove then can apply!
                             String currAccessory =
                                 await DatabaseService().currAccessory();
                             if (currAccessory != "00") {
@@ -199,7 +187,6 @@ class _AccessoryTileState extends State<AccessoryTile> {
                                   .removeAccessory(currAccessory);
                             }
                             await DatabaseService().applyAccessory(accessory);
-                            // how to disable button!
                           },
                           icon: Icon(
                             Icons.check_circle_outline_rounded,
@@ -224,13 +211,7 @@ class _AccessoryTileState extends State<AccessoryTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             await DatabaseService().removeAccessory(accessory.num);
-                            // how to disable button!
                           },
                           icon: Icon(
                             Icons.cancel_outlined,

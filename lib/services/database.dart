@@ -1,11 +1,9 @@
-// import 'package:charts_flutter/flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/models/accessory.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/models/clothes.dart';
-import 'package:study_buddy/globals.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/models/wallpaper.dart';
 
@@ -531,9 +529,6 @@ class DatabaseService {
         .orderBy("start", descending: true)
         .snapshots();
   }
-
-
-
 
   Future addTag(String title, int color) {
     return _db.collection("user").doc(this.uid).update({}).then((value) {

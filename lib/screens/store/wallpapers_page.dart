@@ -140,11 +140,6 @@ class _WallpaperTileState extends State<WallpaperTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             int coins = await DatabaseService().coins();
                             if (coins < price) {
                               // pop up for not enough coins
@@ -182,13 +177,7 @@ class _WallpaperTileState extends State<WallpaperTile> {
                           ),
                           heroTag: name,
                           onPressed: () async {
-                            // check if coins > price first!!
-                            // else return error message
-
-                            // then need to change to use or remove!
-                            // change buttons, new tiles, or gesture detectors
                             await DatabaseService().applyWallpaper(wpp);
-                            // how to disable button!
                           },
                           icon: Icon(
                             Icons.check_circle_outline_rounded,

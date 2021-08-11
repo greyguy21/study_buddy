@@ -8,16 +8,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:study_buddy/screens/store/wallpapers_page.dart';
 import 'package:study_buddy/services/database.dart';
 
-// buttons: on press : only display bought / not bought
-// how to update bought or not bought ** need backend?
-// implement stack : animals trying on clothes
-
-// on press, show animal trying on clothes, & (buy?) button
-// pop up card (item, buy or go back) - on bottom half of screen
-
-// should this be stateful or stateless ??
-
-// below app bar display cash
 class StoreInventory extends StatefulWidget {
   @override
   _StoreInventoryState createState() => _StoreInventoryState();
@@ -71,13 +61,10 @@ class _StoreInventoryState extends State<StoreInventory>
                 String aaa = "-square";
 
                 return Container(
-                  // where the animal and things should be!!
                   color: Colors.white60,
                   height: MediaQuery.of(context).size.height / 2.2,
                   child: Stack(
                     children: <Widget>[
-                      // wallpaper
-                      // shift the wallpaper so the floor is higher
                       Image(
                         image: AssetImage(
                             "assets/wallpaper/${wallpaper + aaa}.png"),
