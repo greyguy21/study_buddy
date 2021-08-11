@@ -50,9 +50,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   trailing: Switch(
                     value: notification,
                     onChanged: (bool newValue) async {
-                      // setState(() {
-                      //   _initialBool = newValue;
-                      // });
                       await DatabaseService().updateNotification(newValue);
                     },
                   ),
@@ -88,7 +85,6 @@ class _SettingsPageState extends State<SettingsPage> {
           TextButton(
             onPressed: () async {
               await FirebaseAuth.instance.signOut().then((value) =>
-                  // Navigator.pop(context);
                   Navigator.popAndPushNamed(context, "/authenticate"));
             },
             child: Text('Sign out'),

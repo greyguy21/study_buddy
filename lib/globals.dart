@@ -5,18 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// var coins = FirebaseFirestore.instance.collection("user")
-//     .doc(FirebaseAuth.instance.currentUser!.uid)
-//     .get()
-//     .then((DocumentSnapshot snapshot) {
-//       if (snapshot.exists) {
-//         int result = snapshot.get("coins");
-//         return result;
-//       } else {
-//         return 888;
-//       }
-//     });
-
 var coins = 0;
 double timeSliderValue = 10;
 var taskName = '';

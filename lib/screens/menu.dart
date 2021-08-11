@@ -32,9 +32,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.home_outlined),
               title: Text('Homepage'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/");
               },
@@ -43,9 +40,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.shopping_cart_outlined),
               title: Text('Store/Inventory'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/store");
               },
@@ -54,9 +48,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.auto_graph),
               title: Text('Statistics'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/statistics");
               },
@@ -65,9 +56,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.timeline),
               title: Text('Timeline'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/timeline');
               },
@@ -76,9 +64,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.label_important_outline_rounded),
               title: Text("Tags"),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/tags");
               },
@@ -87,9 +72,6 @@ class _MenuState extends State<Menu> {
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
               },

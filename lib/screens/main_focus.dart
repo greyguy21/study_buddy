@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:study_buddy/custom_timer.dart';
 import '../globals.dart' as globals;
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:study_buddy/models/app_user.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';

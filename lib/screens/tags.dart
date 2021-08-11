@@ -1,7 +1,6 @@
 import '../globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-// import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:study_buddy/models/tag_model.dart';
 import 'package:study_buddy/screens/loading.dart';
 import 'package:study_buddy/services/database.dart';
@@ -49,8 +48,6 @@ class _TagsPageState extends State<TagsPage> {
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    // globals.numOfTags = snapshot.data!.length;
-                    // print(globals.numOfTags);
                     return Card(
                       elevation: 1.2,
                       shape: RoundedRectangleBorder(
@@ -133,7 +130,6 @@ class _TagsPageState extends State<TagsPage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // allow users to add tags
           setState(() {
             showDialog(
               context: context,
@@ -313,23 +309,3 @@ Widget _errorPopup(BuildContext context) {
     ),
   );
 }
-
-// stream of tags in database
-// user has a list of tags -> collection?
-// tag doc is name and color
-// streambuilder --> need a tag stream!
-
-// Tag Collection
-// -> build the tags in database (retrieve data)
-// -> add new tag (update data)
-// -> remove tag (update data)
-
-// User field
-// need to get current user
-// -> onPressed -> tag chosen -> update
-
-// Tasks
-// need to get current task -> another global variable??
-// need to add
-
-// figure out how to add & choose color palette

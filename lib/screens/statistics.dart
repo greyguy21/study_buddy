@@ -101,9 +101,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       // in this day would have been added already
                       // update color and tag name
                       int index = listOfTags.indexOf(docTag);
-                      // pieDataDay[index].duration += doc.get('duration');
-                      // pieDataDay[index].tagName = docTag;
-                      // pieDataDay[index].color = Color(doc.get('color'));
                       num curr = pieDataDay[index].duration;
                       pieDataDay[index] = new PieData(docTag,
                           doc.get('duration') + curr, Color(doc.get('color')));
@@ -310,7 +307,6 @@ class TagPieChart extends StatelessWidget {
             outsideJustification: charts.OutsideJustification.endDrawArea,
             horizontalFirst: false,
             desiredMaxRows: 2,
-            // cellPadding: EdgeInsets.only(),
             entryTextStyle: charts.TextStyleSpec(
               fontSize: 15,
               color: charts.MaterialPalette.black,
@@ -337,8 +333,6 @@ class MonthLineChart extends StatelessWidget {
         id: 'Month Task Duration',
         domainFn: (DataPoint dp, _) => dp.name,
         measureFn: (DataPoint dp, _) => dp.duration,
-        // colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.color),
-        // new Color(doc.get('color')),
         labelAccessorFn: (DataPoint dp, _) => dp.duration.toString(),
       )
     ];

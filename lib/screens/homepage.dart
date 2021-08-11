@@ -19,17 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
-  // bool _visible = false;
-  // PanelController _pc1 = new PanelController();
-
-  // bool repeatedTaskName(String taskName) {
-  //   Stream<QuerySnapshot> xxx = DatabaseService().timeline;
-  //   List<String> listOfTaskNames = [];
-  //   xxx.forEach((element) {
-  //     listOfTaskNames.add(element.);
-  //   });
-  //   return listOfTaskNames.contains(taskName);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +36,6 @@ class _HomePageState extends State<HomePage> {
           String pet = snapshot.data!.pet;
           String imgPath = "assets/$pet/${pet + clothes + accessory}.png";
           String wallpaperstr = snapshot.data!.wallpaper;
-          // tags = (get list of user tags from firestore)
 
           return WillPopScope(
             onWillPop: () async {
@@ -87,8 +75,6 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           children: [
                             Icon(Icons.attach_money),
-                            // Text(globals.coins.toString(),
-                            //     style: TextStyle(fontSize: 20)),
                             Text(
                               "${snapshot.data!.coins}",
                               style: TextStyle(fontSize: 20),
@@ -99,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   // animal and items
-                  //animal here
+                  // animal here
                   Positioned(
                     top: 200,
                     child: SizedBox(
@@ -114,16 +100,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(bottom: 80),
                 child: FloatingActionButton.extended(
                   onPressed: () {
-                    // setState(() {
-                    // _visible = !_visible;
                     _showStartPanel(context);
-                    // _pc1.open();
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (BuildContext context) => _startPopup(context),
-                    // );
-                    // });
-                    // _pc1.open();
                   },
                   label: Text(
                     'start',
@@ -190,7 +167,6 @@ class _HomePageState extends State<HomePage> {
                             filled: true,
                           ),
                           onChanged: (val) {
-                            // setState(() => globals.taskName = val);
                             globals.taskName = val;
                           },
                         ),
@@ -241,10 +217,6 @@ class _HomePageState extends State<HomePage> {
                               textColor: Colors.white,
                               singleItem: true,
                               onPressed: (value) {
-                                // setState(() {
-                                //   globals.tagName = snapshot.data![index].title;
-                                //   globals.tagColor = snapshot.data![index].color;
-                                // });
                                 globals.tagName = snapshot.data![index].title;
                                 print(globals.tagName);
                                 globals.tagColor = snapshot.data![index].color;
@@ -278,7 +250,6 @@ class _HomePageState extends State<HomePage> {
                               PageTransition(
                                   child: MainFocusPage(),
                                   type: PageTransitionType.fade));
-                          // Navigator.pushReplacementNamed(context, "/mainfocus");
                         }
                       },
                       label: Text(
@@ -337,6 +308,7 @@ class _TimerSliderState extends State<TimerSlider> {
       onChanged: (newTiming) {
         setState(() => globals.timeSliderValue = newTiming);
       },
+      // testing minimum 1min, actual app 10min.
       min: 1,
       max: 120,
       label: globals.timeSliderValue.round().toString(),
@@ -391,23 +363,3 @@ class _AnimalState extends State<Animal> {
     );
   }
 }
-
-// stream of tags in database
-// user has a list of tags -> collection?
-// tag doc is name and color
-// streambuilder --> need a tag stream!
-
-// Tag Collection
-// -> build the tags in database (retrieve data)
-// -> add new tag (update data)
-// -> remove tag (update data)
-
-// User field
-// need to get current user
-// -> onPressed -> tag chosen -> update
-
-// Tasks
-// need to get current task -> another global variable??
-// need to add
-
-// figure out how to add & choose color palette

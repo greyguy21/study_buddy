@@ -25,13 +25,10 @@ class _EndSessionState extends State<EndSession> {
           Text("good job! You've earned $amt coins!"),
           TextButton(
             onPressed: () async {
-              // await DatabaseService().updateTask(taskName,
-              //     globals.timeSliderValue.round(), globals.date, globals.taskStart, globals.taskEnd, globals.tagName, globals.tagColor);
               Navigator.push(
                   context,
                   PageTransition(
-                      child: HomePage(), type: PageTransitionType.fade)
-              );
+                      child: HomePage(), type: PageTransitionType.fade));
               globals.extended = false;
             },
             child: Text('ok'),
